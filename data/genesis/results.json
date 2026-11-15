@@ -1,0 +1,6947 @@
+{
+ "19-1": {
+  "title": "Here Lies Our Original Sin (Part Three) - Hard 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ESAI01",
+    "name": "Primordial Chain Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_UROB_LEGA01",
+    "name": "Dragon Princess Formal Dress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_VEST",
+    "name": "Vest Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DEX_TRIANGLE",
+    "name": "Set Square",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_TRUMPET",
+    "name": "Trumpet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_KATAR",
+    "name": "Platinum Katar Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_09_3",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_ESAI_IGNACIO",
+    "name": "Yishai Ignacio Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_UROBOROS_LEGACY",
+    "name": "Ouroboros Legacy Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_JACKET",
+    "name": "Cloth Jacket Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NECRO",
+    "name": "Necronomicon Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GLASSPEN",
+    "name": "Glass Pen Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 19,
+  "chapter_iname": "GENESIS_09_3",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+ },
+ "19-2": {
+  "title": "Here Lies Our Original Sin (Part Three) - Hard 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ESAI01",
+    "name": "Primordial Chain Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_UROB_LEGA01",
+    "name": "Dragon Princess Formal Dress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_HP_CAP",
+    "name": "Thick Hat",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_GETA",
+    "name": "Single-Tooth Geta Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_DICE",
+    "name": "Dice of Fate Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_09_3",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_ESAI_IGNACIO",
+    "name": "Yishai Ignacio Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_UROBOROS_LEGACY",
+    "name": "Ouroboros Legacy Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_JACKET",
+    "name": "Cloth Jacket Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NECRO",
+    "name": "Necronomicon Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GLASSPEN",
+    "name": "Glass Pen Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 19,
+  "chapter_iname": "GENESIS_09_3",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+ },
+ "19-3": {
+  "title": "Here Lies Our Original Sin (Part Three) - Hard 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ESAI01",
+    "name": "Primordial Chain Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_UROB_LEGA01",
+    "name": "Dragon Princess Formal Dress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_LUK_SILVERCOIN",
+    "name": "Fortune Coin",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROD",
+    "name": "Skull Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_TENBIN",
+    "name": "Gem Seller's Scales Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_09_3",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_ESAI_IGNACIO",
+    "name": "Yishai Ignacio Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_UROBOROS_LEGACY",
+    "name": "Ouroboros Legacy Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_JACKET",
+    "name": "Cloth Jacket Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NECRO",
+    "name": "Necronomicon Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GLASSPEN",
+    "name": "Glass Pen Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 19,
+  "chapter_iname": "GENESIS_09_3",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+ },
+ "19-4": {
+  "title": "Here Lies Our Original Sin (Part Three) - Hard 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ESAI01",
+    "name": "Primordial Chain Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_UROB_LEGA01",
+    "name": "Dragon Princess Formal Dress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DEF_BANGLE",
+    "name": "Copper Bangle",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_LOUPE",
+    "name": "Magnifying Glass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_PARKA",
+    "name": "Magus Hood Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_09_3",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_ESAI_IGNACIO",
+    "name": "Yishai Ignacio Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_UROBOROS_LEGACY",
+    "name": "Ouroboros Legacy Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_JACKET",
+    "name": "Cloth Jacket Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NECRO",
+    "name": "Necronomicon Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GLASSPEN",
+    "name": "Glass Pen Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 19,
+  "chapter_iname": "GENESIS_09_3",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+ },
+ "19-5": {
+  "title": "Here Lies Our Original Sin (Part Three) - Hard 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ESAI01",
+    "name": "Primordial Chain Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_UROB_LEGA01",
+    "name": "Dragon Princess Formal Dress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_MND_CHARM",
+    "name": "Charm",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_HOURGLASS",
+    "name": "Rainbow Hourglass Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+    "name": "Black Belt Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_RABBITDOLL",
+    "name": "Lucky Rabbit Figurine Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_09_3",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_ESAI_IGNACIO",
+    "name": "Yishai Ignacio Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_UROBOROS_LEGACY",
+    "name": "Ouroboros Legacy Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_JACKET",
+    "name": "Cloth Jacket Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NECRO",
+    "name": "Necronomicon Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GLASSPEN",
+    "name": "Glass Pen Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 19,
+  "chapter_iname": "GENESIS_09_3",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+ },
+ "18-1": {
+  "title": "Here Lies Our Original Sin (Part Two) - Hard 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MATH01",
+    "name": "Sephira's Warboots Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_PEN",
+    "name": "Mage's Fountain Pen Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MAS",
+    "name": "Drunkard's Masu Cup Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SCOPE",
+    "name": "Wonder Scope Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_09_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_MATHIAS",
+    "name": "Matia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+    "name": "Shinobi Shoes Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 18,
+  "chapter_iname": "GENESIS_09_2",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+ },
+ "18-2": {
+  "title": "Here Lies Our Original Sin (Part Two) - Hard 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MATH01",
+    "name": "Sephira's Warboots Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_ATK_MACE",
+    "name": "Mace",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GOGGLES",
+    "name": "Goggles Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SPE_FLAGSPEAR",
+    "name": "Promised Holy Banner Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_09_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_MATHIAS",
+    "name": "Matia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+    "name": "Shinobi Shoes Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 18,
+  "chapter_iname": "GENESIS_09_2",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+ },
+ "18-3": {
+  "title": "Here Lies Our Original Sin (Part Two) - Hard 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MATH01",
+    "name": "Sephira's Warboots Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_WAND",
+    "name": "Wand",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CIRCLET",
+    "name": "Circlet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_COAT",
+    "name": "Noble Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ONM_SOUBI",
+    "name": "Hidden Scroll Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_09_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_MATHIAS",
+    "name": "Matia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+    "name": "Shinobi Shoes Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 18,
+  "chapter_iname": "GENESIS_09_2",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+ },
+ "18-4": {
+  "title": "Here Lies Our Original Sin (Part Two) - Hard 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MATH01",
+    "name": "Sephira's Warboots Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_HP_PILOTHAT",
+    "name": "Pilot Helmet",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_CAPE",
+    "name": "Magic Cape Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+    "name": "Black Belt Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SPE_FLAGSPEAR",
+    "name": "Promised Holy Banner Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_09_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_MATHIAS",
+    "name": "Matia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+    "name": "Shinobi Shoes Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 18,
+  "chapter_iname": "GENESIS_09_2",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+ },
+ "18-5": {
+  "title": "Here Lies Our Original Sin (Part Two) - Hard 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MATH01",
+    "name": "Sephira's Warboots Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_CRI_DAGGER",
+    "name": "Dagger",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ONM_SOUBI",
+    "name": "Hidden Scroll Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_09_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_MATHIAS",
+    "name": "Matia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+    "name": "Shinobi Shoes Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 18,
+  "chapter_iname": "GENESIS_09_2",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+ },
+ "17-1": {
+  "title": "Here Lies Our Original Sin (Part One) - Hard 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MESA01",
+    "name": "Protective Battle Gauntlet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_PEN",
+    "name": "Mage's Fountain Pen Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_09_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_MESARTHIM",
+    "name": "Mesarthim Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MAS",
+    "name": "Drunkard's Masu Cup Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_WATCH",
+    "name": "Old Pocket Watch Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 17,
+  "chapter_iname": "GENESIS_09_1",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+ },
+ "17-2": {
+  "title": "Here Lies Our Original Sin (Part One) - Hard 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MESA01",
+    "name": "Protective Battle Gauntlet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_ATK_MACE",
+    "name": "Mace",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_HOLYARMOR",
+    "name": "Brilliant Wings Armor Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_09_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_MESARTHIM",
+    "name": "Mesarthim Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MAS",
+    "name": "Drunkard's Masu Cup Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_WATCH",
+    "name": "Old Pocket Watch Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 17,
+  "chapter_iname": "GENESIS_09_1",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+ },
+ "17-3": {
+  "title": "Here Lies Our Original Sin (Part One) - Hard 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MESA01",
+    "name": "Protective Battle Gauntlet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_WAND",
+    "name": "Wand",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SCOPE",
+    "name": "Wonder Scope Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_VAL_WING",
+    "name": "Valkyrie Headdress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_09_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_MESARTHIM",
+    "name": "Mesarthim Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MAS",
+    "name": "Drunkard's Masu Cup Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_WATCH",
+    "name": "Old Pocket Watch Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 17,
+  "chapter_iname": "GENESIS_09_1",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+ },
+ "17-4": {
+  "title": "Here Lies Our Original Sin (Part One) - Hard 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MESA01",
+    "name": "Protective Battle Gauntlet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_HP_PILOTHAT",
+    "name": "Pilot Helmet",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CIRCLET",
+    "name": "Circlet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_HOLYARMOR",
+    "name": "Brilliant Wings Armor Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_09_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_MESARTHIM",
+    "name": "Mesarthim Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MAS",
+    "name": "Drunkard's Masu Cup Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_WATCH",
+    "name": "Old Pocket Watch Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 17,
+  "chapter_iname": "GENESIS_09_1",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+ },
+ "17-5": {
+  "title": "Here Lies Our Original Sin (Part One) - Hard 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MESA01",
+    "name": "Protective Battle Gauntlet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_CRI_DAGGER",
+    "name": "Dagger",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+    "name": "Shinobi Shoes Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_VAL_WING",
+    "name": "Valkyrie Headdress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_09_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_MESARTHIM",
+    "name": "Mesarthim Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MAS",
+    "name": "Drunkard's Masu Cup Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_WATCH",
+    "name": "Old Pocket Watch Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 17,
+  "chapter_iname": "GENESIS_09_1",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+ },
+ "16-1": {
+  "title": "Pride Illuminates the World (Part Two) - Hard 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SHAH01",
+    "name": "Thora Cloak Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_HELENE01",
+    "name": "Seldom Gardener's Ribbon Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_LUK_SILVERCOIN",
+    "name": "Fortune Coin",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_HOURGLASS",
+    "name": "Rainbow Hourglass Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NECRO",
+    "name": "Necronomicon Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_08_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_SHAHAR",
+    "name": "Shahel Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_HELENE",
+    "name": "Helene Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GOGGLES",
+    "name": "Goggles Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_COAT",
+    "name": "Noble Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 16,
+  "chapter_iname": "GENESIS_08_2",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+ },
+ "16-2": {
+  "title": "Pride Illuminates the World (Part Two) - Hard 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SHAH01",
+    "name": "Thora Cloak Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_HELENE01",
+    "name": "Seldom Gardener's Ribbon Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_GETA",
+    "name": "Single-Tooth Geta Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_LOUPE",
+    "name": "Magnifying Glass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_PARKA",
+    "name": "Magus Hood Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_HWIZ_KABUTO",
+    "name": "Extravagant Helmet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_08_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_SHAHAR",
+    "name": "Shahel Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_HELENE",
+    "name": "Helene Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GOGGLES",
+    "name": "Goggles Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_COAT",
+    "name": "Noble Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 16,
+  "chapter_iname": "GENESIS_08_2",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+ },
+ "16-3": {
+  "title": "Pride Illuminates the World (Part Two) - Hard 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SHAH01",
+    "name": "Thora Cloak Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_HELENE01",
+    "name": "Seldom Gardener's Ribbon Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DEX_TRIANGLE",
+    "name": "Set Square",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_JACKET",
+    "name": "Cloth Jacket Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_KATAR",
+    "name": "Platinum Katar Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_KAM_MAGATAMA",
+    "name": "Jeweled Choker Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_08_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_SHAHAR",
+    "name": "Shahel Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_HELENE",
+    "name": "Helene Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GOGGLES",
+    "name": "Goggles Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_COAT",
+    "name": "Noble Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 16,
+  "chapter_iname": "GENESIS_08_2",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+ },
+ "16-4": {
+  "title": "Pride Illuminates the World (Part Two) - Hard 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SHAH01",
+    "name": "Thora Cloak Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_HELENE01",
+    "name": "Seldom Gardener's Ribbon Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_MND_CHARM",
+    "name": "Charm",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROD",
+    "name": "Skull Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_DICE",
+    "name": "Dice of Fate Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_VISIONMASK",
+    "name": "Entrancing Mask Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_08_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_SHAHAR",
+    "name": "Shahel Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_HELENE",
+    "name": "Helene Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GOGGLES",
+    "name": "Goggles Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_COAT",
+    "name": "Noble Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 16,
+  "chapter_iname": "GENESIS_08_2",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+ },
+ "16-5": {
+  "title": "Pride Illuminates the World (Part Two) - Hard 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SHAH01",
+    "name": "Thora Cloak Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_HELENE01",
+    "name": "Seldom Gardener's Ribbon Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DEF_BANGLE",
+    "name": "Copper Bangle",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_TENBIN",
+    "name": "Gem Seller's Scales Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ORB",
+    "name": "Stellar Orb Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_08_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_SHAHAR",
+    "name": "Shahel Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_HELENE",
+    "name": "Helene Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GOGGLES",
+    "name": "Goggles Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_COAT",
+    "name": "Noble Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 16,
+  "chapter_iname": "GENESIS_08_2",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+ },
+ "15-1": {
+  "title": "Pride Illuminates the World (Part One) - Hard 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_IGNA01",
+    "name": "Agent's Boots Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_GROVE",
+    "name": "Gloves Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+    "name": "Silver Bell Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_08_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_IGNACIO",
+    "name": "Ignacio Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_CHOKER",
+    "name": "Elemental Belt Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+    "name": "Black Belt Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 15,
+  "chapter_iname": "GENESIS_08_1",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+ },
+ "15-2": {
+  "title": "Pride Illuminates the World (Part One) - Hard 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_IGNA01",
+    "name": "Agent's Boots Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_SPD_FEATHER",
+    "name": "Blue Feather",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_JAVELIN",
+    "name": "Javelin Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_CHIKUONKI",
+    "name": "Gramophone Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COWBOY",
+    "name": "Gunner's Hat Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_08_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_IGNACIO",
+    "name": "Ignacio Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+    "name": "Silver Bell Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_CHOKER",
+    "name": "Elemental Belt Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+    "name": "Black Belt Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 15,
+  "chapter_iname": "GENESIS_08_1",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+ },
+ "15-3": {
+  "title": "Pride Illuminates the World (Part One) - Hard 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_IGNA01",
+    "name": "Agent's Boots Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_EARRING",
+    "name": "Earrings Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURO",
+    "name": "Stamp of Certain Delivery Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ZUKIN",
+    "name": "Master Ninja's Hood Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_08_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_IGNACIO",
+    "name": "Ignacio Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+    "name": "Silver Bell Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_CHOKER",
+    "name": "Elemental Belt Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+    "name": "Black Belt Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 15,
+  "chapter_iname": "GENESIS_08_1",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+ },
+ "15-4": {
+  "title": "Pride Illuminates the World (Part One) - Hard 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_IGNA01",
+    "name": "Agent's Boots Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_SPD_GEAR",
+    "name": "Harmonic Cogs",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MIRROR",
+    "name": "Crystal Mirror Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+    "name": "Black Belt Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COWBOY",
+    "name": "Gunner's Hat Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_08_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_IGNACIO",
+    "name": "Ignacio Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+    "name": "Silver Bell Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_CHOKER",
+    "name": "Elemental Belt Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 15,
+  "chapter_iname": "GENESIS_08_1",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+ },
+ "15-5": {
+  "title": "Pride Illuminates the World (Part One) - Hard 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_IGNA01",
+    "name": "Agent's Boots Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_GEM_SPOON",
+    "name": "Silver Spoon",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_TURBAN",
+    "name": "Turban Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ZUKIN",
+    "name": "Master Ninja's Hood Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_08_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_IGNACIO",
+    "name": "Ignacio Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+    "name": "Silver Bell Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_CHOKER",
+    "name": "Elemental Belt Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+    "name": "Black Belt Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 15,
+  "chapter_iname": "GENESIS_08_1",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+ },
+ "14-1": {
+  "title": "\"Greed in My Heart\" (Part Two) - Hard 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BENIKA01",
+    "name": "Dragoncrest Holy Ring Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_HP_CAP",
+    "name": "Thick Hat",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_KATAR",
+    "name": "Platinum Katar Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_RABBITDOLL",
+    "name": "Lucky Rabbit Figurine Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_KUBERA01",
+    "name": "War God Mantle Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_07_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_BENIKA",
+    "name": "Benika Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_HOURGLASS",
+    "name": "Rainbow Hourglass Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_PARKA",
+    "name": "Magus Hood Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GLASSPEN",
+    "name": "Glass Pen Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 14,
+  "chapter_iname": "GENESIS_07_2",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+ },
+ "14-2": {
+  "title": "\"Greed in My Heart\" (Part Two) - Hard 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BENIKA01",
+    "name": "Dragoncrest Holy Ring Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DEF_BANGLE",
+    "name": "Copper Bangle",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_TRUMPET",
+    "name": "Trumpet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_PARKA",
+    "name": "Magus Hood Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANVIL",
+    "name": "Firesteel Anvil Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_KUBERA01",
+    "name": "War God Mantle Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_07_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_BENIKA",
+    "name": "Benika Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_HOURGLASS",
+    "name": "Rainbow Hourglass Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GLASSPEN",
+    "name": "Glass Pen Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_RABBITDOLL",
+    "name": "Lucky Rabbit Figurine Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 14,
+  "chapter_iname": "GENESIS_07_2",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+ },
+ "14-3": {
+  "title": "\"Greed in My Heart\" (Part Two) - Hard 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BENIKA01",
+    "name": "Dragoncrest Holy Ring Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_MND_CHARM",
+    "name": "Charm",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_HOURGLASS",
+    "name": "Rainbow Hourglass Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NECRO",
+    "name": "Necronomicon Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANGELA",
+    "name": "Rod of Recovery Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_KUBERA01",
+    "name": "War God Mantle Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_07_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_BENIKA",
+    "name": "Benika Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_PARKA",
+    "name": "Magus Hood Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GLASSPEN",
+    "name": "Glass Pen Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_RABBITDOLL",
+    "name": "Lucky Rabbit Figurine Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 14,
+  "chapter_iname": "GENESIS_07_2",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+ },
+ "14-4": {
+  "title": "\"Greed in My Heart\" (Part Two) - Hard 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BENIKA01",
+    "name": "Dragoncrest Holy Ring Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DEX_TRIANGLE",
+    "name": "Set Square",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_LOUPE",
+    "name": "Magnifying Glass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANVIL",
+    "name": "Firesteel Anvil Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_KUBERA01",
+    "name": "War God Mantle Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_07_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_BENIKA",
+    "name": "Benika Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_HOURGLASS",
+    "name": "Rainbow Hourglass Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_PARKA",
+    "name": "Magus Hood Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GLASSPEN",
+    "name": "Glass Pen Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_RABBITDOLL",
+    "name": "Lucky Rabbit Figurine Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 14,
+  "chapter_iname": "GENESIS_07_2",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+ },
+ "14-5": {
+  "title": "\"Greed in My Heart\" (Part Two) - Hard 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BENIKA01",
+    "name": "Dragoncrest Holy Ring Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_GETA",
+    "name": "Single-Tooth Geta Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_JACKET",
+    "name": "Cloth Jacket Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANGELA",
+    "name": "Rod of Recovery Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_KUBERA01",
+    "name": "War God Mantle Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_07_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_BENIKA",
+    "name": "Benika Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_HOURGLASS",
+    "name": "Rainbow Hourglass Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_PARKA",
+    "name": "Magus Hood Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GLASSPEN",
+    "name": "Glass Pen Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_RABBITDOLL",
+    "name": "Lucky Rabbit Figurine Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 14,
+  "chapter_iname": "GENESIS_07_2",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+ },
+ "13-1": {
+  "title": "Greed in My Heart (Part One) - Hard 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NEW_NIMURU01",
+    "name": "Reformer's Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BIAN01",
+    "name": "Blue Ribbon of Rending White Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_PEN",
+    "name": "Mage's Fountain Pen Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_PARKA",
+    "name": "Magus Hood Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_DARKKABUTO",
+    "name": "Sinister Helmet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_07_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_NIMURU",
+    "name": "Nimul Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_BIANCA",
+    "name": "Bianca Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROD",
+    "name": "Skull Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 13,
+  "chapter_iname": "GENESIS_07_1",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+ },
+ "13-2": {
+  "title": "Greed in My Heart (Part One) - Hard 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NEW_NIMURU01",
+    "name": "Reformer's Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BIAN01",
+    "name": "Blue Ribbon of Rending White Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_MND_CHARM",
+    "name": "Charm",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_LOUPE",
+    "name": "Magnifying Glass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MAD_GLOBE",
+    "name": "Magia Clarion Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_PI_NIMURU",
+    "name": "Nimul Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_BIANCA",
+    "name": "Bianca Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROD",
+    "name": "Skull Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_07_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 13,
+  "chapter_iname": "GENESIS_07_1",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+ },
+ "13-3": {
+  "title": "Greed in My Heart (Part One) - Hard 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NEW_NIMURU01",
+    "name": "Reformer's Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BIAN01",
+    "name": "Blue Ribbon of Rending White Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_WAND",
+    "name": "Wand",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CIRCLET",
+    "name": "Circlet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANGELA",
+    "name": "Rod of Recovery Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_07_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_NIMURU",
+    "name": "Nimul Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_BIANCA",
+    "name": "Bianca Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROD",
+    "name": "Skull Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 13,
+  "chapter_iname": "GENESIS_07_1",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+ },
+ "13-4": {
+  "title": "Greed in My Heart (Part One) - Hard 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NEW_NIMURU01",
+    "name": "Reformer's Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BIAN01",
+    "name": "Blue Ribbon of Rending White Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_GETA",
+    "name": "Single-Tooth Geta Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_TRUMPET",
+    "name": "Trumpet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MAD_GLOBE",
+    "name": "Magia Clarion Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_07_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_NIMURU",
+    "name": "Nimul Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_BIANCA",
+    "name": "Bianca Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROD",
+    "name": "Skull Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 13,
+  "chapter_iname": "GENESIS_07_1",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+ },
+ "13-5": {
+  "title": "Greed in My Heart (Part One) - Hard 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NEW_NIMURU01",
+    "name": "Reformer's Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BIAN01",
+    "name": "Blue Ribbon of Rending White Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_CRI_DAGGER",
+    "name": "Dagger",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+    "name": "Shinobi Shoes Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANGELA",
+    "name": "Rod of Recovery Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_07_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_NIMURU",
+    "name": "Nimul Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_BIANCA",
+    "name": "Bianca Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROD",
+    "name": "Skull Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 13,
+  "chapter_iname": "GENESIS_07_1",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+ },
+ "12-1": {
+  "title": "Wrath Signifies Justice (Part Two) Hard 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SURUB01",
+    "name": "Successor's Gloves Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_JACKET",
+    "name": "Cloth Jacket Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_WOR_AX",
+    "name": "Gigant Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_SURUBA",
+    "name": "Sulva Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 12,
+  "chapter_iname": "GENESIS_06_2",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+ },
+ "12-2": {
+  "title": "Wrath Signifies Justice (Part Two) Hard 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_QENS01",
+    "name": "Minute Hand of Reminiscence Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_CAPE",
+    "name": "Magic Cape Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MND_CAP",
+    "name": "Mage's Hat Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_WATCH",
+    "name": "Old Pocket Watch Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MAD_GLOBE",
+    "name": "Magia Clarion Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_QENS",
+    "name": "Quence Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_CHOKER",
+    "name": "Elemental Belt Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_PARKA",
+    "name": "Magus Hood Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 12,
+  "chapter_iname": "GENESIS_06_2",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+ },
+ "12-3": {
+  "title": "Wrath Signifies Justice (Part Two) Hard 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SURUB01",
+    "name": "Successor's Gloves Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_JACKET",
+    "name": "Cloth Jacket Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_KAI_RUDDER",
+    "name": "Navigator's Wheel Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_SURUBA",
+    "name": "Sulva Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 12,
+  "chapter_iname": "GENESIS_06_2",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+ },
+ "12-4": {
+  "title": "Wrath Signifies Justice (Part Two) Hard 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_QENS01",
+    "name": "Minute Hand of Reminiscence Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_HOURGLASS",
+    "name": "Rainbow Hourglass Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_STAFF",
+    "name": "Star Staff Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROBE",
+    "name": "Saint's Robe Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_VISIONMASK",
+    "name": "Entrancing Mask Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_QENS",
+    "name": "Quence Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_CHOKER",
+    "name": "Elemental Belt Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_PARKA",
+    "name": "Magus Hood Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 12,
+  "chapter_iname": "GENESIS_06_2",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+ },
+ "12-5": {
+  "title": "Wrath Signifies Justice (Part Two) Hard 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SURUB01",
+    "name": "Successor's Gloves Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_QENS01",
+    "name": "Minute Hand of Reminiscence Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CIRCLET",
+    "name": "Circlet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GLASSPEN",
+    "name": "Glass Pen Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_SURUBA",
+    "name": "Sulva Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_QENS",
+    "name": "Quence Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 12,
+  "chapter_iname": "GENESIS_06_2",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+ },
+ "11-1": {
+  "title": "Wrath Signifies Justice (Part One) - Hard 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANDEC01",
+    "name": "Heaven's Light Faulds Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_ATK_MACE",
+    "name": "Mace",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_KATAR",
+    "name": "Platinum Katar Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_WATCH",
+    "name": "Old Pocket Watch Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_ANDECHS",
+    "name": "Andechs Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 11,
+  "chapter_iname": "GENESIS_06_1",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+ },
+ "11-2": {
+  "title": "Wrath Signifies Justice (Part One) - Hard 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANDEC01",
+    "name": "Heaven's Light Faulds Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DEF_BANGLE",
+    "name": "Copper Bangle",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_JACKET",
+    "name": "Cloth Jacket Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_DARKKABUTO",
+    "name": "Sinister Helmet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_ANDECHS",
+    "name": "Andechs Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 11,
+  "chapter_iname": "GENESIS_06_1",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+ },
+ "11-3": {
+  "title": "Wrath Signifies Justice (Part One) - Hard 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANDEC01",
+    "name": "Heaven's Light Faulds Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_MND_CHARM",
+    "name": "Charm",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CIRCLET",
+    "name": "Circlet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NEC_STORNE",
+    "name": "Spirit Gravestone Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_ANDECHS",
+    "name": "Andechs Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 11,
+  "chapter_iname": "GENESIS_06_1",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+ },
+ "11-4": {
+  "title": "Wrath Signifies Justice (Part One) - Hard 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANDEC01",
+    "name": "Heaven's Light Faulds Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_GETA",
+    "name": "Single-Tooth Geta Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_CHOKER",
+    "name": "Elemental Belt Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+    "name": "Black Belt Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_DARKKABUTO",
+    "name": "Sinister Helmet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_ANDECHS",
+    "name": "Andechs Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 11,
+  "chapter_iname": "GENESIS_06_1",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+ },
+ "11-5": {
+  "title": "Wrath Signifies Justice (Part One) - Hard 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANDEC01",
+    "name": "Heaven's Light Faulds Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_HOURGLASS",
+    "name": "Rainbow Hourglass Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NEC_STORNE",
+    "name": "Spirit Gravestone Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_ANDECHS",
+    "name": "Andechs Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 11,
+  "chapter_iname": "GENESIS_06_1",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+ },
+ "10-1": {
+  "title": "\"Even If My Heart Aches in Envy\" (Part Two) - Hard 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NICA01",
+    "name": "Azure Spirit Princess' Veil Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_LUK_SILVERCOIN",
+    "name": "Fortune Coin",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_TRUMPET",
+    "name": "Trumpet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROBE",
+    "name": "Saint's Robe Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_05_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_NICAEA",
+    "name": "Nicaea Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_TENBIN",
+    "name": "Gem Seller's Scales Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_STAFF",
+    "name": "Star Staff Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 10,
+  "chapter_iname": "GENESIS_05_2",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+ },
+ "10-2": {
+  "title": "\"Even If My Heart Aches in Envy\" (Part Two) - Hard 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NICA01",
+    "name": "Azure Spirit Princess' Veil Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_HP_CAP",
+    "name": "Thick Hat",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_HOURGLASS",
+    "name": "Rainbow Hourglass Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NECRO",
+    "name": "Necronomicon Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_WEDDING",
+    "name": "Marriage Letter Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_PI_NICAEA",
+    "name": "Nicaea Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_TENBIN",
+    "name": "Gem Seller's Scales Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_STAFF",
+    "name": "Star Staff Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROBE",
+    "name": "Saint's Robe Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_05_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 10,
+  "chapter_iname": "GENESIS_05_2",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+ },
+ "10-3": {
+  "title": "\"Even If My Heart Aches in Envy\" (Part Two) - Hard 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NICA01",
+    "name": "Azure Spirit Princess' Veil Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_VEST",
+    "name": "Vest Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_LOUPE",
+    "name": "Magnifying Glass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_PARKA",
+    "name": "Magus Hood Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_VAL_WING",
+    "name": "Valkyrie Headdress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_05_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_NICAEA",
+    "name": "Nicaea Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_TENBIN",
+    "name": "Gem Seller's Scales Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_STAFF",
+    "name": "Star Staff Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROBE",
+    "name": "Saint's Robe Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 10,
+  "chapter_iname": "GENESIS_05_2",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+ },
+ "10-4": {
+  "title": "\"Even If My Heart Aches in Envy\" (Part Two) - Hard 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NICA01",
+    "name": "Azure Spirit Princess' Veil Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_GETA",
+    "name": "Single-Tooth Geta Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_JACKET",
+    "name": "Cloth Jacket Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_KATAR",
+    "name": "Platinum Katar Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_WEDDING",
+    "name": "Marriage Letter Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_05_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_NICAEA",
+    "name": "Nicaea Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_TENBIN",
+    "name": "Gem Seller's Scales Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_STAFF",
+    "name": "Star Staff Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROBE",
+    "name": "Saint's Robe Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 10,
+  "chapter_iname": "GENESIS_05_2",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+ },
+ "10-5": {
+  "title": "\"Even If My Heart Aches in Envy\" (Part Two) - Hard 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NICA01",
+    "name": "Azure Spirit Princess' Veil Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DEX_TRIANGLE",
+    "name": "Set Square",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROD",
+    "name": "Skull Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_DICE",
+    "name": "Dice of Fate Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_VAL_WING",
+    "name": "Valkyrie Headdress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_05_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_NICAEA",
+    "name": "Nicaea Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_TENBIN",
+    "name": "Gem Seller's Scales Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_STAFF",
+    "name": "Star Staff Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROBE",
+    "name": "Saint's Robe Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 10,
+  "chapter_iname": "GENESIS_05_2",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+ },
+ "9-1": {
+  "title": "\"Even If My Heart Aches in Envy\" (Part One) - Hard 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_DAPH01",
+    "name": "White-Silver Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_RABBIT",
+    "name": "Rabbit's Foot Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MAS",
+    "name": "Drunkard's Masu Cup Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_DICE",
+    "name": "Dice of Fate Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROBE",
+    "name": "Saint's Robe Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_05_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_DAPHNE",
+    "name": "Daphne Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 9,
+  "chapter_iname": "GENESIS_05_1",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+ },
+ "9-2": {
+  "title": "\"Even If My Heart Aches in Envy\" (Part One) - Hard 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_DAPH01",
+    "name": "White-Silver Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_CRI_DAGGER",
+    "name": "Dagger",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+    "name": "Shinobi Shoes Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_VAL_WING",
+    "name": "Valkyrie Headdress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_05_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_DAPHNE",
+    "name": "Daphne Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROBE",
+    "name": "Saint's Robe Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 9,
+  "chapter_iname": "GENESIS_05_1",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+ },
+ "9-3": {
+  "title": "\"Even If My Heart Aches in Envy\" (Part One) - Hard 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_DAPH01",
+    "name": "White-Silver Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_HP_PILOTHAT",
+    "name": "Pilot Helmet",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CIRCLET",
+    "name": "Circlet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_HOLYARMOR",
+    "name": "Brilliant Wings Armor Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_05_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_DAPHNE",
+    "name": "Daphne Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROBE",
+    "name": "Saint's Robe Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 9,
+  "chapter_iname": "GENESIS_05_1",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+ },
+ "9-4": {
+  "title": "\"Even If My Heart Aches in Envy\" (Part One) - Hard 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_DAPH01",
+    "name": "White-Silver Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_WAND",
+    "name": "Wand",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_VAL_WING",
+    "name": "Valkyrie Headdress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_PI_DAPHNE",
+    "name": "Daphne Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROBE",
+    "name": "Saint's Robe Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_05_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 9,
+  "chapter_iname": "GENESIS_05_1",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+ },
+ "9-5": {
+  "title": "\"Even If My Heart Aches in Envy\" (Part One) - Hard 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_DAPH01",
+    "name": "White-Silver Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_ATK_MACE",
+    "name": "Mace",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+    "name": "Black Belt Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_HOLYARMOR",
+    "name": "Brilliant Wings Armor Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_05_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_DAPHNE",
+    "name": "Daphne Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROBE",
+    "name": "Saint's Robe Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 9,
+  "chapter_iname": "GENESIS_05_1",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+ },
+ "8-1": {
+  "title": "Swallow that Gluttony (Part Two) - Hard 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_JRIA01_DARK",
+    "name": "Brand of Gluttony Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_ATK_WOODENSWORD",
+    "name": "Wooden Sword",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_TURBAN",
+    "name": "Turban Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MND_CAP",
+    "name": "Mage's Hat Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_JUURIA_DARK",
+    "name": "Dark Julia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+    "name": "Silver Bell Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_CHOKER",
+    "name": "Elemental Belt Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_CHIKUONKI",
+    "name": "Gramophone Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 8,
+  "chapter_iname": "GENESIS_04_2",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+ },
+ "8-2": {
+  "title": "Swallow that Gluttony (Part Two) - Hard 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_JRIA01_DARK",
+    "name": "Brand of Gluttony Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_GROVE",
+    "name": "Gloves Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MIRROR",
+    "name": "Crystal Mirror Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BERS",
+    "name": "Surya Gauntlet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_JUURIA_DARK",
+    "name": "Dark Julia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+    "name": "Silver Bell Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_CHOKER",
+    "name": "Elemental Belt Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_CHIKUONKI",
+    "name": "Gramophone Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 8,
+  "chapter_iname": "GENESIS_04_2",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+ },
+ "8-3": {
+  "title": "Swallow that Gluttony (Part Two) - Hard 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_JRIA01_DARK",
+    "name": "Brand of Gluttony Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_SPD_FEATHER",
+    "name": "Blue Feather",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURO",
+    "name": "Stamp of Certain Delivery Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_DARKKABUTO",
+    "name": "Sinister Helmet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_JUURIA_DARK",
+    "name": "Dark Julia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+    "name": "Silver Bell Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_CHOKER",
+    "name": "Elemental Belt Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_CHIKUONKI",
+    "name": "Gramophone Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 8,
+  "chapter_iname": "GENESIS_04_2",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+ },
+ "8-4": {
+  "title": "Swallow that Gluttony (Part Two) - Hard 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_JRIA01_DARK",
+    "name": "Brand of Gluttony Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_GEM_SPOON",
+    "name": "Silver Spoon",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_JAVELIN",
+    "name": "Javelin Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_CHIKUONKI",
+    "name": "Gramophone Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BERS",
+    "name": "Surya Gauntlet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_JUURIA_DARK",
+    "name": "Dark Julia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+    "name": "Silver Bell Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_CHOKER",
+    "name": "Elemental Belt Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 8,
+  "chapter_iname": "GENESIS_04_2",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+ },
+ "8-5": {
+  "title": "Swallow that Gluttony (Part Two) - Hard 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_JRIA01_DARK",
+    "name": "Brand of Gluttony Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_KNIFE",
+    "name": "Ogre Knife Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_CHOKER",
+    "name": "Elemental Belt Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_DARKKABUTO",
+    "name": "Sinister Helmet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_JUURIA_DARK",
+    "name": "Dark Julia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+    "name": "Silver Bell Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_CHIKUONKI",
+    "name": "Gramophone Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 8,
+  "chapter_iname": "GENESIS_04_2",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+ },
+ "7-1": {
+  "title": "\"Swallow that Gluttony\" (Part One) - Hard 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_EULA01",
+    "name": "Zuka Crown Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_GEM_SPOON",
+    "name": "Silver Spoon",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MIRROR",
+    "name": "Crystal Mirror Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MND_CAP",
+    "name": "Mage's Hat Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_EULALIA",
+    "name": "Eulalia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROD",
+    "name": "Skull Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURO",
+    "name": "Stamp of Certain Delivery Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_STAFF",
+    "name": "Star Staff Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_TWOSWORDS",
+    "name": "Orichalcum Blades Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 7,
+  "chapter_iname": "GENESIS_04_1",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+ },
+ "7-2": {
+  "title": "\"Swallow that Gluttony\" (Part One) - Hard 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_EULA01",
+    "name": "Zuka Crown Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_KNIFE",
+    "name": "Ogre Knife Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+    "name": "Silver Bell Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ONM_SOUBI",
+    "name": "Hidden Scroll Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_EULALIA",
+    "name": "Eulalia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROD",
+    "name": "Skull Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURO",
+    "name": "Stamp of Certain Delivery Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_STAFF",
+    "name": "Star Staff Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_TWOSWORDS",
+    "name": "Orichalcum Blades Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 7,
+  "chapter_iname": "GENESIS_04_1",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+ },
+ "7-3": {
+  "title": "\"Swallow that Gluttony\" (Part One) - Hard 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_EULA01",
+    "name": "Zuka Crown Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_BROOM",
+    "name": "Broom Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_CHOKER",
+    "name": "Elemental Belt Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_RIFLE",
+    "name": "Nocturne Rifle Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_EULALIA",
+    "name": "Eulalia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROD",
+    "name": "Skull Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURO",
+    "name": "Stamp of Certain Delivery Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_STAFF",
+    "name": "Star Staff Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_TWOSWORDS",
+    "name": "Orichalcum Blades Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 7,
+  "chapter_iname": "GENESIS_04_1",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+ },
+ "7-4": {
+  "title": "\"Swallow that Gluttony\" (Part One) - Hard 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_EULA01",
+    "name": "Zuka Crown Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_EARRING",
+    "name": "Earrings Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROD",
+    "name": "Skull Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ONM_SOUBI",
+    "name": "Hidden Scroll Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_EULALIA",
+    "name": "Eulalia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURO",
+    "name": "Stamp of Certain Delivery Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_STAFF",
+    "name": "Star Staff Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_TWOSWORDS",
+    "name": "Orichalcum Blades Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 7,
+  "chapter_iname": "GENESIS_04_1",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+ },
+ "7-5": {
+  "title": "\"Swallow that Gluttony\" (Part One) - Hard 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_EULA01",
+    "name": "Zuka Crown Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_SPD_GEAR",
+    "name": "Harmonic Cogs",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROD",
+    "name": "Skull Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_RIFLE",
+    "name": "Nocturne Rifle Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_PI_EULALIA",
+    "name": "Eulalia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURO",
+    "name": "Stamp of Certain Delivery Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_STAFF",
+    "name": "Star Staff Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_TWOSWORDS",
+    "name": "Orichalcum Blades Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 7,
+  "chapter_iname": "GENESIS_04_1",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+ },
+ "6-1": {
+  "title": "\"If That Would Be Called Sloth\" (Part Two) - Hard 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_IKON01",
+    "name": "Head Engineer's Pouch Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SHOULDER",
+    "name": "Laboratory Flasks Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_STAFF",
+    "name": "Star Staff Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_03_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_IKONA",
+    "name": "Icona Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CIRCLET",
+    "name": "Circlet Diagram Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 6,
+  "chapter_iname": "GENESIS_03_2",
+  "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part Two)"
+ },
+ "6-2": {
+  "title": "\"If That Would Be Called Sloth\" (Part Two) - Hard 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_HGUN",
+    "name": "Long Range Goggles Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ARROWCASE",
+    "name": "Dragon Scale Quiver Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NECRO",
+    "name": "Necronomicon Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_PARKA",
+    "name": "Magus Hood Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_03_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_MINARIO",
+    "name": "Minario Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_JAVELIN",
+    "name": "Javelin Diagram Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 6,
+  "chapter_iname": "GENESIS_03_2",
+  "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part Two)"
+ },
+ "6-3": {
+  "title": "\"If That Would Be Called Sloth\" (Part Two) - Hard 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_IKON01",
+    "name": "Head Engineer's Pouch Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BOILER",
+    "name": "Power Boiler Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_TWOSWORDS",
+    "name": "Orichalcum Blades Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_CHIKUONKI",
+    "name": "Gramophone Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_03_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_IKONA",
+    "name": "Icona Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+    "name": "Shinobi Shoes Diagram Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 6,
+  "chapter_iname": "GENESIS_03_2",
+  "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part Two)"
+ },
+ "6-4": {
+  "title": "\"If That Would Be Called Sloth\" (Part Two) - Hard 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_HGUN",
+    "name": "Long Range Goggles Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ONM_SOUBI",
+    "name": "Hidden Scroll Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_03_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_MINARIO",
+    "name": "Minario Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURO",
+    "name": "Stamp of Certain Delivery Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 6,
+  "chapter_iname": "GENESIS_03_2",
+  "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part Two)"
+ },
+ "6-5": {
+  "title": "\"If That Would Be Called Sloth\" (Part Two) - Hard 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_IKON01",
+    "name": "Head Engineer's Pouch Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_HGUN",
+    "name": "Long Range Goggles Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_RABBITDOLL",
+    "name": "Lucky Rabbit Figurine Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_TWOSWORDS",
+    "name": "Orichalcum Blades Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_PI_MINARIO",
+    "name": "Minario Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_IKONA",
+    "name": "Icona Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURO",
+    "name": "Stamp of Certain Delivery Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_03_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 6,
+  "chapter_iname": "GENESIS_03_2",
+  "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part Two)"
+ },
+ "5-1": {
+  "title": "If That Would Be Called Sloth (Part One) - Hard 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ADRE01",
+    "name": "Engineer's Flight Suit Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANVIL",
+    "name": "Firesteel Anvil Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_WOR_AX",
+    "name": "Gigant Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_RADIO",
+    "name": "Alchemic Radio Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_03_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_ADOREI",
+    "name": "Adaleigh Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   }
+  ],
+  "chapter": 5,
+  "chapter_iname": "GENESIS_03_1",
+  "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part One)"
+ },
+ "5-2": {
+  "title": "If That Would Be Called Sloth (Part One) - Hard 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ADRE01",
+    "name": "Engineer's Flight Suit Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_JAMADHAR",
+    "name": "Jamadhar Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SYO_HORN",
+    "name": "Earthdrake Horn Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_DICE",
+    "name": "Dice of Fate Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_WATCH",
+    "name": "Old Pocket Watch Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_PI_ST_MELA",
+    "name": "Mira Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROBE",
+    "name": "Saint's Robe Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_PARKA",
+    "name": "Magus Hood Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MND_CAP",
+    "name": "Mage's Hat Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_03_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 5,
+  "chapter_iname": "GENESIS_03_1",
+  "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part One)"
+ },
+ "5-3": {
+  "title": "If That Would Be Called Sloth (Part One) - Hard 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ADRE01",
+    "name": "Engineer's Flight Suit Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANVIL",
+    "name": "Firesteel Anvil Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_WOR_AX",
+    "name": "Gigant Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_TWOSWORDS",
+    "name": "Orichalcum Blades Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_03_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_ADOREI",
+    "name": "Adaleigh Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   }
+  ],
+  "chapter": 5,
+  "chapter_iname": "GENESIS_03_1",
+  "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part One)"
+ },
+ "5-4": {
+  "title": "If That Would Be Called Sloth (Part One) - Hard 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ADRE01",
+    "name": "Engineer's Flight Suit Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ELEMENTAL",
+    "name": "Medallion of Wisdom Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NEC_STORNE",
+    "name": "Spirit Gravestone Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GLASSPEN",
+    "name": "Glass Pen Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_PI_ST_NIKUSU",
+    "name": "Nyx Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROBE",
+    "name": "Saint's Robe Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_PARKA",
+    "name": "Magus Hood Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MND_CAP",
+    "name": "Mage's Hat Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_03_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 5,
+  "chapter_iname": "GENESIS_03_1",
+  "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part One)"
+ },
+ "5-5": {
+  "title": "If That Would Be Called Sloth (Part One) - Hard 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ADRE01",
+    "name": "Engineer's Flight Suit Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANVIL",
+    "name": "Firesteel Anvil Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_WOR_AX",
+    "name": "Gigant Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+    "name": "Black Belt Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_PI_ADOREI",
+    "name": "Adaleigh Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_03_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 5,
+  "chapter_iname": "GENESIS_03_1",
+  "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part One)"
+ },
+ "4-1": {
+  "title": "Love: Instinct or Feeling? (Part Two) - Hard 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ST_NIKU_01_DARK",
+    "name": "Emerald Brand of Sloth Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANGELA",
+    "name": "Rod of Recovery Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_JAMADHAR",
+    "name": "Jamadhar Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+    "name": "Black Belt Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_PI_ST_MELA_DARK",
+    "name": "Dark Mira Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_ST_MELA",
+    "name": "Mira Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ARMOR",
+    "name": "Flame Emperor Armor Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_STAFF",
+    "name": "Star Staff Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_02_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 4,
+  "chapter_iname": "GENESIS_02_2",
+  "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part Two)"
+ },
+ "4-2": {
+  "title": "Love: Instinct or Feeling? (Part Two) - Hard 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ST_NIKU_01_DARK",
+    "name": "Emerald Brand of Sloth Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_HWIZ_KABUTO",
+    "name": "Extravagant Helmet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ORB",
+    "name": "Stellar Orb Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MND_CAP",
+    "name": "Mage's Hat Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_02_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_ST_NIKUSU",
+    "name": "Nyx Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_ST_NIKUSU_DARK",
+    "name": "Dark Nyx Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_ROBE",
+    "name": "Saint's Robe Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   }
+  ],
+  "chapter": 4,
+  "chapter_iname": "GENESIS_02_2",
+  "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part Two)"
+ },
+ "4-3": {
+  "title": "Love: Instinct or Feeling? (Part Two) - Hard 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ST_MELA_01_DARK",
+    "name": "Azure Brand of Sloth Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SYO_HORN",
+    "name": "Earthdrake Horn Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NEC_STORNE",
+    "name": "Spirit Gravestone Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_NOTEBOOK",
+    "name": "Research Notebook Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_PARKA",
+    "name": "Magus Hood Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_02_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_ST_MELA_DARK",
+    "name": "Dark Mira Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_ST_NIKUSU_DARK",
+    "name": "Dark Nyx Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_STAFF",
+    "name": "Star Staff Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 4,
+  "chapter_iname": "GENESIS_02_2",
+  "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part Two)"
+ },
+ "4-4": {
+  "title": "Love: Instinct or Feeling? (Part Two) - Hard 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ST_NIKU_01_DARK",
+    "name": "Emerald Brand of Sloth Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_WAISTCLOTH",
+    "name": "Holy Brawler's Sash Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BERS",
+    "name": "Surya Gauntlet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SCOPE",
+    "name": "Wonder Scope Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_02_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_AMBROSIA",
+    "name": "Ambrosia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   }
+  ],
+  "chapter": 4,
+  "chapter_iname": "GENESIS_02_2",
+  "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part Two)"
+ },
+ "4-5": {
+  "title": "Love: Instinct or Feeling? (Part Two) - Hard 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ST_MELA_01_DARK",
+    "name": "Azure Brand of Sloth Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_VISIONMASK",
+    "name": "Entrancing Mask Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SYO_HORN",
+    "name": "Earthdrake Horn Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_STAFF",
+    "name": "Star Staff Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_02_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_ST_MELA_DARK",
+    "name": "Dark Mira Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_ST_NIKUSU_DARK",
+    "name": "Dark Nyx Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_LANCE",
+    "name": "Great Lance Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHELM",
+    "name": "Cross Helmet Piece",
+    "type": "ItemPiecePiece"
+   }
+  ],
+  "chapter": 4,
+  "chapter_iname": "GENESIS_02_2",
+  "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part Two)"
+ },
+ "3-1": {
+  "title": "Love: Instinct or Feeling? (Part One) - Hard 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AMBRO01",
+    "name": "Minute Hand of Revelation Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_VISIONMASK",
+    "name": "Entrancing Mask Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_CHOKER",
+    "name": "Elemental Belt Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_TWOSWORDS",
+    "name": "Orichalcum Blades Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_02_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_AMBROSIA",
+    "name": "Ambrosia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   }
+  ],
+  "chapter": 3,
+  "chapter_iname": "GENESIS_02_1",
+  "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part One)"
+ },
+ "3-2": {
+  "title": "Love: Instinct or Feeling? (Part One) - Hard 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_EMME01",
+    "name": "Holy Garments of Purification Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANGELA",
+    "name": "Rod of Recovery Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+    "name": "Black Belt Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_02_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_EMMEL",
+    "name": "Emmel Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   }
+  ],
+  "chapter": 3,
+  "chapter_iname": "GENESIS_02_1",
+  "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part One)"
+ },
+ "3-3": {
+  "title": "Love: Instinct or Feeling? (Part One) - Hard 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ST_MELA_01",
+    "name": "Intemporal Red Robes Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_HWIZ_KABUTO",
+    "name": "Extravagant Helmet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ORB",
+    "name": "Stellar Orb Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+    "name": "Black Belt Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_02_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_ST_MELA",
+    "name": "Mira Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   }
+  ],
+  "chapter": 3,
+  "chapter_iname": "GENESIS_02_1",
+  "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part One)"
+ },
+ "3-4": {
+  "title": "Love: Instinct or Feeling? (Part One) - Hard 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ST_NIKU01",
+    "name": "Chronometric Blue Robes Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SYO_HORN",
+    "name": "Earthdrake Horn Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ORB",
+    "name": "Stellar Orb Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_02_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_ST_NIKUSU",
+    "name": "Nyx Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   }
+  ],
+  "chapter": 3,
+  "chapter_iname": "GENESIS_02_1",
+  "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part One)"
+ },
+ "3-5": {
+  "title": "Love: Instinct or Feeling? (Part One) - Hard 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AMBRO01",
+    "name": "Minute Hand of Revelation Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_EMME01",
+    "name": "Holy Garments of Purification Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ST_MELA_01",
+    "name": "Intemporal Red Robes Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ST_NIKU01",
+    "name": "Chronometric Blue Robes Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_PI_AMBROSIA",
+    "name": "Ambrosia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_02_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 3,
+  "chapter_iname": "GENESIS_02_1",
+  "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part One)"
+ },
+ "2-1": {
+  "title": "Creating This World (Part Two) - Hard 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_JRIA01",
+    "name": "Patient Mail Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NEC_STORNE",
+    "name": "Spirit Gravestone Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_CHOKER",
+    "name": "Elemental Belt Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_TWOSWORDS",
+    "name": "Orichalcum Blades Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_PI_JUURIA",
+    "name": "Julia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_01_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 2,
+  "chapter_iname": "GENESIS_01_2",
+  "chapter_name": "Chapter 1: Creating This World (Part Two)"
+ },
+ "2-2": {
+  "title": "Creating This World (Part Two) - Hard 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_IENA01",
+    "name": "Blazing Red Blacksmith's Garb Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_WAISTCLOTH",
+    "name": "Holy Brawler's Sash Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+    "name": "Black Belt Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_PI_KU_IENA",
+    "name": "Yna Ku Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_01_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 2,
+  "chapter_iname": "GENESIS_01_2",
+  "chapter_name": "Chapter 1: Creating This World (Part Two)"
+ },
+ "2-3": {
+  "title": "Creating This World (Part Two) - Hard 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_JRIA01",
+    "name": "Patient Mail Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MFEN_SWORD",
+    "name": "White Serpent Blade Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+    "name": "Black Belt Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_PI_JUURIA",
+    "name": "Julia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_01_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 2,
+  "chapter_iname": "GENESIS_01_2",
+  "chapter_name": "Chapter 1: Creating This World (Part Two)"
+ },
+ "2-4": {
+  "title": "Creating This World (Part Two) - Hard 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_IENA01",
+    "name": "Blazing Red Blacksmith's Garb Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_WAISTCLOTH",
+    "name": "Holy Brawler's Sash Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SABER",
+    "name": "Saber Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_PI_KU_IENA",
+    "name": "Yna Ku Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_01_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 2,
+  "chapter_iname": "GENESIS_01_2",
+  "chapter_name": "Chapter 1: Creating This World (Part Two)"
+ },
+ "2-5": {
+  "title": "Creating This World (Part Two) - Hard 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_IENA01",
+    "name": "Blazing Red Blacksmith's Garb Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_JRIA01",
+    "name": "Patient Mail Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_PI_JUURIA",
+    "name": "Julia Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_FURCOAT",
+    "name": "Sacred Fur Coat Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_01_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 2,
+  "chapter_iname": "GENESIS_01_2",
+  "chapter_name": "Chapter 1: Creating This World (Part Two)"
+ },
+ "1-1": {
+  "title": "Creating This World (Part One) - Hard 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_IENA01",
+    "name": "Blazing Red Blacksmith's Garb Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_WAISTCLOTH",
+    "name": "Holy Brawler's Sash Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+    "name": "Black Belt Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_01",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_KU_IENA",
+    "name": "Yna Ku Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   }
+  ],
+  "chapter": 1,
+  "chapter_iname": "GENESIS_01",
+  "chapter_name": "Chapter 1: Creating This World (Part One)"
+ },
+ "1-2": {
+  "title": "Creating This World (Part One) - Hard 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_EMME01",
+    "name": "Holy Garments of Purification Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SYO_HORN",
+    "name": "Earthdrake Horn Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+    "name": "Knight Chess Piece Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+    "name": "Black Belt Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_01",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_EMMEL",
+    "name": "Emmel Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   }
+  ],
+  "chapter": 1,
+  "chapter_iname": "GENESIS_01",
+  "chapter_name": "Chapter 1: Creating This World (Part One)"
+ },
+ "1-3": {
+  "title": "Creating This World (Part One) - Hard 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_IENA01",
+    "name": "Blazing Red Blacksmith's Garb Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BERS",
+    "name": "Surya Gauntlet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_AX",
+    "name": "Great Axe Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MND_CAP",
+    "name": "Mage's Hat Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_01",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_KU_IENA",
+    "name": "Yna Ku Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   }
+  ],
+  "chapter": 1,
+  "chapter_iname": "GENESIS_01",
+  "chapter_name": "Chapter 1: Creating This World (Part One)"
+ },
+ "1-4": {
+  "title": "Creating This World (Part One) - Hard 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_EMME01",
+    "name": "Holy Garments of Purification Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANGELA",
+    "name": "Rod of Recovery Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_PARKA",
+    "name": "Magus Hood Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+    "name": "Black Belt Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_01",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_EMMEL",
+    "name": "Emmel Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   }
+  ],
+  "chapter": 1,
+  "chapter_iname": "GENESIS_01",
+  "chapter_name": "Chapter 1: Creating This World (Part One)"
+ },
+ "1-5": {
+  "title": "Creating This World (Part One) - Hard 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_IENA01",
+    "name": "Blazing Red Blacksmith's Garb Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_EMME01",
+    "name": "Holy Garments of Purification Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_GEARROD",
+    "name": "Gear Rod Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SWORD",
+    "name": "Sacred Lion Blade Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_SHIELD",
+    "name": "Lion Monarch Shield Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_PIECE_MACHINEWING",
+    "name": "Mechanical Wing Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+    "name": "Compass Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAM_SMALL",
+    "name": "Picmy Figurine Diagram",
+    "type": "ItemPiece"
+   },
+   {
+    "iname": "IT_PI_EMMEL",
+    "name": "Emmel Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_KU_IENA",
+    "name": "Yna Ku Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_01",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 1,
+  "chapter_iname": "GENESIS_01",
+  "chapter_name": "Chapter 1: Creating This World (Part One)"
+ }
+}

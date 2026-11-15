@@ -1,0 +1,961 @@
+{
+ "Yishai Ignacio": {
+  "item": "IT_PI_ESAI_IGNACIO",
+  "stages": [
+   {
+    "stage": "19-1",
+    "chapter": 19,
+    "hard": 1,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   },
+   {
+    "stage": "19-2",
+    "chapter": 19,
+    "hard": 2,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   },
+   {
+    "stage": "19-3",
+    "chapter": 19,
+    "hard": 3,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   },
+   {
+    "stage": "19-4",
+    "chapter": 19,
+    "hard": 4,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   },
+   {
+    "stage": "19-5",
+    "chapter": 19,
+    "hard": 5,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   }
+  ]
+ },
+ "Ouroboros Legacy": {
+  "item": "IT_PI_UROBOROS_LEGACY",
+  "stages": [
+   {
+    "stage": "19-1",
+    "chapter": 19,
+    "hard": 1,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   },
+   {
+    "stage": "19-2",
+    "chapter": 19,
+    "hard": 2,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   },
+   {
+    "stage": "19-3",
+    "chapter": 19,
+    "hard": 3,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   },
+   {
+    "stage": "19-4",
+    "chapter": 19,
+    "hard": 4,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   },
+   {
+    "stage": "19-5",
+    "chapter": 19,
+    "hard": 5,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   }
+  ]
+ },
+ "Matia": {
+  "item": "IT_PI_MATHIAS",
+  "stages": [
+   {
+    "stage": "18-1",
+    "chapter": 18,
+    "hard": 1,
+    "chapter_iname": "GENESIS_09_2",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+   },
+   {
+    "stage": "18-2",
+    "chapter": 18,
+    "hard": 2,
+    "chapter_iname": "GENESIS_09_2",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+   },
+   {
+    "stage": "18-3",
+    "chapter": 18,
+    "hard": 3,
+    "chapter_iname": "GENESIS_09_2",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+   },
+   {
+    "stage": "18-4",
+    "chapter": 18,
+    "hard": 4,
+    "chapter_iname": "GENESIS_09_2",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+   },
+   {
+    "stage": "18-5",
+    "chapter": 18,
+    "hard": 5,
+    "chapter_iname": "GENESIS_09_2",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+   }
+  ]
+ },
+ "Mesarthim": {
+  "item": "IT_PI_MESARTHIM",
+  "stages": [
+   {
+    "stage": "17-1",
+    "chapter": 17,
+    "hard": 1,
+    "chapter_iname": "GENESIS_09_1",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+   },
+   {
+    "stage": "17-2",
+    "chapter": 17,
+    "hard": 2,
+    "chapter_iname": "GENESIS_09_1",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+   },
+   {
+    "stage": "17-3",
+    "chapter": 17,
+    "hard": 3,
+    "chapter_iname": "GENESIS_09_1",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+   },
+   {
+    "stage": "17-4",
+    "chapter": 17,
+    "hard": 4,
+    "chapter_iname": "GENESIS_09_1",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+   },
+   {
+    "stage": "17-5",
+    "chapter": 17,
+    "hard": 5,
+    "chapter_iname": "GENESIS_09_1",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+   }
+  ]
+ },
+ "Shahel": {
+  "item": "IT_PI_SHAHAR",
+  "stages": [
+   {
+    "stage": "16-1",
+    "chapter": 16,
+    "hard": 1,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   },
+   {
+    "stage": "16-2",
+    "chapter": 16,
+    "hard": 2,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   },
+   {
+    "stage": "16-3",
+    "chapter": 16,
+    "hard": 3,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   },
+   {
+    "stage": "16-4",
+    "chapter": 16,
+    "hard": 4,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   },
+   {
+    "stage": "16-5",
+    "chapter": 16,
+    "hard": 5,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   }
+  ]
+ },
+ "Helene": {
+  "item": "IT_PI_HELENE",
+  "stages": [
+   {
+    "stage": "16-1",
+    "chapter": 16,
+    "hard": 1,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   },
+   {
+    "stage": "16-2",
+    "chapter": 16,
+    "hard": 2,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   },
+   {
+    "stage": "16-3",
+    "chapter": 16,
+    "hard": 3,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   },
+   {
+    "stage": "16-4",
+    "chapter": 16,
+    "hard": 4,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   },
+   {
+    "stage": "16-5",
+    "chapter": 16,
+    "hard": 5,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   }
+  ]
+ },
+ "Ignacio": {
+  "item": "IT_PI_IGNACIO",
+  "stages": [
+   {
+    "stage": "15-1",
+    "chapter": 15,
+    "hard": 1,
+    "chapter_iname": "GENESIS_08_1",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+   },
+   {
+    "stage": "15-2",
+    "chapter": 15,
+    "hard": 2,
+    "chapter_iname": "GENESIS_08_1",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+   },
+   {
+    "stage": "15-3",
+    "chapter": 15,
+    "hard": 3,
+    "chapter_iname": "GENESIS_08_1",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+   },
+   {
+    "stage": "15-4",
+    "chapter": 15,
+    "hard": 4,
+    "chapter_iname": "GENESIS_08_1",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+   },
+   {
+    "stage": "15-5",
+    "chapter": 15,
+    "hard": 5,
+    "chapter_iname": "GENESIS_08_1",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+   }
+  ]
+ },
+ "Benika": {
+  "item": "IT_PI_BENIKA",
+  "stages": [
+   {
+    "stage": "14-1",
+    "chapter": 14,
+    "hard": 1,
+    "chapter_iname": "GENESIS_07_2",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+   },
+   {
+    "stage": "14-2",
+    "chapter": 14,
+    "hard": 2,
+    "chapter_iname": "GENESIS_07_2",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+   },
+   {
+    "stage": "14-3",
+    "chapter": 14,
+    "hard": 3,
+    "chapter_iname": "GENESIS_07_2",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+   },
+   {
+    "stage": "14-4",
+    "chapter": 14,
+    "hard": 4,
+    "chapter_iname": "GENESIS_07_2",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+   },
+   {
+    "stage": "14-5",
+    "chapter": 14,
+    "hard": 5,
+    "chapter_iname": "GENESIS_07_2",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+   }
+  ]
+ },
+ "Nimul": {
+  "item": "IT_PI_NIMURU",
+  "stages": [
+   {
+    "stage": "13-1",
+    "chapter": 13,
+    "hard": 1,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   },
+   {
+    "stage": "13-2",
+    "chapter": 13,
+    "hard": 2,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   },
+   {
+    "stage": "13-3",
+    "chapter": 13,
+    "hard": 3,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   },
+   {
+    "stage": "13-4",
+    "chapter": 13,
+    "hard": 4,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   },
+   {
+    "stage": "13-5",
+    "chapter": 13,
+    "hard": 5,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   }
+  ]
+ },
+ "Bianca": {
+  "item": "IT_PI_BIANCA",
+  "stages": [
+   {
+    "stage": "13-1",
+    "chapter": 13,
+    "hard": 1,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   },
+   {
+    "stage": "13-2",
+    "chapter": 13,
+    "hard": 2,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   },
+   {
+    "stage": "13-3",
+    "chapter": 13,
+    "hard": 3,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   },
+   {
+    "stage": "13-4",
+    "chapter": 13,
+    "hard": 4,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   },
+   {
+    "stage": "13-5",
+    "chapter": 13,
+    "hard": 5,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   }
+  ]
+ },
+ "Sulva": {
+  "item": "IT_PI_SURUBA",
+  "stages": [
+   {
+    "stage": "12-1",
+    "chapter": 12,
+    "hard": 1,
+    "chapter_iname": "GENESIS_06_2",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+   },
+   {
+    "stage": "12-3",
+    "chapter": 12,
+    "hard": 3,
+    "chapter_iname": "GENESIS_06_2",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+   },
+   {
+    "stage": "12-5",
+    "chapter": 12,
+    "hard": 5,
+    "chapter_iname": "GENESIS_06_2",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+   }
+  ]
+ },
+ "Quence": {
+  "item": "IT_PI_QENS",
+  "stages": [
+   {
+    "stage": "12-2",
+    "chapter": 12,
+    "hard": 2,
+    "chapter_iname": "GENESIS_06_2",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+   },
+   {
+    "stage": "12-4",
+    "chapter": 12,
+    "hard": 4,
+    "chapter_iname": "GENESIS_06_2",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+   },
+   {
+    "stage": "12-5",
+    "chapter": 12,
+    "hard": 5,
+    "chapter_iname": "GENESIS_06_2",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+   }
+  ]
+ },
+ "Andechs": {
+  "item": "IT_PI_ANDECHS",
+  "stages": [
+   {
+    "stage": "11-1",
+    "chapter": 11,
+    "hard": 1,
+    "chapter_iname": "GENESIS_06_1",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+   },
+   {
+    "stage": "11-2",
+    "chapter": 11,
+    "hard": 2,
+    "chapter_iname": "GENESIS_06_1",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+   },
+   {
+    "stage": "11-3",
+    "chapter": 11,
+    "hard": 3,
+    "chapter_iname": "GENESIS_06_1",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+   },
+   {
+    "stage": "11-4",
+    "chapter": 11,
+    "hard": 4,
+    "chapter_iname": "GENESIS_06_1",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+   },
+   {
+    "stage": "11-5",
+    "chapter": 11,
+    "hard": 5,
+    "chapter_iname": "GENESIS_06_1",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+   }
+  ]
+ },
+ "Nicaea": {
+  "item": "IT_PI_NICAEA",
+  "stages": [
+   {
+    "stage": "10-1",
+    "chapter": 10,
+    "hard": 1,
+    "chapter_iname": "GENESIS_05_2",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+   },
+   {
+    "stage": "10-2",
+    "chapter": 10,
+    "hard": 2,
+    "chapter_iname": "GENESIS_05_2",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+   },
+   {
+    "stage": "10-3",
+    "chapter": 10,
+    "hard": 3,
+    "chapter_iname": "GENESIS_05_2",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+   },
+   {
+    "stage": "10-4",
+    "chapter": 10,
+    "hard": 4,
+    "chapter_iname": "GENESIS_05_2",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+   },
+   {
+    "stage": "10-5",
+    "chapter": 10,
+    "hard": 5,
+    "chapter_iname": "GENESIS_05_2",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+   }
+  ]
+ },
+ "Daphne": {
+  "item": "IT_PI_DAPHNE",
+  "stages": [
+   {
+    "stage": "9-1",
+    "chapter": 9,
+    "hard": 1,
+    "chapter_iname": "GENESIS_05_1",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+   },
+   {
+    "stage": "9-2",
+    "chapter": 9,
+    "hard": 2,
+    "chapter_iname": "GENESIS_05_1",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+   },
+   {
+    "stage": "9-3",
+    "chapter": 9,
+    "hard": 3,
+    "chapter_iname": "GENESIS_05_1",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+   },
+   {
+    "stage": "9-4",
+    "chapter": 9,
+    "hard": 4,
+    "chapter_iname": "GENESIS_05_1",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+   },
+   {
+    "stage": "9-5",
+    "chapter": 9,
+    "hard": 5,
+    "chapter_iname": "GENESIS_05_1",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+   }
+  ]
+ },
+ "Dark Julia": {
+  "item": "IT_PI_JUURIA_DARK",
+  "stages": [
+   {
+    "stage": "8-1",
+    "chapter": 8,
+    "hard": 1,
+    "chapter_iname": "GENESIS_04_2",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+   },
+   {
+    "stage": "8-2",
+    "chapter": 8,
+    "hard": 2,
+    "chapter_iname": "GENESIS_04_2",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+   },
+   {
+    "stage": "8-3",
+    "chapter": 8,
+    "hard": 3,
+    "chapter_iname": "GENESIS_04_2",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+   },
+   {
+    "stage": "8-4",
+    "chapter": 8,
+    "hard": 4,
+    "chapter_iname": "GENESIS_04_2",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+   },
+   {
+    "stage": "8-5",
+    "chapter": 8,
+    "hard": 5,
+    "chapter_iname": "GENESIS_04_2",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+   }
+  ]
+ },
+ "Eulalia": {
+  "item": "IT_PI_EULALIA",
+  "stages": [
+   {
+    "stage": "7-1",
+    "chapter": 7,
+    "hard": 1,
+    "chapter_iname": "GENESIS_04_1",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+   },
+   {
+    "stage": "7-2",
+    "chapter": 7,
+    "hard": 2,
+    "chapter_iname": "GENESIS_04_1",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+   },
+   {
+    "stage": "7-3",
+    "chapter": 7,
+    "hard": 3,
+    "chapter_iname": "GENESIS_04_1",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+   },
+   {
+    "stage": "7-4",
+    "chapter": 7,
+    "hard": 4,
+    "chapter_iname": "GENESIS_04_1",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+   },
+   {
+    "stage": "7-5",
+    "chapter": 7,
+    "hard": 5,
+    "chapter_iname": "GENESIS_04_1",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+   }
+  ]
+ },
+ "Icona": {
+  "item": "IT_PI_IKONA",
+  "stages": [
+   {
+    "stage": "6-1",
+    "chapter": 6,
+    "hard": 1,
+    "chapter_iname": "GENESIS_03_2",
+    "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part Two)"
+   },
+   {
+    "stage": "6-3",
+    "chapter": 6,
+    "hard": 3,
+    "chapter_iname": "GENESIS_03_2",
+    "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part Two)"
+   },
+   {
+    "stage": "6-5",
+    "chapter": 6,
+    "hard": 5,
+    "chapter_iname": "GENESIS_03_2",
+    "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part Two)"
+   }
+  ]
+ },
+ "Minario": {
+  "item": "IT_PI_MINARIO",
+  "stages": [
+   {
+    "stage": "6-2",
+    "chapter": 6,
+    "hard": 2,
+    "chapter_iname": "GENESIS_03_2",
+    "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part Two)"
+   },
+   {
+    "stage": "6-4",
+    "chapter": 6,
+    "hard": 4,
+    "chapter_iname": "GENESIS_03_2",
+    "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part Two)"
+   },
+   {
+    "stage": "6-5",
+    "chapter": 6,
+    "hard": 5,
+    "chapter_iname": "GENESIS_03_2",
+    "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part Two)"
+   }
+  ]
+ },
+ "Adaleigh": {
+  "item": "IT_PI_ADOREI",
+  "stages": [
+   {
+    "stage": "5-1",
+    "chapter": 5,
+    "hard": 1,
+    "chapter_iname": "GENESIS_03_1",
+    "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part One)"
+   },
+   {
+    "stage": "5-3",
+    "chapter": 5,
+    "hard": 3,
+    "chapter_iname": "GENESIS_03_1",
+    "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part One)"
+   },
+   {
+    "stage": "5-5",
+    "chapter": 5,
+    "hard": 5,
+    "chapter_iname": "GENESIS_03_1",
+    "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part One)"
+   }
+  ]
+ },
+ "Mira": {
+  "item": "IT_PI_ST_MELA",
+  "stages": [
+   {
+    "stage": "5-2",
+    "chapter": 5,
+    "hard": 2,
+    "chapter_iname": "GENESIS_03_1",
+    "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part One)"
+   },
+   {
+    "stage": "4-1",
+    "chapter": 4,
+    "hard": 1,
+    "chapter_iname": "GENESIS_02_2",
+    "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part Two)"
+   },
+   {
+    "stage": "3-3",
+    "chapter": 3,
+    "hard": 3,
+    "chapter_iname": "GENESIS_02_1",
+    "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part One)"
+   }
+  ]
+ },
+ "Nyx": {
+  "item": "IT_PI_ST_NIKUSU",
+  "stages": [
+   {
+    "stage": "5-4",
+    "chapter": 5,
+    "hard": 4,
+    "chapter_iname": "GENESIS_03_1",
+    "chapter_name": "Chapter 3 \"If That Would Be Called Sloth\" (Part One)"
+   },
+   {
+    "stage": "4-2",
+    "chapter": 4,
+    "hard": 2,
+    "chapter_iname": "GENESIS_02_2",
+    "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part Two)"
+   },
+   {
+    "stage": "3-4",
+    "chapter": 3,
+    "hard": 4,
+    "chapter_iname": "GENESIS_02_1",
+    "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part One)"
+   }
+  ]
+ },
+ "Dark Mira": {
+  "item": "IT_PI_ST_MELA_DARK",
+  "stages": [
+   {
+    "stage": "4-1",
+    "chapter": 4,
+    "hard": 1,
+    "chapter_iname": "GENESIS_02_2",
+    "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part Two)"
+   },
+   {
+    "stage": "4-3",
+    "chapter": 4,
+    "hard": 3,
+    "chapter_iname": "GENESIS_02_2",
+    "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part Two)"
+   },
+   {
+    "stage": "4-5",
+    "chapter": 4,
+    "hard": 5,
+    "chapter_iname": "GENESIS_02_2",
+    "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part Two)"
+   }
+  ]
+ },
+ "Dark Nyx": {
+  "item": "IT_PI_ST_NIKUSU_DARK",
+  "stages": [
+   {
+    "stage": "4-2",
+    "chapter": 4,
+    "hard": 2,
+    "chapter_iname": "GENESIS_02_2",
+    "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part Two)"
+   },
+   {
+    "stage": "4-3",
+    "chapter": 4,
+    "hard": 3,
+    "chapter_iname": "GENESIS_02_2",
+    "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part Two)"
+   },
+   {
+    "stage": "4-5",
+    "chapter": 4,
+    "hard": 5,
+    "chapter_iname": "GENESIS_02_2",
+    "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part Two)"
+   }
+  ]
+ },
+ "Ambrosia": {
+  "item": "IT_PI_AMBROSIA",
+  "stages": [
+   {
+    "stage": "4-4",
+    "chapter": 4,
+    "hard": 4,
+    "chapter_iname": "GENESIS_02_2",
+    "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part Two)"
+   },
+   {
+    "stage": "3-1",
+    "chapter": 3,
+    "hard": 1,
+    "chapter_iname": "GENESIS_02_1",
+    "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part One)"
+   },
+   {
+    "stage": "3-5",
+    "chapter": 3,
+    "hard": 5,
+    "chapter_iname": "GENESIS_02_1",
+    "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part One)"
+   }
+  ]
+ },
+ "Emmel": {
+  "item": "IT_PI_EMMEL",
+  "stages": [
+   {
+    "stage": "3-2",
+    "chapter": 3,
+    "hard": 2,
+    "chapter_iname": "GENESIS_02_1",
+    "chapter_name": "Chapter 2: Love: Instinct or Feeling? (Part One)"
+   },
+   {
+    "stage": "1-2",
+    "chapter": 1,
+    "hard": 2,
+    "chapter_iname": "GENESIS_01",
+    "chapter_name": "Chapter 1: Creating This World (Part One)"
+   },
+   {
+    "stage": "1-4",
+    "chapter": 1,
+    "hard": 4,
+    "chapter_iname": "GENESIS_01",
+    "chapter_name": "Chapter 1: Creating This World (Part One)"
+   },
+   {
+    "stage": "1-5",
+    "chapter": 1,
+    "hard": 5,
+    "chapter_iname": "GENESIS_01",
+    "chapter_name": "Chapter 1: Creating This World (Part One)"
+   }
+  ]
+ },
+ "Julia": {
+  "item": "IT_PI_JUURIA",
+  "stages": [
+   {
+    "stage": "2-1",
+    "chapter": 2,
+    "hard": 1,
+    "chapter_iname": "GENESIS_01_2",
+    "chapter_name": "Chapter 1: Creating This World (Part Two)"
+   },
+   {
+    "stage": "2-3",
+    "chapter": 2,
+    "hard": 3,
+    "chapter_iname": "GENESIS_01_2",
+    "chapter_name": "Chapter 1: Creating This World (Part Two)"
+   },
+   {
+    "stage": "2-5",
+    "chapter": 2,
+    "hard": 5,
+    "chapter_iname": "GENESIS_01_2",
+    "chapter_name": "Chapter 1: Creating This World (Part Two)"
+   }
+  ]
+ },
+ "Yna Ku": {
+  "item": "IT_PI_KU_IENA",
+  "stages": [
+   {
+    "stage": "2-2",
+    "chapter": 2,
+    "hard": 2,
+    "chapter_iname": "GENESIS_01_2",
+    "chapter_name": "Chapter 1: Creating This World (Part Two)"
+   },
+   {
+    "stage": "2-4",
+    "chapter": 2,
+    "hard": 4,
+    "chapter_iname": "GENESIS_01_2",
+    "chapter_name": "Chapter 1: Creating This World (Part Two)"
+   },
+   {
+    "stage": "1-1",
+    "chapter": 1,
+    "hard": 1,
+    "chapter_iname": "GENESIS_01",
+    "chapter_name": "Chapter 1: Creating This World (Part One)"
+   },
+   {
+    "stage": "1-3",
+    "chapter": 1,
+    "hard": 3,
+    "chapter_iname": "GENESIS_01",
+    "chapter_name": "Chapter 1: Creating This World (Part One)"
+   },
+   {
+    "stage": "1-5",
+    "chapter": 1,
+    "hard": 5,
+    "chapter_iname": "GENESIS_01",
+    "chapter_name": "Chapter 1: Creating This World (Part One)"
+   }
+  ]
+ }
+}

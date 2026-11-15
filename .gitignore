@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+*.bak
+
+# your own buttons, scripts and settings (import them in Customize - not shared by default)
+app/buttons/
+app/scripts/
+app/stuck/
+app/ui_settings.json
+
+# Genesis loot screenshots (results.json and the tables are kept)
+data/genesis/*.png
+data/genesis/run_log.txt
+
+# .NET build output
+bin/
+obj/
+
+# never commit downloads, SDKs or game files
+downloads/
+dotnet-sdk*/
+*.zip
+*.dll

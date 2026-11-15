@@ -1,0 +1,119 @@
+Genesis Hard stages - unit shards (read from the game's loot lists)
+ch19 = top of the Genesis chapter list ... ch1 = bottom
+
+ch19  Final Chapter "Here Lies Our Original Sin" (Part Three)
+  19-1 to 19-5: Yishai, Ouroboros (same for all)
+
+ch18  Final Chapter "Here Lies Our Original Sin" (Part Two)
+  18-1 to 18-5: Matia (same for all)
+
+ch17  Final Chapter "Here Lies Our Original Sin" (Part 1)
+  17-1 to 17-5: Mesarthim (same for all)
+
+ch16  Chapter 8 "Pride Illuminates the World" (Part Two)
+  16-1 to 16-5: Shahel, Helene (same for all)
+
+ch15  Chapter 8 "Pride Illuminates the World" (Part One)
+  15-1 to 15-5: Ignacio (same for all)
+
+ch14  Chapter 7 "Greed in My Heart" (Part Two)
+  14-1 to 14-5: Benika (same for all)
+
+ch13  Chapter 7 "Greed in My Heart" (Part One)
+  13-1 to 13-5: Nimul, Bianca (same for all)
+
+ch12  Chapter 6 "Wrath Signifies Justice" (Part Two)
+  12-1: Sulva
+  12-2: Quence
+  12-3: Sulva
+  12-4: Quence
+  12-5: Sulva, Quence
+
+ch11  Chapter 6 "Wrath Signifies Justice" (Part One)
+  11-1 to 11-5: Andechs (same for all)
+
+ch10  Chapter 5 "Even If My Heart Aches in Envy" (Part Two)
+  10-1 to 10-5: Nicaea (same for all)
+
+ch9  Chapter 5 "Even If My Heart Aches in Envy" (Part One)
+  9-1 to 9-5: Daphne (same for all)
+
+ch8  Chapter 4 "Swallow that Gluttony" (Part Two)
+  8-1 to 8-5: Dark Julia (same for all)
+
+ch7  Chapter 4 "Swallow that Gluttony" (Part One)
+  7-1 to 7-5: Eulalia (same for all)
+
+ch6  Chapter 3 "If That Would Be Called Sloth" (Part Two)
+  6-1: Icona
+  6-2: Minario
+  6-3: Icona
+  6-4: Minario
+  6-5: Minario, Icona
+
+ch5  Chapter 3 "If That Would Be Called Sloth" (Part One)
+  5-1: Adaleigh
+  5-2: Mira
+  5-3: Adaleigh
+  5-4: Nyx
+  5-5: Adaleigh
+
+ch4  Chapter 2: Love: Instinct or Feeling? (Part Two)
+  4-1: Dark Mira, Mira
+  4-2: Nyx, Dark Nyx
+  4-3: Dark Mira, Dark Nyx
+  4-4: Ambrosia
+  4-5: Dark Mira, Dark Nyx
+
+ch3  Chapter 2: Love: Instinct or Feeling? (Part One)
+  3-1: Ambrosia
+  3-2: Emmel
+  3-3: Mira
+  3-4: Nyx
+  3-5: Ambrosia
+
+ch2  Chapter 1: Creating This World (Part Two)
+  2-1: Julia
+  2-2: Yna Ku
+  2-3: Julia
+  2-4: Yna Ku
+  2-5: Julia
+
+ch1  Chapter 1: Creating This World (Part One)
+  1-1: Yna Ku
+  1-2: Emmel
+  1-3: Yna Ku
+  1-4: Emmel
+  1-5: Emmel, Yna Ku
+
+
+By unit (where each shard drops)
+
+  Adaleigh: 5-1, 5-3, 5-5
+  Ambrosia: 4-4, 3-1, 3-5
+  Andechs: 11-1, 11-2, 11-3, 11-4, 11-5
+  Benika: 14-1, 14-2, 14-3, 14-4, 14-5
+  Bianca: 13-1, 13-2, 13-3, 13-4, 13-5
+  Daphne: 9-1, 9-2, 9-3, 9-4, 9-5
+  Dark Julia: 8-1, 8-2, 8-3, 8-4, 8-5
+  Dark Mira: 4-1, 4-3, 4-5
+  Dark Nyx: 4-2, 4-3, 4-5
+  Emmel: 3-2, 1-2, 1-4, 1-5
+  Eulalia: 7-1, 7-2, 7-3, 7-4, 7-5
+  Helene: 16-1, 16-2, 16-3, 16-4, 16-5
+  Icona: 6-1, 6-3, 6-5
+  Ignacio: 15-1, 15-2, 15-3, 15-4, 15-5
+  Julia: 2-1, 2-3, 2-5
+  Matia: 18-1, 18-2, 18-3, 18-4, 18-5
+  Mesarthim: 17-1, 17-2, 17-3, 17-4, 17-5
+  Minario: 6-2, 6-4, 6-5
+  Mira: 5-2, 4-1, 3-3
+  Nicaea: 10-1, 10-2, 10-3, 10-4, 10-5
+  Nimul: 13-1, 13-2, 13-3, 13-4, 13-5
+  Nyx: 5-4, 4-2, 3-4
+  Ouroboros: 19-1, 19-2, 19-3, 19-4, 19-5
+  Quence: 12-2, 12-4, 12-5
+  Shahel: 16-1, 16-2, 16-3, 16-4, 16-5
+  Sulva: 12-1, 12-3, 12-5
+  Yishai: 19-1, 19-2, 19-3, 19-4, 19-5
+  Yna Ku: 2-2, 2-4, 1-1, 1-3, 1-5
