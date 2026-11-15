@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Patches Il2CppInterop.Generator.dll: CustomAttributeEx.Extract takes the LAST matching
+       dumper tag instead of throwing when there are two (see docs/NOTES.md). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="$(BepCore)\Mono.Cecil.dll" />
+  </ItemGroup>
+</Project>

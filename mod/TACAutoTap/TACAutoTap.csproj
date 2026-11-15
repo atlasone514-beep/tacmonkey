@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- BepInEx 6 IL2CPP plugin. Built against BepInEx's own .NET 6 runtime folder (no extra
+       targeting-pack download needed). Output: bin\TACAutoTap.dll -> BepInEx\plugins\ -->
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>TACAutoTap</AssemblyName>
+    <RootNamespace>TACAutoTap</RootNamespace>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>bin\</OutputPath>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- .NET 6 runtime shipped with BepInEx (managed assemblies only) -->
+    <Reference Include="$(Game)\dotnet\System.*.dll" Exclude="$(Game)\dotnet\*Native*.dll" Private="false" />
+    <Reference Include="$(Game)\dotnet\netstandard.dll;$(Game)\dotnet\mscorlib.dll" Private="false" />
+    <!-- BepInEx + Il2CppInterop -->
+    <Reference Include="$(Game)\BepInEx\core\BepInEx.Core.dll" Private="false" />
+    <Reference Include="$(Game)\BepInEx\core\BepInEx.Unity.IL2CPP.dll" Private="false" />
+    <Reference Include="$(Game)\BepInEx\core\Il2CppInterop.Runtime.dll" Private="false" />
+    <Reference Include="$(Game)\BepInEx\core\Il2CppInterop.Common.dll" Private="false" />
+    <!-- the game's generated interop assemblies -->
+    <Reference Include="$(Game)\BepInEx\interop\Il2Cppmscorlib.dll" Private="false" />
+    <Reference Include="$(Game)\BepInEx\interop\Il2CppSystem.dll" Private="false" />
+    <Reference Include="$(Game)\BepInEx\interop\UnityEngine.CoreModule.dll" Private="false" />
+    <Reference Include="$(Game)\BepInEx\interop\UnityEngine.UI.dll" Private="false" />
+    <Reference Include="$(Game)\BepInEx\interop\UnityEngine.UIModule.dll" Private="false" />
+    <Reference Include="$(Game)\BepInEx\interop\Unity.TextMeshPro.dll" Private="false" />
+  </ItemGroup>
+</Project>

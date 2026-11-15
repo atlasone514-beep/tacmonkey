@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Offline test: Cpp2IL (as BepInEx runs it) + the PATCHED Il2CppInterop generator -> temp folder. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="$(BepCore)\Il2CppInterop.Generator.dll" /> <!-- the patched one, once installed -->
+    <Reference Include="$(BepCore)\Il2CppInterop.Common.dll" />
+    <Reference Include="$(BepCore)\Cpp2IL.Core.dll" />
+    <Reference Include="$(BepCore)\LibCpp2IL.dll" />
+    <Reference Include="$(BepCore)\AsmResolver.dll" />
+    <Reference Include="$(BepCore)\AsmResolver.DotNet.dll" />
+    <Reference Include="$(BepCore)\AsmResolver.PE.dll" />
+    <Reference Include="$(BepCore)\AsmResolver.PE.File.dll" />
+    <Reference Include="$(BepCore)\AssetRipper.Primitives.dll" />
+    <Reference Include="$(BepCore)\AssetRipper.CIL.dll" />
+    <Reference Include="$(BepCore)\Iced.dll" />
+    <Reference Include="$(BepCore)\Disarm.dll" />
+    <Reference Include="$(BepCore)\Gee.External.Capstone.dll" />
+    <Reference Include="$(BepCore)\StableNameDotNet.dll" />
+    <Reference Include="$(BepCore)\WasmDisassembler.dll" />
+    <Reference Include="$(BepCore)\Mono.Cecil.dll" />
+    <Reference Include="$(BepDotnet)\Microsoft.Extensions.Logging.Abstractions.dll" />
+  </ItemGroup>
+</Project>

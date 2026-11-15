@@ -1,0 +1,953 @@
+"""Story-farm button clicker for The Alchemist Code (native Windows client).
+
+Loop it automates:
+  map: newest quest -> team screen: Hire slot -> merc list: Wind tab, pick merc, Confirm -> Go!
+  -> story: Skip -> Quest Missions screen: click -> results: End Quest -> repeat
+When every quest on the map is cleared (finished counters, no new one), it taps
+"To story selection" and then the newest act at the top of the act list. If the newest
+act turns out to be finished too, it stops (next episode/chapter needs you).
+
+Runs in the background: keep the game open and visible (e.g. on your 2nd screen) and use the
+PC normally. It reads the game window directly, and taps buttons with an injected touch, so
+your mouse stays where it is. Each tap gives the game focus for a split second, then hands it
+back to the window you were using. The game must not be minimized, and the button being
+tapped must not be covered by another window (it skips the tap and waits if it is).
+
+Setup (once):
+    pip install opencv-python numpy
+
+Save the button images:
+    python farm.py grab 01_quest_new  map screen, new quest: crop the "0/3" counter (with the dots)
+    python farm.py grab 02_hire       team screen: the green "Hire" slot
+    python farm.py grab 03_wind       merc list: the Wind (green swirl) tab while it is NOT selected
+                                      (switch to another tab first, so it gets clicked only when needed)
+    python farm.py grab 04_merc       merc list (Wind tab): the card of the merc you want
+    python farm.py grab 05_confirm    "Hire ... for 1 Zeni?" popup: the blue "Confirm" button
+    python farm.py grab 06_go         team screen: the red "Go!" button
+    python farm.py grab 07_skip       story: the "Skip" button (top right)
+    python farm.py grab 08_missions   "Quest Missions" screen: the title bar
+    python farm.py grab 09_endquest   results screen: the "End Quest" button
+    python farm.py grab 10_act        act list: the left end of an act panel (no "Act N" text)
+    python farm.py grab x_quest_done  map screen, finished quest: its "3/3" counter with the star
+    python farm.py grab x_back        map screen: the "To story selection" button
+  Images starting with x_ are only used to detect the finished-act case, never tapped on their own.
+
+Control window (start/pause/stop, run limit, live status and log):
+    double-click farm_ui.pyw, or: python farm_ui.pyw
+
+Check what it sees right now (no clicking):
+    python farm.py test
+
+Run:
+    python farm.py run            (loops forever)
+    python farm.py run 50         (stops after 50 End Quest clicks)
+    python farm.py run nomerc     (skip the mercenary: straight from the team screen to Go!)
+    F8 = pause/resume, F9 = quit (these work from any window)
+
+Scripts (other setups, e.g. a Fire merc instead of the Wind one):
+    Each folder in scripts/ is a script (Default is buttons/). Every captured image, in any of
+    these folders, is in one shared pool, and each script picks the ones it uses: its
+    script.json "use" list, e.g. "Default/02_hire", "Genesis/00_ok". Pick them in the
+    window's Customize list. A script without a "use" list keeps the old rule: the Default
+    images, with its own images replacing those with the same number.
+    python farm.py scripts                           list them
+    python farm.py grab 03_fire --script "Fire merc"  save an image into a script
+    python farm.py test --script "Fire merc"
+    python farm.py run --script "Fire merc"
+  The window has a Script picker with Customize / New / Folder buttons for the same thing.
+
+Buttons are checked in filename order and only ONE is clicked per scan, so the
+number prefix is the priority. Files with the same number prefix (01_quest_new,
+01_quest_done) are variants of one button and share its click cooldown. Keep the game
+window the same size between `grab` and `run` (it rescales if it changed, but same size
+matches best).
+"""
+import ctypes
+import json
+import socket
+import sys
+import threading
+import time
+from ctypes import wintypes
+from pathlib import Path
+
+import cv2
+import numpy as np
+
+WINDOW_TITLE = "The Alchemist Code"
+BUTTON_DIR = Path(__file__).parent / "buttons"
+REF_FILE = BUTTON_DIR / "_ref_width.json"   # frame width each template was grabbed at
+SCRIPTS_DIR = Path(__file__).parent / "scripts"  # one folder per extra script (see load_templates)
+DEFAULT_SCRIPT = "Default"                       # the buttons/ folder on its own
+SPOTS_FILE = "taps.json"                         # optional fixed tap spots (see load_spots)
+SCRIPT_FILE = "script.json"                      # per-script settings: {"use": [...], "count": [...]}
+THRESHOLD = 0.85        # match confidence 0-1. Lower it if a button is missed.
+COLOR_TOL = 14          # max mean colour difference (0-255) between an image and the screen
+SCAN_INTERVAL = 0.25    # seconds between scans
+CLICK_COOLDOWN = 2.0    # seconds before the same button can be clicked again
+STALL_WARNING = 30      # warn if nothing matched for this many seconds
+TOPMOST_BUTTONS = {"01", "10"}  # click the highest match (newest quest / act is at the top)
+QUEST_BUTTON = "01"
+DONE_MARKER, BACK_MARKER = "x_quest_done", "x_back"
+COUNT_BUTTON = "09"  # default run counter (number prefix); each script can pick its own
+
+
+def is_hire(name):
+    """The Hire slot image(s): the only thing left untapped when skipping the merc. Without a
+    Hire tap the merc list and its 'Hire for 1 Zeni?' popup never open, so the Wind tab, merc
+    and Confirm images stay usable for other screens (Confirm also closes 'Skip this cutscene?')."""
+    return "hire" in name.lower()
+# Screens that close on a tap anywhere: tap this empty spot (fraction of the window) first, and
+# alternate with the matched image if it's still up. The spot is pressable through the mod; the
+# matched image (e.g. the "Quest Missions" title) isn't, so tapping it needs a touch tap.
+TAP_ANYWHERE = {"08": (0.5, 0.93)}  # Quest Missions: black area below the panel
+STUCK_REPEAT = 4  # same button tapped this many times in a row -> log it and save a screenshot
+# Buttons that normally take extra taps: the results screen plays its EXP/item motions first and
+# ignores End Quest / Try Again! until they finish.
+STUCK_REPEAT_FOR = {"09": 10}
+STUCK_DIR = Path(__file__).parent / "stuck"
+VK_F8, VK_F9 = 0x77, 0x78
+
+user32, gdi32 = ctypes.windll.user32, ctypes.windll.gdi32
+user32.SetProcessDPIAware()
+user32.WindowFromPoint.argtypes = [wintypes.POINT]
+user32.WindowFromPoint.restype = wintypes.HWND
+user32.GetAncestor.restype = wintypes.HWND
+
+
+def find_window():
+    """Return (hwnd, (left, top, width, height) of client area) or (None, None)."""
+    hwnd = user32.FindWindowW(None, WINDOW_TITLE)
+    if not hwnd or user32.IsIconic(hwnd):
+        return None, None  # not running, or minimized
+    rect = wintypes.RECT()
+    user32.GetClientRect(hwnd, ctypes.byref(rect))
+    origin = wintypes.POINT(0, 0)
+    user32.ClientToScreen(hwnd, ctypes.byref(origin))
+    if rect.right <= 0 or rect.bottom <= 0:
+        return None, None
+    return hwnd, (origin.x, origin.y, rect.right, rect.bottom)
+
+
+class BITMAPINFOHEADER(ctypes.Structure):
+    _fields_ = [("biSize", wintypes.DWORD), ("biWidth", wintypes.LONG), ("biHeight", wintypes.LONG),
+                ("biPlanes", wintypes.WORD), ("biBitCount", wintypes.WORD),
+                ("biCompression", wintypes.DWORD), ("biSizeImage", wintypes.DWORD),
+                ("biXPelsPerMeter", wintypes.LONG), ("biYPelsPerMeter", wintypes.LONG),
+                ("biClrUsed", wintypes.DWORD), ("biClrImportant", wintypes.DWORD)]
+
+
+def capture(hwnd, region):
+    """Read the game window's own pixels (works while it's behind other windows).
+
+    Returns None if the frame comes back black (e.g. the game isn't rendering).
+    """
+    w, h = region[2], region[3]
+    hdc = user32.GetDC(hwnd)
+    mdc = gdi32.CreateCompatibleDC(hdc)
+    bmp = gdi32.CreateCompatibleBitmap(hdc, w, h)
+    gdi32.SelectObject(mdc, bmp)
+    user32.PrintWindow(hwnd, mdc, 1 | 2)  # PW_CLIENTONLY | PW_RENDERFULLCONTENT
+    bih = BITMAPINFOHEADER(ctypes.sizeof(BITMAPINFOHEADER), w, -h, 1, 32, 0, 0, 0, 0, 0, 0)
+    buf = (ctypes.c_char * (w * h * 4))()
+    gdi32.GetDIBits(mdc, bmp, 0, h, buf, ctypes.byref(bih), 0)
+    gdi32.DeleteObject(bmp)
+    gdi32.DeleteDC(mdc)
+    user32.ReleaseDC(hwnd, hdc)
+    frame = cv2.cvtColor(np.frombuffer(buf, np.uint8).reshape(h, w, 4), cv2.COLOR_BGRA2BGR)
+    return frame if frame.mean() > 1 else None
+
+
+class POINTER_INFO(ctypes.Structure):
+    _fields_ = [("pointerType", ctypes.c_uint32), ("pointerId", ctypes.c_uint32),
+                ("frameId", ctypes.c_uint32), ("pointerFlags", ctypes.c_uint32),
+                ("sourceDevice", wintypes.HANDLE), ("hwndTarget", wintypes.HWND),
+                ("ptPixelLocation", wintypes.POINT), ("ptHimetricLocation", wintypes.POINT),
+                ("ptPixelLocationRaw", wintypes.POINT), ("ptHimetricLocationRaw", wintypes.POINT),
+                ("dwTime", wintypes.DWORD), ("historyCount", ctypes.c_uint32),
+                ("InputData", ctypes.c_int32), ("dwKeyStates", wintypes.DWORD),
+                ("PerformanceCount", ctypes.c_uint64), ("ButtonChangeType", ctypes.c_int)]
+
+
+class POINTER_TOUCH_INFO(ctypes.Structure):
+    _fields_ = [("pointerInfo", POINTER_INFO), ("touchFlags", ctypes.c_uint32),
+                ("touchMask", ctypes.c_uint32), ("rcContact", wintypes.RECT),
+                ("rcContactRaw", wintypes.RECT), ("orientation", ctypes.c_uint32),
+                ("pressure", ctypes.c_uint32)]
+
+
+TOUCH_DOWN = 0x00010000 | 0x2 | 0x4   # POINTER_FLAG_DOWN | INRANGE | INCONTACT
+TOUCH_UPDATE = 0x00020000 | 0x2 | 0x4  # POINTER_FLAG_UPDATE | INRANGE | INCONTACT
+TOUCH_UP = 0x00040000                 # POINTER_FLAG_UP
+# How long the finger stays down. The game draws only ~7 frames/s while it isn't the focused
+# window, so a shorter tap can start and end between two frames and get missed.
+TAP_HOLD = 0.2
+_touch_ready = False
+
+
+def _touch(x, y, flags):
+    t = POINTER_TOUCH_INFO()
+    t.pointerInfo.pointerType = 2  # PT_TOUCH
+    t.pointerInfo.pointerFlags = flags
+    t.pointerInfo.ptPixelLocation = wintypes.POINT(x, y)
+    t.touchMask = 0x7  # contact area, orientation, pressure
+    t.rcContact = wintypes.RECT(x - 2, y - 2, x + 2, y + 2)
+    t.orientation = 90
+    t.pressure = 32000
+    return user32.InjectTouchInput(1, ctypes.byref(t))
+
+
+# TAC Auto Tap: BepInEx plugin inside the game (D:\Games\...\TAC Auto Mod\src\TACAutoTap) that
+# presses UI buttons from inside the game - no mouse, no focus change, works while covered.
+MOD_PORT = 47613
+USE_MOD = True
+last_tap = ""  # how the last successful tap was done: "mod" or "touch" (for the log)
+MOD_RETRY = 30.0      # after failing to reach the mod, wait this long before trying again
+_mod_down_until = 0.0
+
+
+def mod_send(command, timeout=3.0, force=False):
+    """Send one line to the TAC Auto Tap mod and return its reply, or None if it isn't running.
+    (Windows takes a moment to refuse a local connection, so a failure is remembered for
+    MOD_RETRY seconds instead of slowing every tap down.)"""
+    global _mod_down_until
+    if not force and time.time() < _mod_down_until:
+        return None
+    try:
+        with socket.create_connection(("127.0.0.1", MOD_PORT), timeout=0.5) as s:
+            s.settimeout(timeout)
+            s.sendall((command + "\n").encode("ascii"))
+            return s.makefile("r", encoding="utf-8").readline().strip() or None
+    except OSError:
+        _mod_down_until = time.time() + MOD_RETRY
+        return None
+
+
+def mod_status():
+    """'pong <version> <w>x<h>' from the mod, or None if it isn't running."""
+    reply = mod_send("ping", timeout=2.0, force=True)
+    return reply if reply and reply.startswith("pong") else None
+
+
+def mod_tap(hwnd, x, y):
+    """Ask the mod to press what's at screen point (x, y). Returns its 'ok ...' reply, or None if
+    the mod isn't running or found nothing pressable there (the caller then touch-taps)."""
+    rect, origin = wintypes.RECT(), wintypes.POINT(0, 0)
+    user32.GetClientRect(hwnd, ctypes.byref(rect))
+    user32.ClientToScreen(hwnd, ctypes.byref(origin))
+    if rect.right <= 0 or rect.bottom <= 0:
+        return None
+    fx, fy = (x - origin.x) / rect.right, (y - origin.y) / rect.bottom
+    reply = mod_send(f"tap {fx:.5f} {fy:.5f}")
+    return reply if reply and reply.startswith("ok") else None
+
+
+def tap(hwnd, x, y):
+    """Tap screen point (x, y) on the game. Through the TAC Auto Tap mod when it's running and
+    there is a UI button there (mouse and focus untouched); otherwise a touch tap that gives
+    focus and the cursor back afterwards.
+
+    Returns False (and taps nothing) if the touch tap is needed but another window covers the point.
+    """
+    global _touch_ready, last_tap
+    x, y = int(x), int(y)
+    if USE_MOD and mod_tap(hwnd, x, y):
+        last_tap = "mod"
+        return True
+    if user32.GetAncestor(user32.WindowFromPoint(wintypes.POINT(x, y)), 2) != hwnd:
+        return False
+    last_tap = "touch"
+    if not _touch_ready:
+        _touch_ready = bool(user32.InitializeTouchInjection(1, 3))  # 1 contact, no feedback
+    prev = user32.GetForegroundWindow()
+    cursor = wintypes.POINT()
+    user32.GetCursorPos(ctypes.byref(cursor))
+    _touch(x, y, TOUCH_DOWN)
+    end = time.time() + TAP_HOLD
+    while time.time() < end:
+        time.sleep(0.03)
+        _touch(x, y, TOUCH_UPDATE)  # keep the contact alive while held
+    _touch(x, y, TOUCH_UP)
+    time.sleep(0.1)
+    if prev and prev != hwnd and user32.GetForegroundWindow() != prev:
+        user32.SetForegroundWindow(prev)
+    user32.SetCursorPos(cursor.x, cursor.y)
+    return True
+
+
+def key_down(vk):
+    return bool(user32.GetAsyncKeyState(vk) & 0x8000)
+
+
+def list_scripts():
+    """Default plus every folder in scripts/."""
+    extra = sorted(d.name for d in SCRIPTS_DIR.iterdir() if d.is_dir()) if SCRIPTS_DIR.is_dir() else []
+    return [DEFAULT_SCRIPT] + extra
+
+
+def script_dir(script=None):
+    return SCRIPTS_DIR / script if script and script != DEFAULT_SCRIPT else BUTTON_DIR
+
+
+def group_key(name):
+    """Images sharing this key are variants of one button: the number prefix (x_ markers: the name)."""
+    return name if name.startswith("x_") else name.split("_")[0]
+
+
+def load_refs(folder=BUTTON_DIR):
+    ref_file = folder / REF_FILE.name
+    return json.loads(ref_file.read_text()) if ref_file.exists() else {}
+
+
+def grab(name, script=None):
+    """Drag a box on a fresh capture of the game and save it as <name>.png in the script's folder."""
+    hwnd, region = find_window()
+    if not region:
+        sys.exit(f"Window '{WINDOW_TITLE}' not found or minimized.")
+    frame = capture(hwnd, region)
+    if frame is None:
+        sys.exit("Captured a black frame - make sure the game is open and not minimized.")
+    x, y, w, h = cv2.selectROI("Drag a box around the button, ENTER to save, C to cancel",
+                               frame, showCrosshair=False)
+    cv2.destroyAllWindows()
+    if w == 0 or h == 0:
+        sys.exit("Cancelled.")
+    out = save_image(script, name, frame[y:y + h, x:x + w], frame.shape[1])
+    print(f"Saved {out} (grabbed at window width {frame.shape[1]})")
+    return out
+
+
+def save_image(script, name, img, ref_width):
+    """Save a button image into a script folder, with the window width it was cut at."""
+    folder = script_dir(script)
+    folder.mkdir(parents=True, exist_ok=True)
+    if img.ndim == 3 and img.shape[2] == 4:
+        img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
+    out = folder / f"{name}.png"
+    cv2.imwrite(str(out), img)
+    refs = load_refs(folder)
+    refs[name] = int(ref_width)
+    (folder / REF_FILE.name).write_text(json.dumps(refs, indent=2))
+    return out
+
+
+def remove_image(script, name):
+    """Take an image out of a script (moved to its _old folder, not deleted)."""
+    folder = script_dir(script)
+    old = folder / "_old"
+    old.mkdir(exist_ok=True)
+    (folder / f"{name}.png").replace(old / f"{name}.png")
+    refs = load_refs(folder)
+    refs.pop(name, None)
+    (folder / REF_FILE.name).write_text(json.dumps(refs, indent=2))
+
+
+def script_settings(script=None):
+    f = script_dir(script) / SCRIPT_FILE
+    try:
+        return json.loads(f.read_text())
+    except (OSError, ValueError):
+        return {}
+
+
+def _write_settings(script, settings):
+    folder = script_dir(script)
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / SCRIPT_FILE).write_text(json.dumps(settings, indent=2))
+
+
+IMPORT_SKIP = {"_old", "_original", "__pycache__"}
+
+
+def import_buttons(src):
+    """Copy button images and scripts from another copy of this program (a folder holding
+    buttons/ and/or scripts/, or a buttons folder itself). Files already here are kept.
+    Returns (images copied, scripts touched, files skipped because they already exist)."""
+    import shutil
+    src = Path(src)
+    if src.name.lower() == "buttons" and not (src / "buttons").is_dir():
+        pairs = [(src, BUTTON_DIR)]
+    else:
+        pairs = [(src / "buttons", BUTTON_DIR)]
+        if (src / "scripts").is_dir():
+            pairs += [(d, SCRIPTS_DIR / d.name) for d in sorted((src / "scripts").iterdir())
+                      if d.is_dir() and d.name not in IMPORT_SKIP]
+    images = skipped = 0
+    scripts = set()
+    for frm, to in pairs:
+        if not frm.is_dir() or frm.resolve() == to.resolve():
+            continue
+        for f in sorted(frm.iterdir()):
+            if not f.is_file() or f.suffix.lower() not in (".png", ".json"):
+                continue
+            out = to / f.name
+            if out.exists():
+                skipped += 1
+                continue
+            to.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(f, out)
+            if f.suffix.lower() == ".png":
+                images += 1
+            scripts.add(DEFAULT_SCRIPT if to == BUTTON_DIR else to.name)
+    return images, sorted(scripts), skipped
+
+
+def library():
+    """Every captured button image, whichever script it was captured in:
+    [(id, name, home, image, ref width)] with id "<home>/<name>" and home = Default (buttons/)
+    or the script folder it lives in."""
+    out = []
+    for home in list_scripts():
+        folder = script_dir(home)
+        if folder.is_dir():
+            out += [(f"{home}/{name}", name, home, tpl, ref) for name, tpl, ref in _load_folder(folder)]
+    return out
+
+
+def used_ids(script=None):
+    """Pool ids this script uses: its pick list (script.json "use"). A script not edited since
+    the pool was added keeps what it used before: the Default images, with the script's own
+    images replacing those with the same number, minus any it had turned off."""
+    settings = script_settings(script)
+    if "use" in settings:
+        return list(settings["use"])
+    ids = [f"{DEFAULT_SCRIPT}/{f.stem}" for f in sorted(BUTTON_DIR.glob("*.png"))]
+    if script and script != DEFAULT_SCRIPT:
+        own = [f.stem for f in sorted(script_dir(script).glob("*.png"))]
+        replaced = {group_key(name) for name in own}
+        ids = [i for i in ids if group_key(i.split("/", 1)[1]) not in replaced]
+        ids += [f"{script}/{name}" for name in own]
+    off = set(settings.get("off", []))
+    return [i for i in ids if i.split("/", 1)[1] not in off]
+
+
+def freeze_use(script=None):
+    """Write the script's current picks to its script.json, so later additions don't change them."""
+    settings = script_settings(script)
+    if "use" not in settings:
+        settings["use"] = sorted(used_ids(script))
+        settings.pop("off", None)
+        _write_settings(script, settings)
+
+
+def set_used(script, button_id, on):
+    """Pick (or un-pick) one pool image for this script."""
+    freeze_use(script)
+    settings = script_settings(script)
+    ids = set(settings["use"])
+    ids = ids | {button_id} if on else ids - {button_id}
+    settings["use"] = sorted(ids)
+    _write_settings(script, settings)
+
+
+def counter_names(script=None, templates=None):
+    """Images whose tap counts as one finished run: the script's own pick (script.json "count"),
+    or by default every used image numbered COUNT_BUTTON (09_endquest, 09_tryagain)."""
+    settings = script_settings(script)
+    if "count" in settings:
+        return set(settings["count"])
+    if templates is not None:
+        names = [name for name, _, _ in templates]
+    else:  # from the picks, not load_templates(): that stops on a script with nothing picked
+        names = [i.split("/", 1)[1] for i in used_ids(script) if i not in ACTIONS]
+    return {name for name in names if group_key(name) == COUNT_BUTTON}
+
+
+def set_counter(script, name, on):
+    """Make one image count as a run (or stop counting) for this script only."""
+    names = counter_names(script)
+    names = names | {name} if on else names - {name}
+    settings = script_settings(script)
+    settings["count"] = sorted(names)
+    _write_settings(script, settings)
+
+
+# Built-in actions: pool entries with no image, done through the TAC Auto Tap mod. A script
+# picks them in Customize like any button. They're checked before the images on every scan.
+ACTION_HOME = "Built-in"
+AP_REFILL = f"{ACTION_HOME}/ap_refill"
+ACTIONS = {AP_REFILL: ("AP refill - 7 Alchemy Drops",
+                       "When the Replenish AP window is open: picks Alchemy Drops, sets 7 pcs "
+                       "(fewer if the game caps it), OK, OK. Needs the mod.")}
+ACTION_CHECK = 1.0  # seconds between checks for an action's screen
+
+
+def action_badge(text):
+    """A small picture for an action in the customizer (it has no captured image)."""
+    img = np.full((60, 180, 3), (60, 40, 25), np.uint8)
+    for i, line in enumerate(text.split("\n")):
+        cv2.putText(img, line, (8, 24 + 24 * i), cv2.FONT_HERSHEY_SIMPLEX, 0.6,
+                    (255, 230, 170), 1, cv2.LINE_AA)
+    return img
+
+
+def used_actions(script=None):
+    return [i for i in used_ids(script) if i in ACTIONS]
+
+
+def ap_window_open():
+    """True if the game shows the Replenish AP window (asked through the mod)."""
+    reply = mod_send("list", timeout=5.0)
+    return bool(reply) and "HealAPItemList" in reply
+
+
+def describe_library(script=None):
+    """Every pool entry for the customizer, in priority order: dicts with id, name, home, img,
+    ref, used (this script uses it), counter, spot, marker, action (built-in, no image)."""
+    used = set(used_ids(script))
+    counters = counter_names(script)
+    spots = load_spots(script)
+    out = [{"id": aid, "name": name, "home": ACTION_HOME, "img": action_badge("AP refill\n7 Alch. Drops"),
+            "ref": None, "used": aid in used, "counter": False, "marker": False, "spot": None,
+            "action": True, "about": about} for aid, (name, about) in ACTIONS.items()]
+    for button_id, name, home, tpl, ref in sorted(library(), key=lambda b: (b[1], b[2])):
+        marker = name.startswith("x_")
+        out.append({"id": button_id, "name": name, "home": home, "img": tpl, "ref": ref,
+                    "used": button_id in used, "counter": name in counters, "marker": marker,
+                    "spot": None if marker else spots.get(group_key(name)), "action": False})
+    return out
+
+
+def load_spots(script=None):
+    """Fixed tap spots: {"04": (0.12, 0.35)} = when button 04's image is seen, tap that spot
+    (fractions of the window width/height) instead of the image. Read from taps.json in
+    buttons/ and then the script folder (the script wins)."""
+    spots = {}
+    for folder in (BUTTON_DIR, script_dir(script)):
+        f = folder / SPOTS_FILE
+        if f.exists():
+            spots.update({k: tuple(v) for k, v in json.loads(f.read_text()).items()})
+    return spots
+
+
+def tap_point(button, hit, size, spots):
+    """Where to tap for a hit: its fixed spot if the button has one, else the image centre."""
+    if button in spots:
+        return int(size[0] * spots[button][0]), int(size[1] * spots[button][1]), " (fixed spot)"
+    return hit[2], hit[3], ""
+
+
+def _load_folder(folder):
+    refs = load_refs(folder)
+    return [(f.stem, cv2.imread(str(f)), refs.get(f.stem)) for f in sorted(folder.glob("*.png"))]
+
+
+def load_templates(script=None):
+    """The images a script uses (see used_ids), from the shared pool, in priority order."""
+    if script and script != DEFAULT_SCRIPT and not script_dir(script).is_dir():
+        sys.exit(f"Script folder not found: {script_dir(script)}")
+    want = set(used_ids(script))
+    templates = sorted(((name, tpl, ref) for button_id, name, _, tpl, ref in library()
+                        if button_id in want), key=lambda t: t[0])
+    if not templates:
+        sys.exit("This script has no buttons picked - tick some in Customize "
+                 "(or capture images with: python farm.py grab <name>)")
+    return templates
+
+
+def match_map(frame, tpl, ref_width):
+    """Full-size score map: (map, template scaled to the frame), or None if it doesn't fit.
+    (The farm loop uses the faster _search; this is kept for checking images by hand.)"""
+    # rescale on any size change: even a 1% difference drops text-heavy images below THRESHOLD
+    if ref_width and frame.shape[1] != ref_width:
+        s = frame.shape[1] / ref_width
+        tpl = cv2.resize(tpl, None, fx=s, fy=s, interpolation=cv2.INTER_AREA)
+    if tpl.shape[0] > frame.shape[0] or tpl.shape[1] > frame.shape[1]:
+        return None
+    return cv2.matchTemplate(frame, tpl, cv2.TM_CCOEFF_NORMED), tpl
+
+
+def color_ok(frame, tpl, x, y):
+    """True if the screen at top-left (x, y) has the image's colours, not just its shape.
+
+    The match score mostly ignores colour, so e.g. the Fire tab icon scores 0.82-0.87 on a
+    selected (bright) tab or behind a dimmed popup. Real matches differ by ~11/255 at most.
+    """
+    h, w = tpl.shape[:2]
+    patch = frame[y:y + h, x:x + w].astype(np.int16)
+    return float(np.abs(patch - tpl.astype(np.int16)).mean()) <= COLOR_TOL
+
+
+# Fast search: look on a half-size copy of the screen first (about 4x less work), then
+# re-check only the promising spots at full size, so scores and positions stay exact.
+COARSE = 0.5       # size of the quick first look
+COARSE_THR = 0.6   # quick-look score a spot needs before it's checked at full size
+COARSE_PAD = 8     # pixels around a quick-look spot searched at full size
+_scaled_cache = {}            # id(template) -> (template, frame width, full-size copy, half-size copy)
+_small_frame = [None, None]   # [frame, its half-size copy] for the frame being scanned
+
+
+def _small(frame):
+    if _small_frame[0] is not frame:
+        _small_frame[:] = [frame, cv2.resize(frame, None, fx=COARSE, fy=COARSE,
+                                             interpolation=cv2.INTER_AREA)]
+    return _small_frame[1]
+
+
+def _scaled(tpl, ref_width, frame_width):
+    """The template resized to this window width, plus its half-size copy (cached)."""
+    hit = _scaled_cache.get(id(tpl))
+    if hit and hit[0] is tpl and hit[1] == frame_width:
+        return hit[2], hit[3]
+    t = tpl
+    if ref_width and frame_width != ref_width:
+        s = frame_width / ref_width
+        t = cv2.resize(tpl, None, fx=s, fy=s, interpolation=cv2.INTER_AREA)
+    small = cv2.resize(t, None, fx=COARSE, fy=COARSE, interpolation=cv2.INTER_AREA)
+    if len(_scaled_cache) > 500:
+        _scaled_cache.clear()
+    _scaled_cache[id(tpl)] = (tpl, frame_width, t, small)  # holding tpl keeps its id unique
+    return t, small
+
+
+def _full_res(frame, t, x0, y0, x1, y1):
+    """Full-size score map for top-left positions in [x0, x1] x [y0, y1]: (map, x offset, y offset)."""
+    h, w = t.shape[:2]
+    x0, y0 = max(0, x0), max(0, y0)
+    x1, y1 = min(frame.shape[1] - w, x1), min(frame.shape[0] - h, y1)
+    if x1 < x0 or y1 < y0:
+        return None
+    crop = frame[y0:y1 + h, x0:x1 + w]
+    return cv2.matchTemplate(crop, t, cv2.TM_CCOEFF_NORMED), x0, y0
+
+
+def _search(frame, tpl, ref_width, all_above=None):
+    """Find a template. Returns (scaled template, spots) where spots is [(score, x, y)] (top-left):
+    the single best spot, or with all_above=thr every full-size position scoring >= thr."""
+    t, ts = _scaled(tpl, ref_width, frame.shape[1])
+    if t.shape[0] > frame.shape[0] or t.shape[1] > frame.shape[1]:
+        return t, []
+    if min(ts.shape[:2]) < 12:  # too small to look at half size: search at full size
+        found = _full_res(frame, t, 0, 0, frame.shape[1], frame.shape[0])
+    else:
+        quick = cv2.matchTemplate(_small(frame), ts, cv2.TM_CCOEFF_NORMED)
+        if all_above is None:
+            _, s, _, loc = cv2.minMaxLoc(quick)
+            if s < COARSE_THR:  # nothing promising: report the quick score
+                return t, [(s, int(loc[0] / COARSE), int(loc[1] / COARSE))]
+            xs, ys = np.array([loc[0]]), np.array([loc[1]])
+        else:
+            ys, xs = np.where(quick >= COARSE_THR)
+            if not len(ys):
+                return t, []
+        found = _full_res(frame, t, int(xs.min() / COARSE) - COARSE_PAD,
+                          int(ys.min() / COARSE) - COARSE_PAD,
+                          int(xs.max() / COARSE) + COARSE_PAD, int(ys.max() / COARSE) + COARSE_PAD)
+    if found is None:
+        return t, []
+    res, ox, oy = found
+    if all_above is None:
+        _, s, _, loc = cv2.minMaxLoc(res)
+        return t, [(s, ox + loc[0], oy + loc[1])]
+    ys, xs = np.where(res >= all_above)
+    return t, [(float(res[y, x]), ox + x, oy + y) for y, x in zip(ys, xs)]
+
+
+def match(frame, tpl, ref_width):
+    """Return (score, center_x, center_y) of the best match in frame coordinates (shape only)."""
+    t, spots = _search(frame, tpl, ref_width)
+    if not spots:
+        return 0.0, 0, 0
+    score, x, y = spots[0]
+    return score, x + t.shape[1] // 2, y + t.shape[0] // 2
+
+
+def find_button(frame, variants, topmost):
+    """Return (name, score, x, y) to click for one button, or None.
+
+    Normal buttons: the first variant that matches. Topmost buttons: the highest match on
+    screen across all variants (the story map lists the newest quest at the top).
+    A match also has to pass the colour check.
+    """
+    hits = []
+    for name, tpl, ref in variants:
+        if not topmost:
+            t, spots = _search(frame, tpl, ref)
+            if spots:
+                score, x, y = spots[0]
+                if score >= THRESHOLD and color_ok(frame, t, x, y):
+                    return name, score, x + t.shape[1] // 2, y + t.shape[0] // 2
+            continue
+        t, spots = _search(frame, tpl, ref, all_above=THRESHOLD)
+        hits += [(name, score, x, y, t) for score, x, y in spots]
+    while hits:
+        # best-scoring point of the topmost match (its top edge only just clears the threshold)
+        top = min(hit[3] for hit in hits)
+        cluster = [hit for hit in hits if hit[3] - top < 20]
+        name, score, x, y, tpl = max(cluster, key=lambda hit: hit[1])
+        if color_ok(frame, tpl, x, y):
+            return name, score, x + tpl.shape[1] // 2, y + tpl.shape[0] // 2
+        hits = [hit for hit in hits if hit[3] - top >= 20]  # wrong colours: try the next one down
+    return None
+
+
+def group_templates(templates):
+    """Group clickable templates by number prefix, keeping filename order: {"01": [variants], ...}.
+
+    x_ marker images are left out (see split_markers).
+    """
+    groups = {}
+    for name, tpl, ref in templates:
+        if not name.startswith("x_"):
+            groups.setdefault(name.split("_")[0], []).append((name, tpl, ref))
+    return groups
+
+
+def split_markers(templates):
+    return {name: (tpl, ref) for name, tpl, ref in templates if name.startswith("x_")}
+
+
+def act_finished(frame, groups, markers):
+    """Return the back-button hit if this is a quest map with no new quest left, else None."""
+    if DONE_MARKER not in markers or BACK_MARKER not in markers:
+        return None
+    if QUEST_BUTTON in groups and find_button(frame, groups[QUEST_BUTTON], True):
+        return None
+    if match(frame, *markers[DONE_MARKER])[0] < THRESHOLD:
+        return None
+    score, x, y = match(frame, *markers[BACK_MARKER])
+    return (BACK_MARKER, score, x, y) if score >= THRESHOLD else None
+
+
+def check(script=None):
+    """Score every button image of a script on the current screen.
+
+    Returns ((width, height), [(name, score), ...], what-it-would-click text).
+    """
+    templates = load_templates(script)
+    hwnd, region = find_window()
+    if not region:
+        sys.exit(f"Window '{WINDOW_TITLE}' not found or minimized.")
+    frame = capture(hwnd, region)
+    if frame is None:
+        sys.exit("Captured a black frame - make sure the game is open and not minimized.")
+    scores = [(name, match(frame, tpl, ref)[0]) for name, tpl, ref in templates]
+    groups = group_templates(templates)
+    back = act_finished(frame, groups, split_markers(templates))
+    if AP_REFILL in used_actions(script) and ap_window_open():
+        action = "Replenish AP is open -> would refill AP with 7 Alchemy Drops"
+    elif back:
+        action = f"Act finished -> would click: {back[0]} at ({back[2]},{back[3]}) in the window"
+    else:
+        spots = load_spots(script)
+        for button, variants in groups.items():
+            hit = find_button(frame, variants, button in TOPMOST_BUTTONS)
+            if hit:
+                x, y, note = tap_point(button, hit, (region[2], region[3]), spots)
+                action = f"Would click: {hit[0]} at ({x},{y}) in the window{note}"
+                break
+        else:
+            action = "Would click: nothing"
+    return (region[2], region[3]), scores, action
+
+
+def test(script=None):
+    (w, h), scores, action = check(script)
+    print(f"Window {w}x{h}. Threshold {THRESHOLD}. Scores on the current screen:")
+    for name, score in scores:
+        print(f"  {name:<16} {score:.2f}")
+    print(action)
+
+
+def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_switch=True,
+        skip_merc=None, script=None):
+    """Farm until stopped and return why it stopped.
+
+    The window (farm_ui.pyw) passes threading.Events for stop/pause/skip_merc, its own log
+    function and on_status(state, runs, last_click). F8 (pause/resume) and F9 (stop) work either
+    way. While skip_merc is set, the Hire slot is never tapped (straight to Go!).
+    """
+    stop = stop or threading.Event()
+    pause = pause or threading.Event()
+    skip_merc = skip_merc or threading.Event()
+
+    def say(msg):
+        log(f"{time.strftime('%H:%M:%S')} {msg}")
+
+    templates = load_templates(script)
+    groups = group_templates(templates)
+    markers = split_markers(templates)
+    spots = load_spots(script)
+    counters = counter_names(script, templates)
+    log(f"Loaded {len(templates)} buttons: {', '.join(n for n, _, _ in templates)}")
+    log(f"Run counter: {', '.join(sorted(counters)) or 'none - runs are not counted'}")
+    if spots:
+        log("Fixed tap spots: " + ", ".join(f"{b} at {x:.0%} across, {y:.0%} down"
+                                            for b, (x, y) in sorted(spots.items())))
+    if not act_switch:
+        markers = {}  # act_finished() never fires without the markers
+        log("Act switching is off.")
+    elif DONE_MARKER not in markers or BACK_MARKER not in markers or "10" not in groups:
+        log("Note: act switching is off (needs x_quest_done, x_back and 10_act images).")
+    if skip_merc.is_set():
+        log("Skipping the mercenary (the Hire slot is never tapped).")
+    status = mod_status() if USE_MOD else None
+    if status:
+        log(f"TAC Auto Tap mod is running ({status.split()[1]}): buttons are pressed inside the "
+            "game - your mouse is left alone (touch taps only where there's no UI button).")
+    else:
+        log("TAC Auto Tap mod not running - using touch taps.")
+    refill = None  # the AP refill action, if this script uses it
+    if AP_REFILL in used_actions(script):
+        import genesis_farm  # its refill routine (imported here: it imports this file)
+        refill = genesis_farm.GenesisFarm(log=log, stop=stop)
+        log(f"AP refill is on: when Replenish AP opens, it uses {genesis_farm.AP_PCS} "
+            f"{genesis_farm.AP_ITEM}." + ("" if status else " (Needs the mod - it isn't running.)"))
+    last_ap_check = 0.0
+    log("F8 = pause/resume, F9 = stop (from any window). Keep the game open and uncovered.")
+    last_click, runs, f8_prev = {}, 0, False
+    went_back = False  # tapped "back" for a finished act, no new quest found since
+    last_action = time.time()
+    warned = covered_warned = False
+    last, shown, reason = "", None, None
+    repeat_button, repeats = None, 0  # same button tapped how many times in a row
+
+    def show(state):
+        nonlocal shown
+        if on_status and (state, runs, last) != shown:
+            shown = (state, runs, last)
+            on_status(state, runs, last)
+
+    while not stop.is_set():
+        if key_down(VK_F9):
+            reason = "Stopped (F9)."
+            break
+        f8 = key_down(VK_F8)
+        if f8 and not f8_prev:
+            if pause.is_set():
+                pause.clear()
+                say("RESUMED")
+            else:
+                pause.set()
+                say("PAUSED")
+        f8_prev = f8
+        if pause.is_set():
+            show("Paused")
+            time.sleep(SCAN_INTERVAL)
+            continue
+
+        hwnd, region = find_window()
+        frame = capture(hwnd, region) if region else None
+        if frame is None:
+            show("Waiting for the game (loading, minimized or closed)")
+            time.sleep(SCAN_INTERVAL)
+            continue
+
+        if refill and time.time() - last_ap_check >= ACTION_CHECK:
+            last_ap_check = time.time()
+            if ap_window_open():
+                say("Replenish AP is open - refilling [mod]")
+                show("Refilling AP")
+                try:
+                    refill.replenish_ap()
+                except genesis_farm.Stop:
+                    break
+                except RuntimeError as e:
+                    reason = f"AP refill failed: {e}"
+                    break
+                last = ACTIONS[AP_REFILL][0]
+                last_action = last_ap_check = time.time()
+                repeat_button, warned = None, False
+                show("Running")
+                continue
+
+        back = act_finished(frame, groups, markers)
+        if back and time.time() - last_click.get(BACK_MARKER, 0) >= CLICK_COOLDOWN:
+            if went_back:
+                reason = ("The newest act is finished too - pick the next episode/chapter "
+                          "yourself, then start again.")
+                break
+            if tap(hwnd, region[0] + back[2], region[1] + back[3]):
+                say(f"act finished - click {BACK_MARKER} [{last_tap}]")
+                last = BACK_MARKER
+                last_click[BACK_MARKER] = last_action = time.time()
+                went_back, warned = True, False
+                show("Running")
+            else:
+                show(f"Waiting: {BACK_MARKER} is covered by another window")
+            time.sleep(SCAN_INTERVAL)
+            continue
+
+        for button, variants in groups.items():
+            if time.time() - last_click.get(button, 0) < CLICK_COOLDOWN:
+                continue
+            if skip_merc.is_set():
+                variants = [v for v in variants if not is_hire(v[0])]
+                if not variants:
+                    continue
+            hit = find_button(frame, variants, button in TOPMOST_BUTTONS)
+            if hit:
+                name, score, cx, cy = hit
+                streak = repeats + 1 if button == repeat_button else 1
+                cx, cy, where = tap_point(button, hit, (region[2], region[3]), spots)
+                if button in TAP_ANYWHERE and streak % 2 == 1:  # 1st, 3rd... tap: empty area
+                    fx, fy = TAP_ANYWHERE[button]
+                    cx, cy = int(region[2] * fx), int(region[3] * fy)
+                    where = " - tapping the empty area instead"
+                if not tap(hwnd, region[0] + cx, region[1] + cy):
+                    if not covered_warned:
+                        say(f"{name} is covered by another window - waiting until it's visible")
+                        covered_warned = True
+                    show(f"Waiting: {name} is covered by another window")
+                    break
+                covered_warned = False
+                repeat_button, repeats = button, streak
+                say(f"click {name} ({score:.2f}){f' x{streak}' if streak > 1 else ''}{where}"
+                    f" [{last_tap}]")
+                if streak == STUCK_REPEAT_FOR.get(button, STUCK_REPEAT):
+                    STUCK_DIR.mkdir(exist_ok=True)
+                    shot = STUCK_DIR / f"{time.strftime('%Y%m%d-%H%M%S')}_{name}.png"
+                    cv2.imwrite(str(shot), frame)
+                    say(f"{name} tapped {streak} times in a row and the screen hasn't moved on "
+                        f"- saved {shot.name} in the stuck folder")
+                last = f"{name} ({score:.2f})"
+                last_click[button] = last_action = time.time()
+                warned = False
+                if button == QUEST_BUTTON:
+                    went_back = False
+                if name in counters and streak == 1:  # repeat taps are still the same screen
+                    runs += 1
+                    log(f"  runs completed: {runs}")
+                    if max_runs and runs >= max_runs:
+                        reason = f"Reached {max_runs} runs."
+                show("Running")
+                break
+        else:
+            if time.time() - last_action > STALL_WARNING:
+                if not warned:
+                    say(f"nothing recognised for {STALL_WARNING}s - unknown screen/popup? "
+                        "(Check screen / `python farm.py test` shows the scores)")
+                    warned = True
+                show(f"Stuck: nothing recognised for {STALL_WARNING}s+")
+            else:
+                show("Running")
+        if reason:
+            break
+        time.sleep(SCAN_INTERVAL)
+    reason = reason or "Stopped."
+    say(reason)
+    show("Stopped")
+    return reason
+
+
+if __name__ == "__main__":
+    cmd, args = (sys.argv[1], sys.argv[2:]) if len(sys.argv) > 1 else ("", [])
+    chosen = None
+    if "--script" in args:  # --script "Fire merc"
+        i = args.index("--script")
+        chosen = args[i + 1] if i + 1 < len(args) else None
+        del args[i:i + 2]
+    if cmd == "grab" and args:
+        grab(args[0], chosen)
+    elif cmd == "test":
+        test(chosen)
+    elif cmd == "scripts":
+        print("\n".join(list_scripts()))
+    elif cmd == "run":
+        no_merc = threading.Event()
+        if "nomerc" in args:
+            args.remove("nomerc")
+            no_merc.set()
+        run(int(args[0]) if args else None, skip_merc=no_merc, script=chosen)
+    else:
+        print(__doc__)

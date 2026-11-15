@@ -1,0 +1,13 @@
+<Project>
+  <!-- Shared by every .NET project here. Game = the game folder (TagaReconstruction.exe,
+       BepInEx\, dotnet\). Set the TAC_GAME environment variable, or build with -p:Game=... -->
+  <PropertyGroup>
+    <Game Condition="'$(Game)' == ''">$(TAC_GAME)</Game>
+    <BepCore>$(Game)\BepInEx\core</BepCore>
+    <BepDotnet>$(Game)\dotnet</BepDotnet>
+  </PropertyGroup>
+  <Target Name="CheckGameFolder" BeforeTargets="ResolveAssemblyReferences"
+          Condition="!Exists('$(Game)\BepInEx\core')">
+    <Error Text="Game folder with BepInEx not found ('$(Game)'). Set TAC_GAME to the folder with TagaReconstruction.exe, or build with -p:Game=&lt;folder&gt;." />
+  </Target>
+</Project>
