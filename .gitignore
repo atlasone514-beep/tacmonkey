@@ -22,3 +22,6 @@ downloads/
 dotnet-sdk*/
 *.zip
 *.dll
+
+# release builds (release/build.py)
+build/

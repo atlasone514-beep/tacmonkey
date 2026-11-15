@@ -74,10 +74,19 @@ from pathlib import Path
 import cv2
 import numpy as np
 
+VERSION = "1.0.0"   # TACMonkey release (the setup and the window show it)
 WINDOW_TITLE = "The Alchemist Code"
-BUTTON_DIR = Path(__file__).parent / "buttons"
+# APP_DIR holds your buttons, scripts and settings; RES_DIR the files shipped with the program.
+# Run from source both are this folder; as the installed TACMonkey.exe, APP_DIR is the exe's
+# folder and RES_DIR the bundled files.
+if getattr(sys, "frozen", False):
+    APP_DIR = Path(sys.executable).parent
+    RES_DIR = Path(getattr(sys, "_MEIPASS", APP_DIR))
+else:
+    APP_DIR = RES_DIR = Path(__file__).parent
+BUTTON_DIR = APP_DIR / "buttons"
 REF_FILE = BUTTON_DIR / "_ref_width.json"   # frame width each template was grabbed at
-SCRIPTS_DIR = Path(__file__).parent / "scripts"  # one folder per extra script (see load_templates)
+SCRIPTS_DIR = APP_DIR / "scripts"  # one folder per extra script (see load_templates)
 DEFAULT_SCRIPT = "Default"                       # the buttons/ folder on its own
 SPOTS_FILE = "taps.json"                         # optional fixed tap spots (see load_spots)
 SCRIPT_FILE = "script.json"                      # per-script settings: {"use": [...], "count": [...]}
@@ -105,7 +114,7 @@ STUCK_REPEAT = 4  # same button tapped this many times in a row -> log it and sa
 # Buttons that normally take extra taps: the results screen plays its EXP/item motions first and
 # ignores End Quest / Try Again! until they finish.
 STUCK_REPEAT_FOR = {"09": 10}
-STUCK_DIR = Path(__file__).parent / "stuck"
+STUCK_DIR = APP_DIR / "stuck"
 VK_F8, VK_F9 = 0x77, 0x78
 
 user32, gdi32 = ctypes.windll.user32, ctypes.windll.gdi32

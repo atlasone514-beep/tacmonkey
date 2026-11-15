@@ -19,7 +19,7 @@ from pathlib import Path
 
 import farm
 
-SHARDS_FILE = Path(__file__).with_name("genesis_shards.json")
+SHARDS_FILE = farm.RES_DIR / "genesis_shards.json"
 AP_ITEM = "Alchemy Drops"   # exact row name; not "Alchemy Droplets" / event drops
 AP_PCS = 7                  # always use this many per refill
 SKIPS = 3                   # skips per stage (the daily Hard attempts)
