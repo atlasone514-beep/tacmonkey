@@ -4,6 +4,19 @@ Automation for The Alchemist Code (TagaReconstruction private server): story/eve
 button images, a Genesis unit-shard farm, and an in-game mod that presses buttons without using
 your mouse.
 
+## Install (no Python needed)
+
+1. Download `TACMonkey-Setup-<version>.exe` from the
+   [Releases](https://github.com/MohammedEmad638/tacmonkey/releases) page.
+2. Close the game and run the setup. It finds the game folder by itself (or pick it), and can
+   download BepInEx for you from the official build server.
+3. Start the game once: the first start with BepInEx takes a minute or two.
+4. Open **TACMonkey** from the Start menu. On first start it offers to import buttons you
+   already have.
+
+Windows may warn that the setup is from an unknown publisher (it isn't code-signed): click
+**More info > Run anyway**. Run the setup again to update, or use its **Uninstall...** button.
+
 ## Layout
 
 | Folder | What's in it |
@@ -12,6 +25,7 @@ your mouse.
 | `mod/TACAutoTap/` | BepInEx 6 IL2CPP plugin: presses UI buttons from inside the game over 127.0.0.1:47613 |
 | `tools/` | `modtest.py` (talk to the mod by hand), Genesis loot reader/report, and the BepInEx loader patcher |
 | `data/genesis/` | Unit shard drops of all 95 Genesis Hard stages (table, list, full loot CSV, raw results) |
+| `installer/`, `release/` | The setup program and the script that builds a release |
 | `docs/NOTES.md` | How the mod setup works and what was checked |
 
 ## Run the farm
@@ -36,3 +50,14 @@ dotnet build mod/TACAutoTap -c Release
 Copy `mod/TACAutoTap/bin/TACAutoTap.dll` to `<game>\BepInEx\plugins\` with the game closed.
 This game needs a patched `Il2CppInterop.Generator.dll` for BepInEx to load. See
 `docs/NOTES.md` and `tools/patcher`.
+
+## Build a release
+
+```
+set TAC_GAME=<game folder with BepInEx be.793 and the patched loader>
+pip install pyinstaller
+python release/build.py
+```
+
+Output: `build/dist/TACMonkey-Setup-<version>.exe`, `SHA256SUMS.txt` and `NOTICE.txt`.
+Bump `VERSION` in `app/farm.py` first.

@@ -16,7 +16,7 @@ try:
     import farm
 except Exception as e:  # e.g. opencv missing - pythonw has no console to show it
     tk.Tk().withdraw()
-    messagebox.showerror("TAC Auto Story",
+    messagebox.showerror("TACMonkey",
                          f"Couldn't load farm.py:\n{e}\n\nSetup: pip install opencv-python numpy")
     raise SystemExit(1)
 
@@ -25,7 +25,7 @@ FG, MUTED, DARK = "#e8e8ea", "#8b8d98", "#121316"
 GREEN, YELLOW, ORANGE, RED, GREY, BLUE = ("#3ecf8e", "#f2c14e", "#f08c4a", "#ef5f5f",
                                           "#6b6e7a", "#5b9cf5")
 FONT = "Segoe UI"
-SETTINGS = Path(__file__).with_name("ui_settings.json")  # remembers script and checkboxes
+SETTINGS = farm.APP_DIR / "ui_settings.json"  # remembers script and checkboxes
 BAD_CHARS = set('\\/:*?"<>|')
 
 
@@ -51,7 +51,7 @@ class App:
         self.tick_from = time.time()
         self.import_asked = False  # first-run "use your existing buttons?" was shown
 
-        root.title("TAC Auto Story")
+        root.title(f"TACMonkey {farm.VERSION}")
         root.configure(bg=BG)
         root.minsize(480, 760)
         root.geometry("500x940")
@@ -251,7 +251,7 @@ class App:
         self.genesis_stop = threading.Event()
         self.genesis_data = {}
         try:
-            self.genesis_data = json.loads(Path(__file__).with_name("genesis_shards.json")
+            self.genesis_data = json.loads(farm.RES_DIR.joinpath("genesis_shards.json")
                                            .read_text(encoding="utf-8"))
         except (OSError, ValueError):
             pass
