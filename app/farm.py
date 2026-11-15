@@ -75,6 +75,7 @@ import cv2
 import numpy as np
 
 VERSION = "1.0.0"   # TACMonkey release (the setup and the window show it)
+MOD_VERSION = "1.2.1"  # TAC Auto Tap version shipped with this release (release/build.py checks it)
 WINDOW_TITLE = "The Alchemist Code"
 # APP_DIR holds your buttons, scripts and settings; RES_DIR the files shipped with the program.
 # Run from source both are this folder; as the installed TACMonkey.exe, APP_DIR is the exe's
@@ -226,7 +227,9 @@ def mod_send(command, timeout=3.0, force=False):
         with socket.create_connection(("127.0.0.1", MOD_PORT), timeout=0.5) as s:
             s.settimeout(timeout)
             s.sendall((command + "\n").encode("ascii"))
-            return s.makefile("r", encoding="utf-8").readline().strip() or None
+            reply = s.makefile("r", encoding="utf-8").readline().strip() or None
+        _mod_down_until = 0.0  # reachable again (e.g. a forced ping after the game started)
+        return reply
     except OSError:
         _mod_down_until = time.time() + MOD_RETRY
         return None
@@ -236,6 +239,16 @@ def mod_status():
     """'pong <version> <w>x<h>' from the mod, or None if it isn't running."""
     reply = mod_send("ping", timeout=2.0, force=True)
     return reply if reply and reply.startswith("pong") else None
+
+
+def mod_mismatch(status):
+    """A warning if the running mod isn't the version this app came with, else None."""
+    parts = (status or "").split()
+    if len(parts) < 2 or parts[1] == MOD_VERSION:
+        return None
+    return (f"The game has TAC Auto Tap {parts[1]}, but this TACMonkey is made for {MOD_VERSION}. "
+            "Close the game and run the TACMonkey setup (or the update) to bring them in step - "
+            "some buttons may not work until then.")
 
 
 def mod_tap(hwnd, x, y):
@@ -794,6 +807,8 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
     if status:
         log(f"TAC Auto Tap mod is running ({status.split()[1]}): buttons are pressed inside the "
             "game - your mouse is left alone (touch taps only where there's no UI button).")
+        if mod_mismatch(status):
+            log("WARNING: " + mod_mismatch(status))
     else:
         log("TAC Auto Tap mod not running - using touch taps.")
     refill = None  # the AP refill action, if this script uses it
