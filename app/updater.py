@@ -12,15 +12,19 @@ import re
 import subprocess
 import sys
 import tempfile
+import urllib.error
 import urllib.request
 from pathlib import Path
 
 import farm
 
-REPO = "MohammedEmad638/tacmonkey"
-API = f"https://api.github.com/repos/{REPO}/releases/latest"
-PAGE = f"https://github.com/{REPO}/releases/latest"
-DOWNLOADS = f"https://github.com/{REPO}/releases/download/"  # assets must come from here
+# The repository is moving to a new owner. Tried in this order: the new address answers once the
+# move is done, the old one until then (and GitHub redirects it afterwards). Release files are
+# only accepted from these.
+REPOS = ("atlasone514-beep/tacmonkey", "MohammedEmad638/tacmonkey")
+REPO = REPOS[0]
+PAGE = f"https://github.com/{REPOS[-1]}/releases/latest"  # set to the one that answered
+DOWNLOADS = tuple(f"https://github.com/{r}/releases/download/" for r in REPOS)
 SETUP_NAME = re.compile(r"^TACMonkey-Setup-[0-9][0-9A-Za-z.\-]*\.exe$")
 SUMS_NAME = "SHA256SUMS.txt"
 MAX_SETUP = 300_000_000  # refuse anything absurdly large
@@ -29,6 +33,10 @@ HEADERS = {"User-Agent": "TACMonkey-Updater", "Accept": "application/vnd.github+
 
 class UpdateError(Exception):
     pass
+
+
+class NotThere(UpdateError):
+    """GitHub has no such repository (or release) at that address."""
 
 
 def parse_version(text):
@@ -50,6 +58,10 @@ def _get(url, timeout):
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
             return r.read(2_000_000)
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            raise NotThere() from e
+        raise UpdateError(f"Couldn't reach GitHub ({e}).") from e
     except OSError as e:
         raise UpdateError(f"Couldn't reach GitHub ({e}).") from e
 
@@ -58,8 +70,18 @@ def latest(timeout=8):
     """The latest release if it's newer than this app, else None.
 
     Returns {"version", "page", "notes", "setup": {"name", "url", "size"}, "sums_url"}."""
+    global PAGE
+    for repo in REPOS:
+        try:
+            raw = _get(f"https://api.github.com/repos/{repo}/releases/latest", timeout)
+            break
+        except NotThere:
+            continue
+    else:
+        raise UpdateError("GitHub has no TACMonkey release at the expected address.")
+    PAGE = f"https://github.com/{repo}/releases/latest"
     try:
-        rel = json.loads(_get(API, timeout))
+        rel = json.loads(raw)
     except ValueError as e:
         raise UpdateError("GitHub sent something that isn't a release.") from e
     if rel.get("draft") or rel.get("prerelease"):
@@ -81,7 +103,7 @@ def latest(timeout=8):
     if not 0 < setup["size"] <= MAX_SETUP:
         raise UpdateError(f"Release {version}'s setup has an unexpected size.")
     page = rel.get("html_url") or PAGE
-    if not page.startswith(f"https://github.com/{REPO}/"):
+    if not page.startswith(tuple(f"https://github.com/{r}/" for r in REPOS)):
         page = PAGE
     return {"version": version, "page": page, "notes": (rel.get("body") or "").strip(),
             "setup": setup, "sums_url": sums}
