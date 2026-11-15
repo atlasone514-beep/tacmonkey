@@ -38,6 +38,7 @@ QUEST_BTN = (0.836, 0.512)
 DIFF = (0.127, 0.168)
 NODES = ((0.1936, 0.4195), (0.3258, 0.5738), (0.4627, 0.4195), (0.5977, 0.5738), (0.7318, 0.4195))
 POPUP_TITLE, POPUP_OK = (0.40, 0.40), (0.5, 0.641)
+PEDDLER = "UnlockGuerrillaShopPopup"   # the Peddler Shop popup; its View Later is btn_cancel
 NOTICE, NOTICE_OK = (0.5, 0.35), (0.5, 0.672)   # e.g. "Clear ... EX 1 to unlock." + its OK
 MODES = {  # map switch sprite, how the stage popup ends its title, log label
     "hard": ("btn_scenario_hard", r"Hard", "Hard"),
@@ -161,10 +162,23 @@ class GenesisFarm:
             self.sleep(2.5)
         raise RuntimeError("couldn't reach the Genesis chapter list - start from the home screen")
 
+    def dismiss_peddler(self, els=None):
+        """Press View Later on the Peddler Shop popup if it's showing. True if it was."""
+        btn = next((e for e in (els if els is not None else self.elements())
+                    if PEDDLER in e["path"] and e["path"].endswith("btn_cancel") and e["on"]), None)
+        if not btn:
+            return False
+        self.press(btn)
+        self.log("  Peddler Shop popped up - View Later")
+        self.sleep(1.5)
+        return True
+
     def close_popups(self):
         for _ in range(4):
             here = self.probe(OUTSIDE)
-            if "Win_Btn_Decide" in here:          # a game notice: its OK closes it
+            if PEDDLER in here:
+                self.dismiss_peddler()
+            elif "Win_Btn_Decide" in here:          # a game notice: its OK closes it
                 self.tap(NOTICE_OK)
             elif "GenesisQuestConfirm" in here or "QuestDetail" in here:
                 self.tap(OUTSIDE)
@@ -313,6 +327,8 @@ class GenesisFarm:
         els = [e for e in self.elements() if e["top"]]
         paths = " ".join(e["path"] for e in els)
         alltext = " ".join(e["text"] for e in els).replace("\xa0", " ")
+        if PEDDLER in paths:
+            return "peddler", els
         if "RaidResultWindow" in paths:
             return "result", els
         if "RaidSettings" in paths:
@@ -350,6 +366,8 @@ class GenesisFarm:
                 self.log(f"  {key}: skipping {n}x")
                 did_skip = True
                 self.sleep(2.0)
+            elif state == "peddler":
+                self.dismiss_peddler(els)
             elif state == "apwindow":
                 self.replenish_ap()
             elif state == "result":

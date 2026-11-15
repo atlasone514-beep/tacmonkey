@@ -75,7 +75,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-VERSION = "1.3.0"   # TACMonkey release (the setup and the window show it)
+VERSION = "1.3.1"   # TACMonkey release (the setup and the window show it)
 MOD_VERSION = "1.2.1"  # TAC Auto Tap version shipped with this release (release/build.py checks it)
 WINDOW_TITLE = "The Alchemist Code"
 # APP_DIR holds your buttons, scripts and settings; RES_DIR the files shipped with the program.
@@ -765,6 +765,23 @@ def used_actions(script=None):
     return [i for i in used_ids(script) if i in ACTIONS]
 
 
+PEDDLER = "UnlockGuerrillaShopPopup"   # the Peddler Shop popup that can follow any quest
+
+
+def press_view_later():
+    """If the Peddler Shop popup is showing, press its View Later (through the mod). True if so."""
+    reply = mod_send("list", timeout=5.0)
+    if not reply or PEDDLER not in reply:
+        return False
+    try:
+        els = json.loads(reply)
+    except ValueError:
+        return False
+    btn = next((e for e in els if PEDDLER in e.get("path", "") and e["path"].endswith("btn_cancel")
+                and e.get("on")), None)
+    return bool(btn) and mod_send(f"tap {btn['x']:.4f} {btn['y']:.4f}", timeout=5.0) is not None
+
+
 def ap_window_open():
     """True if the game shows the Replenish AP window (asked through the mod)."""
     reply = mod_send("list", timeout=5.0)
@@ -1216,7 +1233,7 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
         refill = genesis_farm.GenesisFarm(log=log, stop=stop)
         log(f"AP refill is on: when Replenish AP opens, it uses {genesis_farm.AP_PCS} "
             f"{genesis_farm.AP_ITEM}." + ("" if status else " (Needs the mod - it isn't running.)"))
-    last_ap_check = 0.0
+    last_ap_check = last_peddler_check = 0.0
     log("F8 = pause/resume, F9 = stop (from any window). Keep the game open and uncovered.")
     flow = FlowRecorder(script)  # learns the arrows the customizer draws
     last_click, runs, f8_prev = {}, 0, False
@@ -1256,6 +1273,16 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
             show("Waiting for the game (loading, minimized or closed)")
             time.sleep(SCAN_INTERVAL)
             continue
+
+        if status and time.time() - last_peddler_check >= ACTION_CHECK:
+            last_peddler_check = time.time()
+            if press_view_later():
+                say("Peddler Shop popped up - View Later [mod]")
+                last = "View Later (Peddler Shop)"
+                last_action = time.time()
+                repeat_button, warned = None, False
+                time.sleep(1.0)
+                continue
 
         if refill and time.time() - last_ap_check >= ACTION_CHECK:
             last_ap_check = time.time()
