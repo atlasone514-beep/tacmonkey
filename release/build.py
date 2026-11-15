@@ -45,7 +45,7 @@ Il2CppInterop.Generator.dll: a modified copy of Il2CppInterop 1.5.3 (commit dbda
 https://github.com/BepInEx/Il2CppInterop, licensed LGPL-3.0. The only change: in
 CustomAttributeEx.Extract, SingleOrDefault is replaced by LastOrDefault, so the duplicated
 dumper attributes in this game's code don't stop the generator. The patching program is in
-tools/patcher of https://github.com/MohammedEmad638/tacmonkey; the original file is kept next
+tools/patcher of https://github.com/atlasone514-beep/tacmonkey; the original file is kept next
 to it as Il2CppInterop.Generator.dll.original.
 
 BepInEx (LGPL-2.1, https://github.com/BepInEx/BepInEx) is not included: the setup downloads
