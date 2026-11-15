@@ -54,6 +54,7 @@ class App:
         self.import_asked = False  # first-run "use your existing buttons?" was shown
         self.update_info = None    # the newer release found by the update check
         self.update_busy = False   # downloading it
+        self.editor_view = "flow"  # Customize opens as "flow" (flowchart) or "list" (priority)
 
         root.title(f"TACMonkey {farm.VERSION}")
         root.configure(bg=BG)
@@ -311,9 +312,10 @@ class App:
         self.script_menu.pack(side="left", padx=6)
         self.customizer = None
         self.new_btn = self.small_button(row, "New", self.new_script)
+        self.import_btn = self.small_button(row, "Import", lambda: self.import_script(self.root))
         self.folder_btn = self.small_button(row, "Folder", self.open_folder)
         self.grab_btn = self.small_button(row, "Customize", self.customize)
-        for b in (self.grab_btn, self.new_btn, self.folder_btn):
+        for b in (self.grab_btn, self.new_btn, self.import_btn, self.folder_btn):
             b.pack(side="left", padx=(0, 4))
         self.refresh_scripts()
         self.max_runs = tk.StringVar(value="0")
@@ -504,6 +506,7 @@ class App:
         for w in (self.max_spin, self.thr_spin, self.act_check, self.script_menu):
             w.config(state="disabled" if run else "normal")
         self.enable(self.new_btn, not run)
+        self.enable(self.import_btn, not run)  # importing switches to the new script
         self.pause_btn.config(text="Resume" if self.state == "Paused" else "Pause")
         if hasattr(self, "genesis_vars"):
             self.enable(self.genesis_start, not run and not grun and bool(self.genesis_selected()))
@@ -618,10 +621,35 @@ class App:
             messagebox.showerror("New script", f"'{name}' already exists.", parent=self.root)
             return
         farm.script_dir(name).mkdir(parents=True)
+        farm.new_script_settings(name)  # starts empty (no picks = not "all of Default")
         self.refresh_scripts()
         self.pick_script(name)
-        self.log("Open Customize to pick its buttons from the list, or capture new ones there.",
-                 "muted")
+        self.log("Add its buttons in the window that opened: click them in the list at the "
+                 "bottom, or capture new ones.", "muted")
+        self.customize()
+
+    def import_script(self, parent):
+        """Make a new script from a .tacscript file someone sent."""
+        path = filedialog.askopenfilename(
+            parent=parent, title="Import script",
+            filetypes=[("TACMonkey script", f"*{farm.SHARE_EXT}"), ("All files", "*.*")])
+        if not path:
+            return
+        try:
+            name, images, notes = farm.import_script(path)
+        except (farm.ShareError, OSError) as e:
+            messagebox.showerror("Import script", str(e), parent=parent)
+            return
+        self.refresh_scripts()
+        self.pick_script(name)
+        self.log(f"Imported script '{name}' from {Path(path).name}: {images} button images"
+                 + (f" ({'; '.join(notes)})" if notes else ""), "good")
+        messagebox.showinfo(
+            "Import script", f"Added the script '{name}' with {images} button images.\n\n"
+            "Its images were captured on another PC. Open the game on a screen the script "
+            "uses and press Check screen: if a button scores low, re-capture it in Customize."
+            + ("\n\nNote: " + "; ".join(notes) if notes else ""), parent=parent)
+        self.customize()
 
     def open_folder(self):
         self.open_folder_of(self.script.get())()
@@ -664,6 +692,7 @@ class App:
         self.skip_merc.set(s.get("skip_merc", False))
         self.import_asked = s.get("import_asked", False)
         self.check_updates.set(s.get("check_updates", True))
+        self.editor_view = s.get("editor_view", "flow")
         self.toggle_merc()
         for u in s.get("genesis_units", []):
             if u in self.genesis_vars:
@@ -677,6 +706,7 @@ class App:
                                             "skip_merc": self.skip_merc.get(),
                                             "import_asked": self.import_asked,
                                             "check_updates": self.check_updates.get(),
+                                            "editor_view": self.editor_view,
                                             "genesis_units": self.genesis_selected()}, indent=2))
         except OSError:
             pass
@@ -712,6 +742,9 @@ class App:
                 self.set_state(state, f"Last click: {last}" if last else "Watching the game...")
                 self.show_stats()
                 self.update_buttons()
+                c = self.customizer
+                if last and c and c.win.winfo_exists() and c.script == self.script.get():
+                    c.highlight(last.rsplit(" (", 1)[0])
             elif kind == "done":
                 self.worker = None
                 self.set_state("Stopped", msg[1])
@@ -772,148 +805,598 @@ class App:
         self.root.destroy()
 
 
-NAME_HELP = ("Name for the new button image.\n\n"
-             "Start it with a number - lower numbers are checked first\n"
-             "(00_ok is checked before 02_hire). Images with the same number are\n"
-             "variants of one button. x_ at the start = marker only, never tapped.")
+NAME_HELP = ("Name for the new button image (e.g. go, confirm, try again).\n\n"
+             "It goes to the bottom of the Priority list - move it up there if it\n"
+             "should win over other buttons. To add another look of a button that\n"
+             "is already in the script, use 'Add a variant' on its card instead.\n\n"
+             "Start the name with x_ for a marker: only looked at, never tapped.")
 
 
 class Customizer:
-    """Pick, from every captured button, the ones a script uses."""
-    THUMB_W, THUMB_H = 150, 70
+    """A script as a flowchart (or as its priority list): one card per step (its images are
+    variants of one button), arrows in the order real runs went through them, a detail panel
+    for the picked card, and every other captured button below to add with a click."""
+    CARD_W, THUMB_W, THUMB_H = 184, 164, 54
+    GAP_X, GAP_Y = 56, 70
+    TILE_W, TILE_H = 132, 56
 
     def __init__(self, app, script):
         self.app, self.script = app, script
-        self.photos = []  # keep thumbnails alive
-        self.only_used = tk.BooleanVar(value=False)
+        self.photos = {}          # (id, w, h) -> PhotoImage, kept alive while shown
+        self.selected = None      # ("step", key) / ("entry", id)
+        self.live = None          # step key of the last button the farm pressed
+        self.model = None
         self.win = win = tk.Toplevel(app.root)
         win.title(f"Customize script - {script}")
         win.configure(bg=BG)
-        win.geometry("760x760")
-        win.minsize(620, 420)
+        win.geometry("1100x880")
+        win.minsize(820, 600)
+
         head = tk.Frame(win, bg=BG)
         head.pack(fill="x", padx=14, pady=(12, 4))
         self.title = app.label(head, "", size=13, bold=True)
         self.title.pack(anchor="w")
-        app.label(head, (
-            "Every button you have captured is listed here, whichever script it was captured "
-            "in. Tick the ones this script should use. They are checked top to bottom and the "
-            "first one seen is tapped, so the number at the start is the priority. Tick "
-            "'Counts as a run' on the button(s) whose tap means one run is done. "
-            "Changes apply on the next Start."),
-            size=9, color=MUTED, wraplength=720, justify="left").pack(anchor="w", pady=(2, 8))
+        self.subtitle = app.label(head, "", size=9, color=MUTED, wraplength=1040, justify="left")
+        self.subtitle.pack(anchor="w", pady=(2, 8))
         bar = tk.Frame(head, bg=BG)
         bar.pack(fill="x")
         for text, cmd in (("Capture new button", self.add_grab),
                           ("New button from file", self.add_file),
                           ("Import buttons", self.import_buttons)):
             app.small_button(bar, text, cmd).pack(side="left", padx=(0, 6))
-        tk.Checkbutton(bar, text="Only show buttons this script uses", variable=self.only_used,
-                       command=self.refresh, bg=BG, fg=FG, activebackground=BG,
-                       activeforeground=FG, selectcolor=FIELD, highlightthickness=0, bd=0,
-                       font=(FONT, 9)).pack(side="right")
+        for text, cmd in (("Import script", self.import_script),
+                          ("Export script", self.export_script),
+                          ("Reset arrows", self.reset_arrows)):
+            app.small_button(bar, text, cmd).pack(side="right", padx=(6, 0))
+        # view switch: the flow of a run, or the order buttons are checked in
+        tabs = tk.Frame(head, bg=BG)
+        tabs.pack(fill="x", pady=(10, 0))
+        self.mode = app.editor_view if app.editor_view in ("flow", "list") else "flow"
+        self.tabs = {}
+        for mode, text in (("flow", "Flowchart"), ("list", "Priority list")):
+            b = tk.Button(tabs, text=text, relief="flat", bd=0, padx=14, pady=4,
+                          font=(FONT, 10, "bold"), cursor="hand2",
+                          command=lambda m=mode: self.set_mode(m))
+            b.pack(side="left", padx=(0, 4))
+            self.tabs[mode] = b
+        self.style_tabs()
 
-        body = tk.Frame(win, bg=BG)
-        body.pack(fill="both", expand=True, padx=12, pady=(8, 12))
-        self.canvas = tk.Canvas(body, bg=BG, highlightthickness=0)
-        scroll = tk.Scrollbar(body, command=self.canvas.yview)
-        scroll.pack(side="right", fill="y")
-        self.canvas.pack(side="left", fill="both", expand=True)
-        self.canvas.configure(yscrollcommand=scroll.set)
-        self.inner = tk.Frame(self.canvas, bg=BG)
-        self.inner_id = self.canvas.create_window(0, 0, window=self.inner, anchor="nw")
-        self.inner.bind("<Configure>", lambda _: self.canvas.configure(
-            scrollregion=self.canvas.bbox("all")))
-        self.canvas.bind("<Configure>", lambda e: self.canvas.itemconfig(self.inner_id,
-                                                                           width=e.width))
-        win.bind("<MouseWheel>", lambda e: self.canvas.yview_scroll(-e.delta // 120, "units"))
+        panes = tk.PanedWindow(win, orient="vertical", bg=BG, sashwidth=6, bd=0,
+                               sashrelief="flat")
+        panes.pack(fill="both", expand=True, padx=12, pady=(8, 12))
+
+        # top: the flow (left) and the picked card (right)
+        top = tk.Frame(panes, bg=BG)
+        self.detail = tk.Frame(top, bg=PANEL, width=300, padx=12, pady=10)
+        self.detail.pack(side="right", fill="y", padx=(8, 0))
+        self.detail.pack_propagate(False)
+        self.flow = self.scroll_canvas(top)
+        self.flow.bind("<Configure>", lambda _: self.draw_flow())
+        panes.add(top, minsize=260, height=520)
+
+        # bottom: everything else that's captured, to add with a click
+        bottom = tk.Frame(panes, bg=BG)
+        row = tk.Frame(bottom, bg=BG)
+        row.pack(fill="x", pady=(6, 4))
+        app.label(row, "ADD BUTTONS", size=8, color=MUTED).pack(side="left")
+        app.label(row, "  click one to add it to this script", size=8,
+                  color=MUTED).pack(side="left")
+        self.search = tk.StringVar()
+        self.search.trace_add("write", lambda *_: self.draw_pool())
+        tk.Entry(row, textvariable=self.search, bg=FIELD, fg=FG, insertbackground=FG,
+                 relief="flat", font=(FONT, 10), width=24).pack(side="right")
+        app.label(row, "Search ", size=9, color=MUTED).pack(side="right")
+        self.pool = self.scroll_canvas(bottom)
+        self.pool.bind("<Configure>", lambda _: self.draw_pool())
+        panes.add(bottom, minsize=140)
+
+        win.bind("<MouseWheel>", self.wheel)
         self.refresh()
 
-    def thumb(self, img):
-        h, w = img.shape[:2]
-        s = min(self.THUMB_W / w, self.THUMB_H / h, 1.0)
-        small = farm.cv2.resize(img, (max(1, int(w * s)), max(1, int(h * s))),
-                                interpolation=farm.cv2.INTER_AREA)
-        _, buf = farm.cv2.imencode(".png", small)
-        photo = tk.PhotoImage(data=base64.b64encode(buf.tobytes()))
-        self.photos.append(photo)
-        return photo
+    def style_tabs(self):
+        for mode, b in self.tabs.items():
+            on = mode == self.mode
+            b.configure(bg=BLUE if on else FIELD, fg=DARK if on else FG,
+                        activebackground=BLUE if on else GREY, activeforeground=DARK if on else FG)
 
-    def describe(self, b):
-        if b["action"]:
-            return f"built-in action (no image)\n{b['about']}"
-        parts = ["marker: only used to spot a finished act, never tapped" if b["marker"]
-                 else f"priority {b['name'].split('_')[0]}",
-                 f"captured in: {b['home']}"]
-        if b["spot"] and b["used"]:
-            parts.append(f"taps a fixed spot ({b['spot'][0]:.0%} across, "
-                         f"{b['spot'][1]:.0%} down) instead of the image")
-        return "\n".join(parts)
+    def set_mode(self, mode):
+        self.mode = self.app.editor_view = mode
+        self.app.save_settings()
+        self.style_tabs()
+        self.flow.yview_moveto(0)
+        self.refresh()
 
+    # ---------- drawing helpers ----------
+    def scroll_canvas(self, parent):
+        box = tk.Frame(parent, bg=BG)
+        box.pack(side="left", fill="both", expand=True)
+        canvas = tk.Canvas(box, bg=BG, highlightthickness=0)
+        bar = tk.Scrollbar(box, command=canvas.yview)
+        bar.pack(side="right", fill="y")
+        canvas.pack(side="left", fill="both", expand=True)
+        canvas.configure(yscrollcommand=bar.set)
+        return canvas
+
+    def wheel(self, e):
+        widget = self.win.winfo_containing(e.x_root, e.y_root)
+        detail = getattr(self, "detail_canvas", None)
+        for canvas in (self.flow, self.pool, detail):
+            if canvas is None or not canvas.winfo_exists() or widget is None:
+                continue
+            if str(widget).startswith(str(canvas)):  # the canvas or something on it
+                canvas.yview_scroll(-e.delta // 120, "units")
+                return
+
+    def photo(self, b, max_w, max_h):
+        """A thumbnail of an entry's image (cached while the window shows it)."""
+        key = (b["id"], max_w, max_h)
+        if key not in self.photos:
+            img = b["img"]
+            h, w = img.shape[:2]
+            s = min(max_w / w, max_h / h, 1.0)
+            small = farm.cv2.resize(img, (max(1, int(w * s)), max(1, int(h * s))),
+                                    interpolation=farm.cv2.INTER_AREA)
+            _, buf = farm.cv2.imencode(".png", small)
+            self.photos[key] = tk.PhotoImage(data=base64.b64encode(buf.tobytes()))
+        return self.photos[key]
+
+    @staticmethod
+    def pretty(name):
+        """'quest new' from 01_quest_new: an old-style number prefix isn't part of the name."""
+        return farm.NUMBERED.sub("", name).replace("_", " ").strip() or name
+
+    @classmethod
+    def step_title(cls, key, entries):
+        """A step's title: its first image's name (priority is shown separately, as #n)."""
+        return cls.pretty(entries[0]["name"])
+
+    def card_height(self, n):
+        return 34 + n * (self.THUMB_H + 6) + 22
+
+    # ---------- refresh ----------
     def refresh(self):
-        y = self.canvas.yview()[0]
-        for child in self.inner.winfo_children():
-            child.destroy()
         self.photos.clear()
-        buttons = farm.describe_library(self.script)
-        used = sum(b["used"] for b in buttons)
-        self.title.config(text=f"Script: {self.script}   -   {used} of {len(buttons)} "
-                               "captured buttons used")
-        app = self.app
-        for b in buttons:
-            if self.only_used.get() and not b["used"]:
-                continue
-            row = tk.Frame(self.inner, bg=PANEL if b["used"] else BG, padx=10, pady=8,
-                           highlightthickness=1,
-                           highlightbackground=GREEN if b["used"] else FIELD)
-            row.pack(fill="x", pady=(0, 6))
-            bg = row["bg"]
-            pic = tk.Frame(row, bg=DARK, width=self.THUMB_W + 8, height=self.THUMB_H + 8)
-            pic.pack(side="left", padx=(0, 12))
-            pic.pack_propagate(False)
-            tk.Label(pic, image=self.thumb(b["img"]), bg=DARK).pack(expand=True)
-            actions = tk.Frame(row, bg=bg)
-            actions.pack(side="right")
-            for text, cmd in (("Re-capture", lambda b=b: self.grab(b["home"], b["name"])),
-                              ("From file", lambda b=b: self.load_file(b["home"], b["name"])),
-                              ("Delete", lambda b=b: self.delete(b))):
-                if not b["action"]:
-                    app.small_button(actions, text, cmd).pack(fill="x", pady=1)
-            text = tk.Frame(row, bg=bg)
-            text.pack(side="left", fill="x", expand=True)
-            app.label(text, b["name"], size=11, bold=True,
-                      color=FG if b["used"] else MUTED).pack(anchor="w")
-            app.label(text, self.describe(b), size=9, color=MUTED, wraplength=320,
-                      justify="left").pack(anchor="w")
-            ticks = tk.Frame(text, bg=bg)
-            ticks.pack(anchor="w", pady=(4, 0))
-            for w in (text, ticks):
-                w.configure(bg=bg)
-            self.check_row(ticks, b)
-        self.win.update_idletasks()
-        self.canvas.yview_moveto(y)
+        self.model = m = farm.flow_model(self.script)
+        steps = sum(len(v) for v in m["groups"].values())
+        self.title.config(text=f"Script: {self.script}   -   {len(m['groups'])} steps, "
+                               f"{steps} button images"
+                               + (f", {len(m['actions'])} built-in" if m["actions"] else ""))
+        if self.mode == "list":
+            text = ("The order the farm checks the steps on every scan: when two are on screen at "
+                    "once, the higher one in this list is tapped. Move steps with the arrows. "
+                    + ("This script has its own order." if m["custom_priority"] else
+                       "Right now it's the default order: old numbered names first, then the rest A-Z.")
+                    + " Click a step for its options. Changes apply on the next Start.")
+        else:
+            text = ("Each card is one step: its images are variants (looks) of one button - "
+                    "group them with Add a variant or an image's Step. " + (
+                        "The arrows show the order your runs went through the steps."
+                        if m["learned"] else
+                        "Until the farm has run with this script the cards follow the priority "
+                        "list (dashed arrows); after a run the arrows show the real order.")
+                    + " When two are on screen at once, the Priority list decides. Click a card "
+                      "for its options. Changes apply on the next Start.")
+        self.subtitle.config(text=text)
+        if self.selected and not self.find_selected():
+            self.selected = None
+        self.draw_flow()
+        self.draw_pool()
+        self.draw_detail()
 
-    def check_row(self, parent, b):
-        bg = parent["bg"]
-        for text, value, cmd, color in (
-                ("Use in this script", b["used"], lambda on, b=b: self.use(b, on),
-                 GREEN if b["used"] else FG),
-                ("Counts as a run", b["counter"], lambda on, b=b: self.count(b, on),
-                 GREEN if b["counter"] else FG)):
-            if (b["marker"] or b["action"]) and text == "Counts as a run":
-                continue
-            var = tk.BooleanVar(value=value)
-            tk.Checkbutton(parent, text=text, variable=var, bg=bg, fg=color,
-                           activebackground=bg, activeforeground=FG, selectcolor=FIELD,
-                           highlightthickness=0, bd=0, font=(FONT, 9),
-                           command=lambda c=cmd, v=var: c(v.get())).pack(side="left",
-                                                                         padx=(0, 14))
+    def find_selected(self):
+        m, sel = self.model, self.selected
+        if not sel:
+            return None
+        if sel[0] == "step":
+            return m["groups"].get(sel[1])
+        hits = [b for b in m["actions"] + m["markers"] if b["id"] == sel[1]]
+        return hits or None
+
+    def highlight(self, name):
+        """Light up the step of the button the farm just pressed."""
+        key = next((k for k, bs in self.model["groups"].items()
+                    if any(b["name"] == name for b in bs)), None) if self.model else None
+        if key != self.live:
+            self.live = key
+            self.draw_flow()
+
+    # ---------- the flow ----------
+    def draw_flow(self):
+        c, m = self.flow, self.model
+        if m is None:
+            return
+        if self.mode == "list":
+            self.draw_list()
+            return
+        c.delete("all")
+        width = max(c.winfo_width(), self.CARD_W + 40)
+        cols = max(1, (width - 20 + self.GAP_X) // (self.CARD_W + self.GAP_X))
+        x0, y = 16, 14
+        if not m["groups"] and not m["actions"] and not m["markers"]:
+            c.create_text(width // 2, 80, fill=MUTED, font=(FONT, 11), justify="center",
+                          text="This script has no buttons yet.\n\nAdd some from the list below, "
+                               "or capture new ones with the buttons at the top.")
+            c.configure(scrollregion=(0, 0, width, 200))
+            return
+
+        order = m["order"]
+        boxes = {}
+        rows = [order[i:i + cols] for i in range(0, len(order), cols)]
+        for row in rows:
+            h = max(self.card_height(len(m["groups"][k])) for k in row)
+            for i, key in enumerate(row):
+                x = x0 + i * (self.CARD_W + self.GAP_X)
+                boxes[key] = (x, y, x + self.CARD_W, y + self.card_height(len(m["groups"][key])))
+            y += h + self.GAP_Y
+        for i, key in enumerate(order):  # arrows first, cards on top
+            if i + 1 < len(order):
+                self.arrow(key, order[i + 1], boxes)
+        if order and m["learned"]:
+            last = boxes[order[-1]]
+            back = m["pairs"].get((order[-1], order[0]))
+            c.create_text(last[2] + 8, (last[1] + last[3]) // 2, anchor="w", fill=MUTED,
+                          font=(FONT, 8), text="back to\n" + order[0] + (f" ({back})" if back
+                                                                        else ""))
+        for key in order:
+            self.card(key, boxes[key])
+
+        # built-in actions and markers: outside the loop
+        extras = [("ANY TIME", b) for b in m["actions"]] + [("MARKER", b) for b in m["markers"]]
+        if extras:
+            c.create_text(x0, y - self.GAP_Y + 24, anchor="nw", fill=MUTED, font=(FONT, 8),
+                          text="OUTSIDE THE LOOP  -  built-in actions run whenever their window "
+                               "shows; markers are only looked at, never tapped")
+            ey = y - self.GAP_Y + 44
+            for i, (tag, b) in enumerate(extras):
+                x = x0 + (i % cols) * (self.CARD_W + self.GAP_X)
+                yy = ey + (i // cols) * (self.card_height(1) + 16)
+                self.extra_card(tag, b, (x, yy, x + self.CARD_W, yy + self.card_height(1)))
+            y = ey + ((len(extras) - 1) // cols + 1) * (self.card_height(1) + 16)
+        c.configure(scrollregion=(0, 0, width, y + 10))
+
+    # ---------- the priority list ----------
+    LIST_THUMB_W, LIST_THUMB_H, ROW_H = 120, 44, 64
+
+    def draw_list(self):
+        c, m = self.flow, self.model
+        c.delete("all")
+        width = max(c.winfo_width(), 520)
+        steps = m["priority"]
+        if not steps:
+            c.create_text(width // 2, 80, fill=MUTED, font=(FONT, 11), justify="center",
+                          text="This script has no buttons yet.\n\nAdd some from the list below.")
+            c.configure(scrollregion=(0, 0, width, 200))
+            return
+        y = 10
+        if m["custom_priority"]:
+            t = c.create_text(16, y, anchor="nw", fill=BLUE, font=(FONT, 9, "underline"),
+                              text="Back to default order", tags="reset")
+            c.tag_bind("reset", "<Button-1>", lambda _e: self.reset_priority())
+            c.tag_bind("reset", "<Enter>", lambda _e: c.configure(cursor="hand2"))
+            c.tag_bind("reset", "<Leave>", lambda _e: c.configure(cursor=""))
+            y = c.bbox(t)[3] + 8
+        for i, key in enumerate(steps):
+            self.list_row(i, key, (8, y, width - 8, y + self.ROW_H))
+            y += self.ROW_H + 6
+        extras = m["actions"] + m["markers"]
+        if extras:
+            c.create_text(16, y + 8, anchor="nw", fill=MUTED, font=(FONT, 8), width=width - 32,
+                          text="NOT RANKED: " + ", ".join(b["name"] for b in extras) +
+                               "  -  built-in actions run whenever their window shows; markers "
+                               "are only looked at. Switch to Flowchart to open them.")
+            y += 40
+        c.configure(scrollregion=(0, 0, width, y + 10))
+
+    def list_row(self, i, key, box):
+        c, m = self.flow, self.model
+        entries = m["groups"][key]
+        x1, y1, x2, y2 = box
+        tag = f"row:{key}"
+        sel = self.selected == ("step", key)
+        live = self.live == key
+        c.create_rectangle(x1, y1, x2, y2, fill=PANEL, tags=tag, width=3 if (sel or live) else 1,
+                           outline=YELLOW if live else BLUE if sel else FIELD)
+        c.create_text(x1 + 30, (y1 + y2) // 2, text=f"#{i + 1}", fill=FG,
+                      font=(FONT, 13, "bold"), tags=tag)
+        c.create_text(x1 + 62, y1 + 10, anchor="nw", text=self.step_title(key, entries), fill=FG,
+                      font=(FONT, 10, "bold"), width=170, tags=tag)
+        pressed = m["pressed"].get(key, 0)
+        sub = [f"{len(entries)} variant{'s' if len(entries) > 1 else ''}"]
+        if pressed:
+            sub.append(f"pressed {pressed}x")
+        if any(b["counter"] for b in entries):
+            sub.append("counts runs")
+        c.create_text(x1 + 62, y2 - 10, anchor="sw", text="  ·  ".join(sub), fill=MUTED,
+                      font=(FONT, 8), tags=tag)
+        tx = x1 + 250
+        room = max(1, (x2 - 110 - tx) // (self.LIST_THUMB_W + 8))
+        for b in entries[:room]:
+            c.create_rectangle(tx, y1 + 9, tx + self.LIST_THUMB_W, y2 - 9, fill=DARK, outline="",
+                               tags=tag)
+            c.create_image(tx + self.LIST_THUMB_W // 2, (y1 + y2) // 2, tags=tag,
+                           image=self.photo(b, self.LIST_THUMB_W - 6, self.LIST_THUMB_H))
+            tx += self.LIST_THUMB_W + 8
+        if len(entries) > room:
+            c.create_text(tx, (y1 + y2) // 2, anchor="w", fill=MUTED, font=(FONT, 9),
+                          text=f"+{len(entries) - room}", tags=tag)
+        c.tag_bind(tag, "<Button-1>", lambda _e, k=key: self.select(("step", k)))
+        last = len(m["priority"]) - 1
+        for label, delta, x, ok in (("▲", -1, x2 - 64, i > 0), ("▼", 1, x2 - 28, i < last)):
+            bt = f"move:{key}:{delta}"
+            c.create_rectangle(x - 15, y1 + 16, x + 15, y2 - 16, fill=FIELD if ok else PANEL,
+                               outline="", tags=bt)
+            c.create_text(x, (y1 + y2) // 2, text=label, fill=FG if ok else GREY,
+                          font=(FONT, 11), tags=bt)
+            if ok:
+                c.tag_bind(bt, "<Button-1>", lambda _e, k=key, d=delta: self.move(k, d))
+                c.tag_bind(bt, "<Enter>", lambda _e: c.configure(cursor="hand2"))
+                c.tag_bind(bt, "<Leave>", lambda _e: c.configure(cursor=""))
+
+    def move(self, key, delta):
+        order = list(self.model["priority"])
+        i = order.index(key)
+        j = i + delta
+        if not 0 <= j < len(order):
+            return
+        order[i], order[j] = order[j], order[i]
+        farm.set_priority_order(self.script, order)
+        self.app.log(f"{self.script}: priority is now " + " > ".join(order), "info")
+        self.selected = ("step", key)
+        self.refresh()
+
+    def reset_priority(self):
+        farm.set_priority_order(self.script, [])
+        self.app.log(f"{self.script}: priority back to the default order", "info")
+        self.refresh()
+
+    def arrow(self, a, b, boxes):
+        c, m = self.flow, self.model
+        ax1, ay1, ax2, ay2 = boxes[a]
+        bx1, by1, bx2, by2 = boxes[b]
+        n = m["pairs"].get((a, b))
+        out = sum(v for (p, _), v in m["pairs"].items() if p == a)
+        learned = m["learned"]
+        color = BLUE if n else GREY
+        dash = () if n else (4, 3)
+        if abs(ay1 - by1) < 2:  # same row: straight across
+            pts = (ax2, ay1 + 30, bx1, by1 + 30)
+            lx, ly = (ax2 + bx1) // 2, ay1 + 18
+        else:  # next row: down, back to the left, down into the card
+            mid = max(ay2, by1 - self.GAP_Y) + self.GAP_Y // 2
+            pts = ((ax1 + ax2) // 2, ay2, (ax1 + ax2) // 2, mid, (bx1 + bx2) // 2, mid,
+                   (bx1 + bx2) // 2, by1)
+            lx, ly = (ax1 + ax2) // 2 + 6, ay2 + 12
+        c.create_line(*pts, fill=color, width=2, arrow="last", arrowshape=(9, 11, 4), dash=dash)
+        if learned and n:
+            c.create_text(lx, ly, fill=BLUE, font=(FONT, 8), anchor="center" if abs(ay1 - by1)
+                          < 2 else "w", text=f"{n}x" + (f" ({n * 100 // out}%)" if out else ""))
+
+    def card(self, key, box):
+        c, m = self.flow, self.model
+        entries = m["groups"][key]
+        x1, y1, x2, y2 = box
+        pressed = m["pressed"].get(key, 0)
+        sel = self.selected == ("step", key)
+        live = self.live == key
+        dim = m["learned"] and not pressed
+        outline = YELLOW if live else BLUE if sel else (FIELD if dim else GREY)
+        tag = f"step:{key}"
+        c.create_rectangle(x1, y1, x2, y2, fill=PANEL, outline=outline,
+                           width=3 if (sel or live) else 1, tags=tag)
+        c.create_text(x1 + 10, y1 + 9, anchor="nw", text=self.step_title(key, entries),
+                      fill=MUTED if dim else FG, font=(FONT, 10, "bold"), tags=tag,
+                      width=self.CARD_W - 20)
+        if any(b["counter"] for b in entries):
+            c.create_rectangle(x2 - 46, y1 + 8, x2 - 8, y1 + 24, fill=GREEN, outline="", tags=tag)
+            c.create_text(x2 - 27, y1 + 16, text="RUN", fill=DARK, font=(FONT, 7, "bold"), tags=tag)
+        ty = y1 + 34
+        for b in entries:
+            c.create_rectangle(x1 + 10, ty, x2 - 10, ty + self.THUMB_H, fill=DARK, outline="",
+                               tags=tag)
+            c.create_image((x1 + x2) // 2, ty + self.THUMB_H // 2, tags=tag,
+                           image=self.photo(b, self.THUMB_W, self.THUMB_H - 4))
+            ty += self.THUMB_H + 6
+        foot = (f"pressed {pressed}x" if pressed else
+                "not pressed in runs yet" if m["learned"] else
+                f"{len(entries)} variant{'s' if len(entries) > 1 else ''}")
+        if any(b["spot"] for b in entries):
+            foot += "  ·  fixed spot"
+        c.create_text(x1 + 10, y2 - 16, anchor="w", text=foot, fill=MUTED, font=(FONT, 8),
+                      tags=tag)
+        c.create_text(x2 - 10, y2 - 16, anchor="e", text=f"#{m['priority'].index(key) + 1}",
+                      fill=MUTED, font=(FONT, 8, "bold"), tags=tag)
+        c.tag_bind(tag, "<Button-1>", lambda _e, k=key: self.select(("step", k)))
+        c.tag_bind(tag, "<Enter>", lambda _e: c.configure(cursor="hand2"))
+        c.tag_bind(tag, "<Leave>", lambda _e: c.configure(cursor=""))
+
+    def extra_card(self, label, b, box):
+        c = self.flow
+        x1, y1, x2, y2 = box
+        sel = self.selected == ("entry", b["id"])
+        tag = f"entry:{b['id']}"
+        c.create_rectangle(x1, y1, x2, y2, fill=PANEL, outline=BLUE if sel else ORANGE,
+                           width=3 if sel else 1, dash=() if sel else (3, 2), tags=tag)
+        c.create_text(x1 + 10, y1 + 9, anchor="nw", text=b["name"], fill=FG, width=self.CARD_W - 20,
+                      font=(FONT, 9, "bold"), tags=tag)
+        c.create_rectangle(x1 + 10, y1 + 34, x2 - 10, y1 + 34 + self.THUMB_H, fill=DARK, outline="",
+                           tags=tag)
+        c.create_image((x1 + x2) // 2, y1 + 34 + self.THUMB_H // 2, tags=tag,
+                       image=self.photo(b, self.THUMB_W, self.THUMB_H - 4))
+        c.create_text(x1 + 10, y2 - 16, anchor="w", text=label.lower(), fill=ORANGE,
+                      font=(FONT, 8), tags=tag)
+        c.tag_bind(tag, "<Button-1>", lambda _e: self.select(("entry", b["id"])))
+
+    def select(self, what):
+        self.selected = None if self.selected == what else what
+        self.draw_flow()
+        self.draw_detail()
+
+    # ---------- the picked card ----------
+    def draw_detail(self):
+        d, app, m = self.detail, self.app, self.model
+        for child in d.winfo_children():
+            child.destroy()
+        entries = self.find_selected()
+        if not entries:
+            app.label(d, "Click a card", size=11, bold=True).pack(anchor="w")
+            app.label(d, "Its images, what they do, and buttons to re-capture, remove or count "
+                         "it as a run show up here.", size=9, color=MUTED, wraplength=270,
+                      justify="left").pack(anchor="w", pady=(4, 0))
+            if m and m["learned"]:
+                app.label(d, "\nArrows: how often the next step came right after this one in "
+                             "your runs. Grey cards weren't pressed in any run - an old "
+                             "capture, or a screen that just hasn't come up.", size=9,
+                          color=MUTED, wraplength=270, justify="left").pack(anchor="w")
+            return
+        sel = self.selected
+        if sel[0] == "step":
+            key = sel[1]
+            app.label(d, self.step_title(key, entries), size=12, bold=True).pack(anchor="w")
+            nxt = sorted(((n, b) for (a, b), n in m["pairs"].items() if a == key), reverse=True)
+            rank = m["priority"].index(key) + 1
+            info = [f"priority #{rank} of {len(m['priority'])}"
+                    + (" (own order)" if m["custom_priority"] else " (default order)")]
+            if nxt:
+                total = sum(n for n, _ in nxt)
+                info.append("next in runs: " + ", ".join(
+                    f"{self.step_title(b, m['groups'][b]) if b in m['groups'] else b} "
+                    f"{n * 100 // total}%" for n, b in nxt[:4]))
+            app.label(d, "\n".join(info), size=9, color=MUTED, wraplength=270,
+                      justify="left").pack(anchor="w", pady=(2, 8))
+        if sel[0] == "step":
+            app.small_button(d, "Add a variant (capture)", lambda: self.add_variant(sel[1])).pack(
+                side="bottom", fill="x", pady=(6, 0))
+        # the variants, scrolling if there are more than fit
+        holder = tk.Frame(d, bg=PANEL)
+        holder.pack(fill="both", expand=True)
+        canvas = tk.Canvas(holder, bg=PANEL, highlightthickness=0, width=270)
+        bar = tk.Scrollbar(holder, command=canvas.yview)
+        canvas.configure(yscrollcommand=bar.set)
+        canvas.pack(side="left", fill="both", expand=True)
+        body = tk.Frame(canvas, bg=PANEL)
+        canvas.create_window(0, 0, window=body, anchor="nw", width=262)
+        for b in entries:
+            self.detail_entry(body, b)
+        body.update_idletasks()
+        canvas.configure(scrollregion=(0, 0, 262, body.winfo_reqheight()))
+        if body.winfo_reqheight() > canvas.winfo_height() > 1 or len(entries) > 2:
+            bar.pack(side="right", fill="y")
+        self.detail_canvas = canvas
+
+    def detail_entry(self, parent, b):
+        app = self.app
+        box = tk.Frame(parent, bg=FIELD, padx=8, pady=6)
+        box.pack(fill="x", pady=(0, 6))
+        tk.Label(box, image=self.photo(b, 260, 60), bg=DARK).pack(fill="x")
+        app.label(box, b["name"], size=10, bold=True).pack(anchor="w", pady=(4, 0))
+        about = (b["about"] if b["action"] else
+                 "marker: only looked at, never tapped" if b["marker"] else
+                 f"captured in: {b['home']}")
+        if b.get("spot"):
+            about += f"\ntaps a fixed spot ({b['spot'][0]:.0%} across, {b['spot'][1]:.0%} down)"
+        app.label(box, about, size=8, color=MUTED, wraplength=250, justify="left").pack(anchor="w")
+        if not (b["marker"] or b["action"]):
+            var = tk.BooleanVar(value=b["counter"])
+            tk.Checkbutton(box, text="Counts as a run", variable=var, bg=FIELD,
+                           fg=GREEN if b["counter"] else FG, activebackground=FIELD,
+                           activeforeground=FG, selectcolor=PANEL, highlightthickness=0, bd=0,
+                           font=(FONT, 9), command=lambda: self.count(b, var.get())).pack(
+                anchor="w", pady=(4, 0))
+        if not (b["marker"] or b["action"]):
+            self.step_chooser(box, b)
+        grid = tk.Frame(box, bg=FIELD)
+        grid.pack(fill="x", pady=(4, 0))
+        grid.columnconfigure((0, 1), weight=1)
+        buttons = [("Remove from script", lambda: self.use(b, False))]
+        if not b["action"]:
+            buttons += [("Delete", lambda: self.delete(b)),
+                        ("Re-capture", lambda: self.grab(b["home"], b["name"])),
+                        ("From file", lambda: self.load_file(b["home"], b["name"]))]
+        for i, (text, cmd) in enumerate(buttons):
+            btn = app.small_button(grid, text, cmd)
+            btn.configure(bg=PANEL)
+            btn.color = PANEL
+            btn.grid(row=i // 2, column=i % 2, sticky="ew", padx=(0, 4) if i % 2 == 0 else 0,
+                     pady=(0, 3))
+
+    def step_chooser(self, parent, b):
+        """'Step: [#2 hire v]' - move this image into another step (as a variant of that
+        button) or make it a step of its own."""
+        m = self.model
+        own = "Its own step"
+        labels = {f"#{i + 1}  {self.step_title(k, m['groups'][k])}": k
+                  for i, k in enumerate(m["priority"])}
+        current = next((lab for lab, k in labels.items() if k == b["step"]), own)
+        alone = len(m["groups"].get(b["step"], [])) <= 1
+        options = list(labels) + ([] if alone else [own])
+        row = tk.Frame(parent, bg=FIELD)
+        row.pack(fill="x", pady=(4, 0))
+        self.app.label(row, "Step", size=9, color=MUTED).pack(side="left")
+        var = tk.StringVar(value=current)
+        menu = tk.OptionMenu(row, var, *options,
+                             command=lambda lab: self.move_to_step(b, labels.get(lab)))
+        menu.config(bg=PANEL, fg=FG, activebackground=GREY, activeforeground=FG, relief="flat",
+                    bd=0, highlightthickness=0, font=(FONT, 9), anchor="w")
+        menu["menu"].config(bg=FIELD, fg=FG, activebackground=BLUE, activeforeground=DARK,
+                            font=(FONT, 9), bd=0)
+        menu.pack(side="left", fill="x", expand=True, padx=(6, 0))
+
+    def move_to_step(self, b, key):
+        """key = another step (join it as a variant), or None = a step of its own."""
+        target = key or b["name"]
+        if target == b["step"]:
+            return
+        farm.set_step(self.script, b["name"], target)
+        self.app.log(f"{self.script}: {b['name']} is now "
+                     + (f"a variant in step {self.step_title(key, self.model['groups'][key])}"
+                        if key else "a step of its own (at the bottom of the priority)"), "info")
+        self.selected = ("step", farm.group_key(b["name"], farm.step_map(self.script)))
+        self.refresh()
+
+    # ---------- the pool ----------
+    def draw_pool(self):
+        c = self.pool
+        if self.model is None:
+            return
+        c.delete("all")
+        width = max(c.winfo_width(), self.TILE_W + 20)
+        word = self.search.get().strip().lower()
+        items = [b for b in farm.describe_library(self.script) if not b["used"]
+                 and (not word or word in b["name"].lower() or word in b["home"].lower())]
+        if not items:
+            c.create_text(width // 2, 40, fill=MUTED, font=(FONT, 10), text=(
+                "Nothing matches." if word else
+                "Every captured button is in this script. Capture or import more at the top."))
+            c.configure(scrollregion=(0, 0, width, 80))
+            return
+        cols = max(1, (width - 8) // (self.TILE_W + 10))
+        th = self.TILE_H + 52
+        for i, b in enumerate(items):
+            x = 4 + (i % cols) * (self.TILE_W + 10)
+            y = 4 + (i // cols) * (th + 10)
+            tag = f"pool:{b['id']}"
+            c.create_rectangle(x, y, x + self.TILE_W, y + th, fill=PANEL, outline=FIELD, tags=tag)
+            c.create_image(x + self.TILE_W // 2, y + 6 + self.TILE_H // 2, tags=tag,
+                           image=self.photo(b, self.TILE_W - 12, self.TILE_H))
+            name = c.create_text(x + 6, y + self.TILE_H + 12, anchor="nw", fill=FG,
+                                 font=(FONT, 8, "bold"), text=b["name"], width=self.TILE_W - 12,
+                                 tags=tag)
+            c.create_text(x + 6, c.bbox(name)[3] + 1, anchor="nw", fill=MUTED, font=(FONT, 7),
+                          text="built-in" if b["action"] else b["home"], width=self.TILE_W - 12,
+                          tags=tag)
+            c.tag_bind(tag, "<Button-1>", lambda _e, b=b: self.use(b, True))
+            c.tag_bind(tag, "<Enter>", lambda _e: c.configure(cursor="hand2"))
+            c.tag_bind(tag, "<Leave>", lambda _e: c.configure(cursor=""))
+        rows = (len(items) - 1) // cols + 1
+        c.configure(scrollregion=(0, 0, width, 8 + rows * (th + 10)))
 
     # ---------- actions ----------
     def use(self, b, on):
         farm.set_used(self.script, b["id"], on)
-        self.app.log(f"{self.script}: {'using' if on else 'not using'} {b['name']} "
+        self.app.log(f"{self.script}: {'added' if on else 'removed'} {b['name']} "
                      f"(captured in {b['home']})", "info")
+        if on and not b["action"] and not b["marker"]:
+            self.selected = ("step", farm.group_key(b["name"], farm.step_map(self.script)))
         self.refresh()
 
     def count(self, b, on):
@@ -921,6 +1404,42 @@ class Customizer:
         now = sorted(farm.counter_names(self.script))
         self.app.log(f"{self.script}: run counter is now {', '.join(now) or 'nothing'}", "info")
         self.refresh()
+
+    def reset_arrows(self):
+        if not self.model or not self.model["learned"]:
+            messagebox.showinfo("Reset arrows", "No arrows learned yet - they come from runs.",
+                                parent=self.win)
+            return
+        if messagebox.askyesno("Reset arrows", "Forget the order learned from runs? The cards go "
+                               "back to priority order until the next run.", parent=self.win):
+            farm.reset_flow(self.script)
+            self.refresh()
+
+    def export_script(self):
+        path = filedialog.asksaveasfilename(
+            parent=self.win, title="Export script", defaultextension=farm.SHARE_EXT,
+            initialfile=f"{self.script}{farm.SHARE_EXT}",
+            filetypes=[("TACMonkey script", f"*{farm.SHARE_EXT}")])
+        if not path:
+            return
+        try:
+            count, renamed, missing = farm.export_script(self.script, path)
+        except (farm.ShareError, OSError) as e:
+            messagebox.showerror("Export script", str(e), parent=self.win)
+            return
+        notes = [f"{count} button images"]
+        if renamed:
+            notes.append("renamed (same name in two folders): " +
+                         ", ".join(f"{a} -> {b}" for a, b in renamed.items()))
+        if missing:
+            notes.append("missing on disk, left out: " + ", ".join(missing))
+        self.app.log(f"Exported '{self.script}' to {Path(path).name}: " + "; ".join(notes), "good")
+        messagebox.showinfo("Export script", f"Saved {Path(path).name}.\n\n" + "\n".join(notes) +
+                            "\n\nSend that one file. Your friend opens it with Import script.",
+                            parent=self.win)
+
+    def import_script(self):
+        self.app.import_script(self.win)
 
     def ask(self, title, prompt):
         name = simpledialog.askstring(title, prompt, parent=self.win)
@@ -939,7 +1458,8 @@ class Customizer:
             "Replace image", f"Replace the picture of {name}?\n\nUsed by: "
             f"{', '.join(users) or 'no script'}", parent=self.win)
 
-    def grab(self, home, name, pick=False):
+    def grab(self, home, name, pick=False, step=None):
+        """Capture an image; pick=True adds it to this script (into `step`, if given)."""
         if not self.confirm_replace(home, name):
             return
         if not messagebox.askokcancel(
@@ -952,7 +1472,10 @@ class Customizer:
 
         def done():
             if pick and (farm.script_dir(home) / f"{name}.png").exists():
+                if step:
+                    farm.set_step(self.script, name, step)
                 farm.set_used(self.script, f"{home}/{name}", True)
+                self.selected = ("step", farm.group_key(name, farm.step_map(self.script)))
             self.refresh_if_open()
 
         self.app.grab_image(home, name, done)
@@ -965,6 +1488,15 @@ class Customizer:
         name = self.ask("Capture new button", NAME_HELP)
         if name:
             self.grab(self.script, name, pick=True)
+
+    def add_variant(self, key):
+        """Capture another look of the same step (named <first image>_2, _3 ...)."""
+        names = {b["name"] for b in farm.describe_library(self.script)}
+        base = self.model["groups"][key][0]["name"]
+        n = 2
+        while f"{base}_{n}" in names:
+            n += 1
+        self.grab(self.script, f"{base}_{n}", pick=True, step=key)
 
     def load_file(self, home, name, pick=False):
         path = filedialog.askopenfilename(
@@ -983,6 +1515,7 @@ class Customizer:
         farm.save_image(home, name, img, width)
         if pick:
             farm.set_used(self.script, f"{home}/{name}", True)
+            self.selected = ("step", farm.group_key(name, farm.step_map(self.script)))
         self.app.log(f"Saved {name}.png (from {Path(path).name}, window width {width})", "good")
         self.refresh()
 

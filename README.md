@@ -49,6 +49,40 @@ If the game has a different mod version than the app expects, the log says so.
 
 Without the mod, the farm uses touch taps (the game window must stay uncovered).
 
+## Scripts
+
+**Customize** opens a script in one of two views (switch with the tabs):
+
+- **Flowchart:** one card per step, in the order your runs actually go through them.
+  - A step is one button; its images are variants (different looks of it).
+  - The farm records which button followed which, so the arrows show counts like `27x (90%)`.
+  - Before the first run, the cards follow the priority list.
+  - During a run, the step it just pressed is outlined in yellow.
+- **Priority list:** the order the farm checks steps on every scan. When two are on screen at
+  once, the higher one is tapped. Move steps with the arrows.
+
+To change a step, click its card. From there you can:
+- re-capture or replace an image, or remove or delete it;
+- mark it as the run counter;
+- **Add a variant**, or move an image into another step with **Step**.
+
+Below the flow is every other captured button: click one to add it.
+
+**Button names are free.** `go.png`, `try again.png` and so on all work. The priority and the
+variant grouping are saved in the script, not in file names. Old names like `06_go` still work:
+their number is used as the default step and order until you change it. A new button goes to
+the bottom of the priority list. Names starting with `x_` are markers, which are only looked
+at and never tapped.
+
+Some old story-farm behaviour still depends on fixed numbers: `01` topmost quest, `08` tap
+anywhere, `09` default run counter, `10` act, and the `x_quest_done` / `x_back` markers.
+
+**Sharing:** **Export script** writes one `.tacscript` file with the images the script uses,
+plus its steps, priority, run counter, tap spots and learned arrows. Your friend opens it with
+**Import** (main window) or **Import script** (Customize). It becomes a new script with its own
+copy of the images, so nothing they already have is overwritten. Then they press **Check
+screen** to see whether the images match on their window.
+
 ## Build the mod
 
 Needs the .NET 8 SDK and the game folder with BepInEx 6 (IL2CPP) installed and started once.
