@@ -119,6 +119,12 @@ mod isn't running).
        -> btn_ok -> team Back -> close popup. AP: HealAPItemList -> row "Alchemy Drops" ->
        UseApHealItem: + until 7 pcs (game caps so AP <= max) -> OK -> OK. Tested: 3 real 3x skips
        (8-3/4/5), AP 760 -> 400. AP refill path not yet seen live (needs AP < 120).
+11. [x] Mod v1.2.1 (2026-11-15), security: a web page can make the browser send an HTTP request
+       to 127.0.0.1:47613, and v1.2.0 ran every line it got - so the request body (e.g.
+       `click Sell`) would have been executed. Now the connection is closed at the first line that
+       isn't a mod command (HTTP always starts with "GET/POST ... HTTP/1.1"), lines are capped at
+       512 printable ASCII characters. Tested offline against browser-style requests.
+       v1.2.0 kept in backup\TACAutoTap-1.2.0.dll.
 8. [~] Test in the game (2026-11-11): plugin loads ("Loading [TAC Auto Tap 1.0.0]", TapRunner
        registered despite the Class::Init substitute warning). `ping` -> `pong 1.0.0 1765x993`.
        Probes on the home screen found the real buttons (ShortcutMenu/open, quest/event,

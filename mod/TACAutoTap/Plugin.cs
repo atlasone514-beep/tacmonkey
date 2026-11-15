@@ -18,6 +18,11 @@
 //   scroll FX FY V -> move the list under the point to V (0..1).
 // The press is sent through Unity's EventSystem the same way a real touch is: pointer down,
 // pointer up, click - on the main thread.
+//
+// Safety: a web page can make the browser send an HTTP request to 127.0.0.1, and its body would
+// arrive here as lines. So the connection is closed at the first line that isn't one of the
+// commands above (an HTTP request always starts with "GET/POST ... HTTP/1.1"), before any body
+// is read. Lines are also capped in length and must be plain printable ASCII.
 using System;
 using System.Collections.Concurrent;
 using System.Globalization;
@@ -38,8 +43,11 @@ namespace TACAutoTap;
 public class Plugin : BasePlugin
 {
     public const string Guid = "tac.autotap";
-    public const string Version = "1.2.0";
+    public const string Version = "1.2.1";
     public const int Port = 47613;
+    private const int MaxLine = 512;
+    private static readonly string[] Commands =
+        { "ping", "tap", "probe", "list", "click", "items", "inspect", "scroll" };
 
     internal static ManualLogSource L;
     internal static readonly ConcurrentQueue<Request> Pending = new();
@@ -74,12 +82,19 @@ public class Plugin : BasePlugin
                 client.NoDelay = true;
                 client.ReceiveTimeout = 5000;
                 using var stream = client.GetStream();
-                var reader = new StreamReader(stream, Encoding.ASCII);
                 var writer = new StreamWriter(stream, new UTF8Encoding(false)) { AutoFlush = true, NewLine = "\n" };
                 string line;
-                while ((line = reader.ReadLine()) != null)
+                while ((line = ReadLine(stream)) != null)
                 {
-                    var req = new Request(line.Trim());
+                    line = line.Trim();
+                    if (!IsCommand(line))
+                    {
+                        writer.WriteLine("err not a command - closing");
+                        L.LogWarning("closed a connection that sent something other than a command " +
+                                     "(e.g. a web page trying to reach the mod)");
+                        break;
+                    }
+                    var req = new Request(line);
                     Pending.Enqueue(req);
                     // The game handles it on its next frame (only ~7 fps when the window isn't focused).
                     writer.WriteLine(req.Done.Wait(3000) ? req.Reply : "err timeout - game busy or paused");
@@ -90,6 +105,30 @@ public class Plugin : BasePlugin
                 L.LogDebug($"connection ended: {e.Message}");
             }
         }
+    }
+
+    /// <summary>One line (without the line break), or null at the end of the connection or if
+    /// the line is too long or holds anything but printable ASCII.</summary>
+    private static string ReadLine(Stream stream)
+    {
+        var sb = new StringBuilder();
+        while (true)
+        {
+            var b = stream.ReadByte();
+            if (b < 0) return sb.Length > 0 ? sb.ToString() : null;
+            if (b == '\n') return sb.ToString();
+            if (b == '\r') continue;
+            if (b < 0x20 || b > 0x7E || sb.Length >= MaxLine) return null;
+            sb.Append((char)b);
+        }
+    }
+
+    private static bool IsCommand(string line)
+    {
+        if (line.Length == 0 || line.Contains("HTTP/")) return false;
+        var space = line.IndexOf(' ');
+        var word = space < 0 ? line : line.Substring(0, space);
+        return Array.IndexOf(Commands, word) >= 0;
     }
 }
 
