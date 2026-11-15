@@ -73,9 +73,13 @@ def main():
     game = os.environ.get("TAC_GAME")
     if not game or not (Path(game) / "BepInEx" / "core").is_dir():
         sys.exit("Set TAC_GAME to the game folder (with BepInEx be.793 installed).")
-    version = read_version(REPO / "app" / "farm.py", r'VERSION = "([^"]+)"')
+    version = read_version(REPO / "app" / "farm.py", r'(?m)^VERSION = "([^"]+)"')
     mod_version = read_version(REPO / "mod" / "TACAutoTap" / "Plugin.cs",
                                r'Version = "([^"]+)"')
+    app_mod = read_version(REPO / "app" / "farm.py", r'MOD_VERSION = "([^"]+)"')
+    if app_mod != mod_version:
+        sys.exit(f"app/farm.py MOD_VERSION is {app_mod} but the mod is {mod_version} - set them "
+                 "the same, so the app's mod check matches what this setup installs.")
     dotnet = os.environ.get("DOTNET") or shutil.which("dotnet")
     if not dotnet:
         sys.exit("dotnet not found - install the .NET 8 SDK or set DOTNET to dotnet.exe")

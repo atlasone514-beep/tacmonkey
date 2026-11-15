@@ -15,7 +15,18 @@ your mouse.
    already have.
 
 Windows may warn that the setup is from an unknown publisher (it isn't code-signed): click
-**More info > Run anyway**. Run the setup again to update, or use its **Uninstall...** button.
+**More info > Run anyway**. To remove it, run the setup again and use its **Uninstall...** button.
+
+### Updates
+
+On start, TACMonkey asks GitHub whether a newer release exists (turn this off with **Check for
+updates when TACMonkey starts**, or press **Check now**). If there is one, a bar offers
+**Update**. The new setup is downloaded and checked against the release's `SHA256SUMS.txt`.
+TACMonkey then closes, the setup updates the app and the mod (BepInEx is left as it is), and
+the app opens again. Buttons, scripts and settings stay. Close the game first so the mod can be
+updated too. Running the new setup by hand works the same way.
+
+If the game has a different mod version than the app expects, the log says so.
 
 ## Layout
 
@@ -60,4 +71,12 @@ python release/build.py
 ```
 
 Output: `build/dist/TACMonkey-Setup-<version>.exe`, `SHA256SUMS.txt` and `NOTICE.txt`.
-Bump `VERSION` in `app/farm.py` first.
+Bump `VERSION` in `app/farm.py` first. If the mod changed, bump its `Version` in `Plugin.cs` and
+set `MOD_VERSION` in `app/farm.py` to match (the build stops if they differ).
+
+Publish with a `v<version>` tag and attach all three files. The app's update check needs the
+setup exe and `SHA256SUMS.txt` on the release:
+
+```
+gh release create v<version> build/dist/TACMonkey-Setup-<version>.exe build/dist/SHA256SUMS.txt build/dist/NOTICE.txt
+```
