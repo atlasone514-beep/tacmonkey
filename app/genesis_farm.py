@@ -384,7 +384,10 @@ class GenesisFarm:
                 t = self.texts(chunk)
                 n = next((int(t[i - 1]) for i in range(1, len(t))
                           if t[i].startswith("(Owned") and t[i - 1].isdigit()), None)
-                out.append((m.group(1), n if n is not None else 1))
+                name = m.group(1)
+                if self.mode == "extra" and not name.endswith("Diagram Piece"):
+                    name += " Soul Shard"   # elemental shards: "Thunder Soul Shard", not "Thunder"
+                out.append((name, n if n is not None else 1))
         return out
 
     def farm_stage(self, st):
@@ -455,7 +458,8 @@ class GenesisFarm:
                 self.farm_stage(st)
             self.go_genesis()
             summary = ", ".join(f"{u} x{n}" for u, n in self.shards.items()) or "none"
-            self.log(f"{name} finished. Shards this run: {summary}")
+            what = "Shards" if self.mode == "hard" else "Shards and pieces"
+            self.log(f"{name} finished. {what} this run: {summary}")
             return "Finished."
         except Stop:
             self.log(f"{name} stopped.")
