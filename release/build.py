@@ -81,17 +81,28 @@ def main():
         sys.exit(f"app/farm.py MOD_VERSION is {app_mod} but the mod is {mod_version} - set them "
                  "the same, so the app's mod check matches what this setup installs.")
     dotnet = os.environ.get("DOTNET") or shutil.which("dotnet")
-    if not dotnet:
+    if not dotnet and not os.environ.get("TAC_MOD_DLL"):
         sys.exit("dotnet not found - install the .NET 8 SDK or set DOTNET to dotnet.exe")
     print(f"TACMonkey {version}, mod {mod_version}")
 
     shutil.rmtree(BUILD, ignore_errors=True)
     PAYLOAD.mkdir(parents=True)
 
-    # 1. the mod
-    run([dotnet, "build", REPO / "mod" / "TACAutoTap", "-c", "Release", "-nologo", "-v", "q",
-         f"-p:Game={game}"])
-    shutil.copy2(REPO / "mod" / "TACAutoTap" / "bin" / "TACAutoTap.dll", PAYLOAD)
+    # 1. the mod: built from source, or (TAC_MOD_DLL) an already built TACAutoTap.dll of the
+    # same version, e.g. when BepInEx\interop isn't there to compile against yet
+    prebuilt = os.environ.get("TAC_MOD_DLL")
+    if prebuilt:
+        if mod_version.encode() not in Path(prebuilt).read_bytes():
+            sys.exit(f"{prebuilt} isn't TAC Auto Tap {mod_version}")
+        print(f"Using the built mod {prebuilt} (SHA-256 {sha256(prebuilt)})")
+        shutil.copy2(prebuilt, PAYLOAD / "TACAutoTap.dll")
+    else:
+        if not (Path(game) / "BepInEx" / "interop").is_dir():
+            sys.exit("BepInEx\\interop is missing in TAC_GAME - start the game once so BepInEx "
+                     "makes it, or set TAC_MOD_DLL to a built TACAutoTap.dll of this version.")
+        run([dotnet, "build", REPO / "mod" / "TACAutoTap", "-c", "Release", "-nologo", "-v", "q",
+             f"-p:Game={game}"])
+        shutil.copy2(REPO / "mod" / "TACAutoTap" / "bin" / "TACAutoTap.dll", PAYLOAD)
 
     # 2. the patched loader, checked against the known hash
     patched = Path(game) / "BepInEx" / "core" / "Il2CppInterop.Generator.dll"
