@@ -64,6 +64,7 @@ matches best).
 """
 import ctypes
 import json
+import re
 import socket
 import sys
 import threading
@@ -90,6 +91,7 @@ REF_FILE = BUTTON_DIR / "_ref_width.json"   # frame width each template was grab
 SCRIPTS_DIR = APP_DIR / "scripts"  # one folder per extra script (see load_templates)
 DEFAULT_SCRIPT = "Default"                       # the buttons/ folder on its own
 SPOTS_FILE = "taps.json"                         # optional fixed tap spots (see load_spots)
+FLOW_FILE = "flow.json"                          # which button followed which in runs (FlowRecorder)
 SCRIPT_FILE = "script.json"                      # per-script settings: {"use": [...], "count": [...]}
 THRESHOLD = 0.85        # match confidence 0-1. Lower it if a button is missed.
 COLOR_TOL = 14          # max mean colour difference (0-255) between an image and the screen
@@ -311,9 +313,53 @@ def script_dir(script=None):
     return SCRIPTS_DIR / script if script and script != DEFAULT_SCRIPT else BUTTON_DIR
 
 
-def group_key(name):
-    """Images sharing this key are variants of one button: the number prefix (x_ markers: the name)."""
-    return name if name.startswith("x_") else name.split("_")[0]
+NUMBERED = re.compile(r"^(\d+)_")
+
+
+def group_key(name, steps=None):
+    """The step an image belongs to (images of one step are variants of one button): the step
+    the script assigns it (script.json "steps"), else an old-style number prefix (07_skip and
+    07_talk are step 07), else the image is a step of its own. x_ markers are their own name."""
+    if steps and name in steps:
+        return steps[name]
+    if name.startswith("x_"):
+        return name
+    m = NUMBERED.match(name)
+    return m.group(1) if m else name
+
+
+def step_map(script=None):
+    """{image name: step} the script assigns by hand (variants grouped in Customize)."""
+    steps = script_settings(script).get("steps", {})
+    return {k: v for k, v in steps.items() if isinstance(k, str) and isinstance(v, str)} \
+        if isinstance(steps, dict) else {}
+
+
+def set_step(script, name, key):
+    """Put image `name` into step `key` for this script (None = its own default step)."""
+    before = rank_steps(script_steps(script), priority_order(script))
+    settings = script_settings(script)
+    steps = step_map(script)
+    if key is None or key == group_key(name):
+        steps.pop(name, None)
+    else:
+        steps[name] = key
+    if steps:
+        settings["steps"] = dict(sorted(steps.items()))
+    else:
+        settings.pop("steps", None)
+    _write_settings(script, settings)
+    added = [k for k in script_steps(script) if k not in before]
+    if added and before:  # a step split off goes to the bottom of the priority
+        set_priority_order(script, [k for k in before if k in script_steps(script)] + added)
+
+
+def script_steps(script=None):
+    """The steps this script's picked images make up (markers and built-ins left out), in plain
+    sort order - the starting point that priority_order reorders."""
+    steps = step_map(script)
+    names = [i.split("/", 1)[1] for i in used_ids(script) if i not in ACTIONS]
+    return sorted({group_key(n, steps) for n in names if not n.startswith("x_")})
 
 
 def load_refs(folder=BUTTON_DIR):
@@ -372,6 +418,12 @@ def script_settings(script=None):
         return {}
 
 
+def new_script_settings(script):
+    """A new script starts with nothing picked (a folder without script.json would use every
+    Default image, the old behaviour kept for scripts made before the pool existed)."""
+    _write_settings(script, {"use": []})
+
+
 def _write_settings(script, settings):
     folder = script_dir(script)
     folder.mkdir(parents=True, exist_ok=True)
@@ -414,6 +466,170 @@ def import_buttons(src):
     return images, sorted(scripts), skipped
 
 
+# ---------- sharing a script as one file ----------
+SHARE_EXT = ".tacscript"   # a zip: manifest.json + images/<name>.png
+SHARE_FORMAT = 1
+SHARE_MAX_IMAGES = 400
+SHARE_MAX_IMAGE_BYTES = 5_000_000
+SHARE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _.\-]{0,80}$")
+
+
+class ShareError(Exception):
+    pass
+
+
+def export_script(script, path):
+    """Write one script to a .tacscript file: the images it uses (wherever they live), their
+    capture widths, its run counter, tap spots and built-in actions.
+
+    Returns (images written, names renamed {old: new}, ids missing on disk)."""
+    import zipfile
+    want = used_ids(script)
+    actions = [i for i in want if i in ACTIONS]
+    pool = {bid: (name, home) for bid, name, home, _, _ in library()}
+    counters = counter_names(script)
+    src_steps = step_map(script)
+    images, renamed, missing, out_steps = {}, {}, [], {}
+    files = {}
+    for bid in sorted(i for i in want if i not in ACTIONS):
+        if bid not in pool:
+            missing.append(bid)
+            continue
+        name, home = pool[bid]
+        src = script_dir(home) / f"{name}.png"
+        data = src.read_bytes()
+        out = name
+        if out in files and files[out] != data:  # same name from two folders: keep both
+            n = 2
+            while f"{name}_{n}" in files:
+                n += 1
+            out = f"{name}_{n}"
+            renamed[f"{home}/{name}"] = out
+        if out in files:
+            continue  # the very same image twice
+        files[out] = data
+        images[out] = {"ref": load_refs(script_dir(home)).get(name),
+                       "count": name in counters}
+        step = group_key(name, src_steps)
+        if step != group_key(out):
+            out_steps[out] = step
+    if not files and not actions:
+        raise ShareError("This script has no buttons picked - nothing to export.")
+    pairs, _ = load_flow(script)  # the learned arrows travel along (renamed images left out)
+    flow = {f"{a}>{b}": n for (a, b), n in pairs.items() if a in images and b in images and
+            a not in renamed.values() and b not in renamed.values()}
+    manifest = {"format": SHARE_FORMAT, "app_version": VERSION, "name": script,
+                "images": images, "actions": actions, "flow": flow,
+                "order": priority_order(script), "steps": out_steps,
+                "spots": {k: list(v) for k, v in load_spots(script).items()}}
+    with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as z:
+        z.writestr("manifest.json", json.dumps(manifest, indent=2))
+        for name, data in files.items():
+            z.writestr(f"images/{name}.png", data)
+    return len(files), renamed, missing
+
+
+def free_script_name(name):
+    """name, or 'name (2)', 'name (3)' ... whichever isn't taken yet."""
+    taken = {s.lower() for s in list_scripts()}
+    out, n = name, 2
+    while out.lower() in taken:
+        out, n = f"{name} ({n})", n + 1
+    return out
+
+
+def import_script(path, name=None):
+    """Make a new script from a .tacscript file. Nothing that's already here is touched: the
+    images go into the new script's own folder. Returns (script name, images, notes)."""
+    import zipfile
+    try:
+        z = zipfile.ZipFile(path)
+    except (OSError, zipfile.BadZipFile) as e:
+        raise ShareError(f"Not a TACMonkey script file ({e}).") from e
+    with z:
+        try:
+            manifest = json.loads(z.read("manifest.json").decode("utf-8"))
+        except (KeyError, ValueError, UnicodeDecodeError) as e:
+            raise ShareError("Not a TACMonkey script file (no readable manifest).") from e
+        if not isinstance(manifest, dict) or manifest.get("format") != SHARE_FORMAT:
+            raise ShareError("This script file is from a different TACMonkey version - "
+                             "update TACMonkey and try again.")
+        images = manifest.get("images") or {}
+        if not isinstance(images, dict) or len(images) > SHARE_MAX_IMAGES:
+            raise ShareError("The script file's image list is broken.")
+        notes = []
+        decoded = {}
+        for img_name, meta in images.items():
+            if not isinstance(img_name, str) or not SHARE_NAME.match(img_name) or \
+                    not isinstance(meta, dict):
+                raise ShareError(f"Unsafe image name in the script file: {img_name!r}")
+            try:
+                info = z.getinfo(f"images/{img_name}.png")
+            except KeyError:
+                notes.append(f"{img_name} is listed but missing from the file - skipped")
+                continue
+            if info.file_size > SHARE_MAX_IMAGE_BYTES:
+                raise ShareError(f"{img_name}.png is too large to be a button image.")
+            img = cv2.imdecode(np.frombuffer(z.read(info), np.uint8), cv2.IMREAD_COLOR)
+            if img is None:
+                raise ShareError(f"{img_name}.png isn't a readable image.")
+            decoded[img_name] = (img, meta)
+        actions = [a for a in manifest.get("actions") or [] if a in ACTIONS]
+        if not decoded and not actions:
+            raise ShareError("The script file has no buttons in it.")
+        spots = {}
+        for key, val in (manifest.get("spots") or {}).items():
+            try:
+                x, y = float(val[0]), float(val[1])
+            except (TypeError, ValueError, IndexError, KeyError):
+                continue
+            if isinstance(key, str) and SHARE_NAME.match(key) and 0 <= x <= 1 and 0 <= y <= 1:
+                spots[key] = [x, y]
+        flow = {}
+        raw_flow = manifest.get("flow") or {}
+        for key, n in (raw_flow.items() if isinstance(raw_flow, dict) else []):
+            a, _, b = str(key).partition(">")
+            if a in decoded and b in decoded and isinstance(n, int) and 0 < n < 10**7:
+                flow[f"{a}>{b}"] = n
+
+    wanted = str(name or manifest.get("name") or Path(path).stem)
+    wanted = "".join(c for c in wanted if c not in '\\/:*?"<>|').strip(" .") or "Imported"
+    if wanted == DEFAULT_SCRIPT:
+        wanted = "Imported"
+    script = free_script_name(wanted[:60])
+    folder = script_dir(script)
+    folder.mkdir(parents=True)
+    refs = {}
+    for img_name, (img, meta) in decoded.items():
+        cv2.imwrite(str(folder / f"{img_name}.png"), img)  # re-encoded: only pixels come in
+        ref = meta.get("ref")
+        if isinstance(ref, int) and 100 <= ref <= 10000:
+            refs[img_name] = ref
+    (folder / REF_FILE.name).write_text(json.dumps(refs, indent=2))
+    if spots:
+        (folder / SPOTS_FILE).write_text(json.dumps(spots, indent=2))
+    if flow:
+        (folder / FLOW_FILE).write_text(json.dumps({"pairs": flow, "pressed": {}}, indent=2))
+    settings = {
+        "use": sorted([f"{script}/{n}" for n in decoded] + actions),
+        "count": sorted(n for n, (_, meta) in decoded.items() if meta.get("count") is True)}
+    raw_steps = manifest.get("steps")
+    step_of = {n: k for n, k in (raw_steps.items() if isinstance(raw_steps, dict) else [])
+               if n in decoded and isinstance(k, str) and SHARE_NAME.match(k)}
+    if step_of:
+        settings["steps"] = dict(sorted(step_of.items()))
+    steps = {group_key(n, step_of) for n in decoded}
+    raw_order = manifest.get("order")
+    order = [k for k in raw_order if isinstance(k, str) and k in steps] \
+        if isinstance(raw_order, list) else []
+    if order:
+        settings["order"] = order
+    _write_settings(script, settings)
+    if manifest.get("app_version") and manifest["app_version"] != VERSION:
+        notes.append(f"made with TACMonkey {manifest['app_version']} (you have {VERSION})")
+    return script, len(decoded), notes
+
+
 def library():
     """Every captured button image, whichever script it was captured in:
     [(id, name, home, image, ref width)] with id "<home>/<name>" and home = Default (buttons/)
@@ -453,13 +669,18 @@ def freeze_use(script=None):
 
 
 def set_used(script, button_id, on):
-    """Pick (or un-pick) one pool image for this script."""
+    """Pick (or un-pick) one pool image for this script. A new step goes to the bottom of the
+    priority (not wherever its name would sort)."""
     freeze_use(script)
+    before = rank_steps(script_steps(script), priority_order(script))
     settings = script_settings(script)
     ids = set(settings["use"])
     ids = ids | {button_id} if on else ids - {button_id}
     settings["use"] = sorted(ids)
     _write_settings(script, settings)
+    added = [k for k in script_steps(script) if k not in before]
+    if on and added and before:
+        set_priority_order(script, before + added)
 
 
 def counter_names(script=None, templates=None):
@@ -472,7 +693,8 @@ def counter_names(script=None, templates=None):
         names = [name for name, _, _ in templates]
     else:  # from the picks, not load_templates(): that stops on a script with nothing picked
         names = [i.split("/", 1)[1] for i in used_ids(script) if i not in ACTIONS]
-    return {name for name in names if group_key(name) == COUNT_BUTTON}
+    steps = step_map(script)
+    return {name for name in names if group_key(name, steps) == COUNT_BUTTON}
 
 
 def set_counter(script, name, on):
@@ -519,6 +741,7 @@ def describe_library(script=None):
     used = set(used_ids(script))
     counters = counter_names(script)
     spots = load_spots(script)
+    steps = step_map(script)
     out = [{"id": aid, "name": name, "home": ACTION_HOME, "img": action_badge("AP refill\n7 Alch. Drops"),
             "ref": None, "used": aid in used, "counter": False, "marker": False, "spot": None,
             "action": True, "about": about} for aid, (name, about) in ACTIONS.items()]
@@ -526,8 +749,109 @@ def describe_library(script=None):
         marker = name.startswith("x_")
         out.append({"id": button_id, "name": name, "home": home, "img": tpl, "ref": ref,
                     "used": button_id in used, "counter": name in counters, "marker": marker,
-                    "spot": None if marker else spots.get(group_key(name)), "action": False})
+                    "spot": None if marker else spots.get(group_key(name, steps)),
+                    "step": group_key(name, steps), "action": False})
     return out
+
+
+# ---------- the flow: which button follows which (drawn by the customizer) ----------
+def load_flow(script=None):
+    """({(a, b): times b was pressed right after a}, {name: times pressed}) from runs."""
+    try:
+        data = json.loads((script_dir(script) / FLOW_FILE).read_text())
+        pairs = {tuple(k.split(">", 1)): int(v) for k, v in data.get("pairs", {}).items()
+                 if ">" in k}
+        return pairs, {k: int(v) for k, v in data.get("pressed", {}).items()}
+    except (OSError, ValueError, AttributeError, TypeError):
+        return {}, {}
+
+
+def reset_flow(script=None):
+    (script_dir(script) / FLOW_FILE).unlink(missing_ok=True)
+
+
+class FlowRecorder:
+    """Counts, during a run, which button was pressed after which. Repeat taps of the same
+    button are one step. Saved every few presses and at the end."""
+
+    def __init__(self, script):
+        self.script = script
+        self.pairs, self.pressed = load_flow(script)
+        self.prev, self.unsaved = None, 0
+
+    def press(self, name):
+        self.pressed[name] = self.pressed.get(name, 0) + 1
+        if self.prev and self.prev != name:
+            self.pairs[(self.prev, name)] = self.pairs.get((self.prev, name), 0) + 1
+        self.prev = name
+        self.unsaved += 1
+        if self.unsaved >= 5:
+            self.save()
+
+    def save(self):
+        if not self.unsaved:
+            return
+        try:
+            folder = script_dir(self.script)
+            folder.mkdir(parents=True, exist_ok=True)
+            (folder / FLOW_FILE).write_text(json.dumps(
+                {"pairs": {f"{a}>{b}": n for (a, b), n in sorted(self.pairs.items())},
+                 "pressed": dict(sorted(self.pressed.items()))}, indent=2))
+            self.unsaved = 0
+        except OSError:
+            pass
+
+
+def flow_model(script=None):
+    """What the customizer draws: this script's buttons grouped like the farm groups them
+    (same number = variants of one step), in the order runs went through them.
+
+    {"groups": {key: [entries]}, "order": [keys], "pairs": {(ka, kb): n}, "pressed": {key: n},
+     "learned": bool, "actions": [entries], "markers": [entries]} - entries as describe_library."""
+    entries = [b for b in describe_library(script) if b["used"]]
+    actions = [b for b in entries if b["action"]]
+    markers = [b for b in entries if not b["action"] and b["marker"]]
+    groups = {}
+    for b in sorted((b for b in entries if not b["action"] and not b["marker"]),
+                    key=lambda b: (b["step"], b["name"], b["home"])):
+        groups.setdefault(b["step"], []).append(b)
+    key_of = {b["name"]: k for k, bs in groups.items() for b in bs}
+    pairs, pressed = load_flow(script)
+    gpairs, gpressed = {}, {}
+    for (a, b), n in pairs.items():
+        if a in key_of and b in key_of and key_of[a] != key_of[b]:
+            gpairs[(key_of[a], key_of[b])] = gpairs.get((key_of[a], key_of[b]), 0) + n
+    for name, n in pressed.items():
+        if name in key_of:
+            gpressed[key_of[name]] = gpressed.get(key_of[name], 0) + n
+    own = priority_order(script)
+    priority = rank_steps(list(groups), own)
+    return {"groups": groups, "order": flow_order(priority, gpairs, gpressed),
+            "priority": priority, "custom_priority": bool(own),
+            "pairs": gpairs, "pressed": gpressed, "learned": bool(gpairs),
+            "actions": actions, "markers": markers}
+
+
+def flow_order(keys, pairs, pressed):
+    """Steps in the order runs go through them: from the first pressed step (in priority
+    order), always on to its most frequent next step not placed yet; never-pressed steps go
+    last. Without any runs it's simply the priority order (keys as given)."""
+    if not pairs:
+        return list(keys)
+    nxt = {}
+    for (a, b), n in pairs.items():
+        nxt.setdefault(a, []).append((n, b))
+    seen_pressed = [k for k in keys if pressed.get(k) or any(k in p for p in pairs)]
+    order, placed = [], set()
+    current = seen_pressed[0] if seen_pressed else None
+    while current is not None:
+        order.append(current)
+        placed.add(current)
+        options = sorted((o for o in nxt.get(current, []) if o[1] not in placed),
+                         key=lambda o: (-o[0], keys.index(o[1])))
+        current = options[0][1] if options else next(
+            (k for k in seen_pressed if k not in placed), None)
+    return order + [k for k in keys if k not in placed]
 
 
 def load_spots(script=None):
@@ -703,16 +1027,43 @@ def find_button(frame, variants, topmost):
     return None
 
 
-def group_templates(templates):
-    """Group clickable templates by number prefix, keeping filename order: {"01": [variants], ...}.
+def group_templates(templates, order=None, steps=None):
+    """Group clickable templates into steps (see group_key): {"01": [variants], "go": [...]}.
+    The dict order is the priority (checked first to last): plain sort order of the steps, or
+    the script's own priority list (see priority_order) when it has one.
 
     x_ marker images are left out (see split_markers).
     """
     groups = {}
     for name, tpl, ref in templates:
         if not name.startswith("x_"):
-            groups.setdefault(name.split("_")[0], []).append((name, tpl, ref))
-    return groups
+            groups.setdefault(group_key(name, steps), []).append((name, tpl, ref))
+    return {k: groups[k] for k in rank_steps(sorted(groups), order)}
+
+
+def rank_steps(keys, order=None):
+    """keys (in number order) in priority order: the ones in the script's priority list in that
+    order, then any others (e.g. added since) in number order after them."""
+    if not order:
+        return list(keys)
+    listed = [k for k in order if k in keys]
+    return listed + [k for k in keys if k not in listed]
+
+
+def priority_order(script=None):
+    """The script's own priority list of steps ([] = plain number order)."""
+    order = script_settings(script).get("order", [])
+    return [k for k in order if isinstance(k, str)] if isinstance(order, list) else []
+
+
+def set_priority_order(script, keys):
+    """Save the step priority for this script; the plain number order is stored as no list."""
+    settings = script_settings(script)
+    if list(keys) == sorted(keys) or not keys:
+        settings.pop("order", None)
+    else:
+        settings["order"] = list(keys)
+    _write_settings(script, settings)
 
 
 def split_markers(templates):
@@ -744,7 +1095,7 @@ def check(script=None):
     if frame is None:
         sys.exit("Captured a black frame - make sure the game is open and not minimized.")
     scores = [(name, match(frame, tpl, ref)[0]) for name, tpl, ref in templates]
-    groups = group_templates(templates)
+    groups = group_templates(templates, priority_order(script), step_map(script))
     back = act_finished(frame, groups, split_markers(templates))
     if AP_REFILL in used_actions(script) and ap_window_open():
         action = "Replenish AP is open -> would refill AP with 7 Alchemy Drops"
@@ -787,11 +1138,12 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
         log(f"{time.strftime('%H:%M:%S')} {msg}")
 
     templates = load_templates(script)
-    groups = group_templates(templates)
+    groups = group_templates(templates, priority_order(script), step_map(script))
     markers = split_markers(templates)
     spots = load_spots(script)
     counters = counter_names(script, templates)
     log(f"Loaded {len(templates)} buttons: {', '.join(n for n, _, _ in templates)}")
+    log("Priority: " + " > ".join(groups) + (" (own list)" if priority_order(script) else ""))
     log(f"Run counter: {', '.join(sorted(counters)) or 'none - runs are not counted'}")
     if spots:
         log("Fixed tap spots: " + ", ".join(f"{b} at {x:.0%} across, {y:.0%} down"
@@ -819,6 +1171,7 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
             f"{genesis_farm.AP_ITEM}." + ("" if status else " (Needs the mod - it isn't running.)"))
     last_ap_check = 0.0
     log("F8 = pause/resume, F9 = stop (from any window). Keep the game open and uncovered.")
+    flow = FlowRecorder(script)  # learns the arrows the customizer draws
     last_click, runs, f8_prev = {}, 0, False
     went_back = False  # tapped "back" for a finished act, no new quest found since
     last_action = time.time()
@@ -925,6 +1278,8 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
                     say(f"{name} tapped {streak} times in a row and the screen hasn't moved on "
                         f"- saved {shot.name} in the stuck folder")
                 last = f"{name} ({score:.2f})"
+                if streak == 1:
+                    flow.press(name)
                 last_click[button] = last_action = time.time()
                 warned = False
                 if button == QUEST_BUTTON:
@@ -948,6 +1303,7 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
         if reason:
             break
         time.sleep(SCAN_INTERVAL)
+    flow.save()
     reason = reason or "Stopped."
     say(reason)
     show("Stopped")
