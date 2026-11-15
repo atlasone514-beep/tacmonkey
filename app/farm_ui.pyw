@@ -9,6 +9,7 @@ import queue
 import threading
 import time
 import tkinter as tk
+import webbrowser
 from pathlib import Path
 from tkinter import filedialog, messagebox, simpledialog
 
@@ -19,6 +20,7 @@ except Exception as e:  # e.g. opencv missing - pythonw has no console to show i
     messagebox.showerror("TACMonkey",
                          f"Couldn't load farm.py:\n{e}\n\nSetup: pip install opencv-python numpy")
     raise SystemExit(1)
+import updater
 
 BG, PANEL, FIELD = "#17181c", "#22242b", "#2d3039"
 FG, MUTED, DARK = "#e8e8ea", "#8b8d98", "#121316"
@@ -50,6 +52,8 @@ class App:
         self.run_time = 0.0
         self.tick_from = time.time()
         self.import_asked = False  # first-run "use your existing buttons?" was shown
+        self.update_info = None    # the newer release found by the update check
+        self.update_busy = False   # downloading it
 
         root.title(f"TACMonkey {farm.VERSION}")
         root.configure(bg=BG)
@@ -63,6 +67,128 @@ class App:
         root.after(100, self.poll)
         root.after(1000, self.tick)
         root.after(400, self.first_run)
+        if self.check_updates.get():
+            root.after(1500, lambda: self.check_for_updates(manual=False))
+        threading.Thread(target=self.check_mod, daemon=True).start()
+
+    def check_mod(self):
+        """If the game is open with a different mod version than this app expects, say so."""
+        problem = farm.mod_mismatch(farm.mod_status())
+        if problem:
+            self.q.put(("log", problem, "warn"))
+
+    # ---------- updates ----------
+    def build_update_bar(self):
+        """The 'new version available' strip at the top; packed only when there is one."""
+        bar = tk.Frame(self.root, bg=BLUE, padx=14, pady=8)
+        self.update_text = tk.Label(bar, bg=BLUE, fg=DARK, font=(FONT, 10, "bold"), anchor="w",
+                                    justify="left", wraplength=260)
+        self.update_text.pack(side="left", fill="x", expand=True)
+        self.update_buttons_ = []
+        for text, command in (("Later", self.hide_update), ("What's new", self.update_notes),
+                              ("Update", self.do_update)):
+            b = tk.Button(bar, text=text, command=command, bg=DARK, fg=FG, activebackground=PANEL,
+                          activeforeground=FG, disabledforeground=MUTED, relief="flat", bd=0,
+                          font=(FONT, 9, "bold" if text == "Update" else "normal"), padx=8, pady=3,
+                          cursor="hand2")
+            b.color = DARK
+            b.pack(side="right", padx=(6, 0))
+            self.update_buttons_.append(b)
+        self.update_btn = self.update_buttons_[-1]
+        self.update_bar = bar
+
+    def check_for_updates(self, manual=True):
+        """Ask GitHub for a newer release on a worker thread; the answer comes back via poll."""
+        if self.update_busy:
+            return
+        if manual:
+            self.log("Checking for updates...", "muted")
+
+        def job():
+            try:
+                self.q.put(("update", updater.latest(), manual))
+            except updater.UpdateError as e:
+                self.q.put(("update_error", str(e), manual))
+            except Exception as e:
+                self.q.put(("update_error", f"{e!r}", manual))
+
+        threading.Thread(target=job, daemon=True).start()
+
+    def show_update(self, info):
+        self.update_info = info
+        self.update_text.config(text=f"TACMonkey {info['version']} is available")
+        self.enable(self.update_btn, True)
+        if not self.update_bar.winfo_ismapped():
+            self.update_bar.pack(fill="x", before=self.status_card)
+        self.log(f"Update available: TACMonkey {info['version']}.", "info")
+
+    def hide_update(self):
+        if not self.update_busy:
+            self.update_bar.pack_forget()
+
+    def update_notes(self):
+        webbrowser.open(self.update_info["page"] if self.update_info else updater.PAGE)
+
+    def do_update(self):
+        info = self.update_info
+        if not info or self.update_busy:
+            return
+        if not updater.can_self_update():
+            self.log("This copy runs from source - get the new version from the Releases page.",
+                     "info")
+            webbrowser.open(info["page"])
+            return
+        if self.running() or self.genesis_running():
+            messagebox.showinfo("Update", "Stop the farm first, then press Update.",
+                                parent=self.root)
+            return
+        self.update_busy = True
+        self.enable(self.update_btn, False)
+        size = info["setup"]["size"] / 1e6
+        self.update_text.config(text=f"Downloading TACMonkey {info['version']} ({size:.0f} MB)...")
+        self.log(f"Downloading {info['setup']['name']} from GitHub ({size:.0f} MB)...", "muted")
+        shown = [-1]
+
+        def progress(done):
+            pct = int(done * 100)
+            if pct != shown[0]:
+                shown[0] = pct
+                self.q.put(("update_progress", pct))
+
+        def job():
+            try:
+                self.q.put(("update_ready", updater.download(info, progress)))
+            except updater.UpdateError as e:
+                self.q.put(("update_failed", str(e)))
+            except Exception as e:
+                self.q.put(("update_failed", f"{e!r}"))
+
+        threading.Thread(target=job, daemon=True).start()
+
+    def update_ready(self, setup):
+        self.update_busy = False
+        self.log("Download checked (SHA-256 matches the release).", "good")
+        self.update_text.config(text=f"TACMonkey {self.update_info['version']} is ready to install.")
+        self.enable(self.update_btn, True)
+        if not messagebox.askyesno(
+                "Update", f"TACMonkey will close and the setup will update it to "
+                f"{self.update_info['version']}, then open it again.\n\nIf the game is open, close "
+                "it too, so the mod can be updated.\n\nWindows may say it protected your PC - "
+                "choose More info > Run anyway.\n\nUpdate now?", parent=self.root):
+            return
+        try:
+            updater.launch(setup)
+        except OSError as e:
+            self.log(f"Couldn't start the setup: {e}", "bad")
+            return
+        self.close()
+
+    def update_failed(self, text):
+        self.update_busy = False
+        self.log(f"Update failed: {text}", "bad")
+        self.update_text.config(text="The update didn't download. Try again, or use What's new "
+                                     "to get it from the Releases page.")
+        self.enable(self.update_btn, True)
 
     def first_run(self):
         """No buttons captured yet (a fresh copy): offer to bring in existing ones, once."""
@@ -132,10 +258,12 @@ class App:
 
     def build(self):
         root = self.root
+        self.build_update_bar()
         tk.Frame(root, bg=BG, height=12).pack()
 
         # status
         status = self.card(root)
+        self.status_card = status
         top = tk.Frame(status, bg=PANEL)
         top.pack(fill="x")
         self.dot = tk.Canvas(top, width=14, height=14, bg=PANEL, highlightthickness=0)
@@ -213,6 +341,12 @@ class App:
                    self.skip_merc, self.toggle_merc).pack(fill="x")
         self.check(opts, "Keep this window on top", self.on_top,
                    lambda: self.root.attributes("-topmost", self.on_top.get())).pack(fill="x")
+        self.check_updates = tk.BooleanVar(value=True)
+        row = tk.Frame(opts, bg=PANEL)
+        row.pack(fill="x")
+        self.check(row, "Check for updates when TACMonkey starts", self.check_updates,
+                   self.save_settings).pack(side="left")
+        self.small_button(row, "Check now", self.check_for_updates).pack(side="right")
         row = tk.Frame(opts, bg=PANEL)
         row.pack(fill="x", pady=(10, 0))
         self.check_btn = self.button(row, "Check screen", BLUE, self.check_screen)
@@ -529,6 +663,7 @@ class App:
         self.act_switch.set(s.get("act_switch", True))
         self.skip_merc.set(s.get("skip_merc", False))
         self.import_asked = s.get("import_asked", False)
+        self.check_updates.set(s.get("check_updates", True))
         self.toggle_merc()
         for u in s.get("genesis_units", []):
             if u in self.genesis_vars:
@@ -541,6 +676,7 @@ class App:
                                             "act_switch": self.act_switch.get(),
                                             "skip_merc": self.skip_merc.get(),
                                             "import_asked": self.import_asked,
+                                            "check_updates": self.check_updates.get(),
                                             "genesis_units": self.genesis_selected()}, indent=2))
         except OSError:
             pass
@@ -594,6 +730,22 @@ class App:
             elif kind == "grab_done":
                 if msg[1]:
                     msg[1]()
+            elif kind == "update":
+                _, info, manual = msg
+                if info:
+                    self.show_update(info)
+                elif manual:
+                    self.log(f"TACMonkey {farm.VERSION} is the latest version.", "good")
+            elif kind == "update_error":
+                _, text, manual = msg
+                self.log(f"Update check: {text}", "bad" if manual else "muted")
+            elif kind == "update_progress":
+                self.update_text.config(text=f"Downloading TACMonkey "
+                                             f"{self.update_info['version']}... {msg[1]}%")
+            elif kind == "update_ready":
+                self.update_ready(msg[1])
+            elif kind == "update_failed":
+                self.update_failed(msg[1])
             elif kind == "gdone":
                 self.genesis_worker = None
                 self.set_state("Stopped", msg[1])
