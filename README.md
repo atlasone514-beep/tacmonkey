@@ -77,8 +77,11 @@ at and never tapped.
 Some old story-farm behaviour still depends on fixed numbers: `01` topmost quest, `08` tap
 anywhere, `09` default run counter, `10` act, and the `x_quest_done` / `x_back` markers.
 
-**Every script:** some popups can show up in any script, like the Peddler Shop after a quest.
-Capture its **View Later** button once, click its card and tick **Press in every script**. Every
+**Peddler Shop:** when the mod is running, the farm and the Genesis farm press **View Later**
+on the Peddler Shop popup by themselves.
+
+**Every script:** for other popups that can show up in any script (or the Peddler Shop without
+the mod), capture the button once, click its card and tick **Press in every script**. Every
 script then checks it before its own steps. It isn't part of any script's steps or priority.
 
 **Sharing:** **Export script** writes one `.tacscript` file with the images the script uses,
