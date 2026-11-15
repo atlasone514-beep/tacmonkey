@@ -6,6 +6,7 @@ import base64
 import json
 import os
 import queue
+import re
 import threading
 import time
 import tkinter as tk
@@ -380,41 +381,50 @@ class App:
         self.label(root, "F8 pause / resume  ·  F9 stop  —  these work from any window",
                    size=8, color=MUTED).pack(pady=8)
 
-    # ---------- Genesis unit farm ----------
+    # ---------- Genesis unit farm / Ex Genesis farm ----------
+    GENESIS_MODES = {  # mode -> (tab text, data file, what a pick is)
+        "hard": ("Units (Hard)", "genesis_shards.json", "units"),
+        "extra": ("Ex chapters (Extra)", "genesis_extra.json", "chapters"),
+    }
+
     def build_genesis(self, root):
-        """Pick units; skip-ticket the Genesis Hard stages that drop their shards."""
+        """Hard: pick units, skip-ticket the Genesis Hard stages that drop their shards.
+        Extra: pick chapters, skip-ticket their Extra stages. The number box next to a pick is
+        how many of its stages to farm."""
         self.genesis_worker = None
         self.genesis_stop = threading.Event()
-        self.genesis_data = {}
-        try:
-            self.genesis_data = json.loads(farm.RES_DIR.joinpath("genesis_shards.json")
-                                           .read_text(encoding="utf-8"))
-        except (OSError, ValueError):
-            pass
+        self.genesis_mode = "hard"
+        self.genesis_data, self.genesis_vars, self.genesis_counts = {}, {}, {}
+        self.genesis_spins = {}
+        for mode, (_, file, _) in self.GENESIS_MODES.items():
+            try:
+                data = json.loads(farm.RES_DIR.joinpath(file).read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                data = {}
+            if mode == "extra":   # one pick per chapter, newest first ("ALL" is for the command line)
+                data = dict(sorted(((k, v) for k, v in data.items() if k.startswith("ch")),
+                                   key=lambda kv: -int(kv[0][2:])))
+            self.genesis_data[mode] = data
+            self.genesis_vars[mode], self.genesis_counts[mode] = {}, {}
+            self.genesis_spins[mode] = {}
         card = self.card(root, pady=(10, 0))
         head = tk.Frame(card, bg=PANEL)
         head.pack(fill="x")
-        self.label(head, "GENESIS UNIT FARM", size=8, color=MUTED).pack(side="left")
-        self.label(head, "skip tickets x3 per stage · AP refill: 7 Alchemy Drops", size=8,
-                   color=MUTED).pack(side="right")
-        grid = tk.Frame(card, bg=PANEL)
-        grid.pack(fill="x", pady=(6, 4))
-        self.genesis_vars = {}
-        units = sorted(self.genesis_data, key=str.lower)
-        cols = 3
-        for i, unit in enumerate(units):
-            var = tk.BooleanVar(value=False)
-            n = len(self.genesis_data[unit]["stages"])
-            cb = tk.Checkbutton(grid, text=f"{unit} ({n})", variable=var, command=self.genesis_changed,
-                                bg=PANEL, fg=FG, activebackground=PANEL, activeforeground=FG,
-                                selectcolor=FIELD, highlightthickness=0, bd=0, font=(FONT, 9),
-                                anchor="w")
-            cb.grid(row=i // cols, column=i % cols, sticky="w", padx=(0, 6))
-            self.genesis_vars[unit] = var
-        for c in range(cols):
-            grid.columnconfigure(c, weight=1)
-        if not units:
-            self.label(grid, "genesis_shards.json not found", color=RED).grid(row=0, column=0)
+        self.label(head, "GENESIS FARM", size=8, color=MUTED).pack(side="left")
+        self.genesis_tabs = {}
+        for mode, (text, _, _) in self.GENESIS_MODES.items():
+            tab = tk.Label(head, text=text, bg=FIELD, fg=FG, font=(FONT, 9, "bold"), padx=10,
+                           pady=2, cursor="hand2")
+            tab.pack(side="left", padx=(10 if mode == "hard" else 4, 0))
+            tab.bind("<Button-1>", lambda _e, m=mode: self.genesis_set_mode(m))
+            self.genesis_tabs[mode] = tab
+        self.genesis_frames = {}
+        for mode in self.GENESIS_MODES:
+            frame = tk.Frame(card, bg=PANEL)
+            self.genesis_frames[mode] = frame
+            self.genesis_grid(frame, mode)
+        self.genesis_body_anchor = tk.Frame(card, bg=PANEL)   # frames are packed before this
+        self.genesis_body_anchor.pack(fill="x")
         row = tk.Frame(card, bg=PANEL)
         row.pack(fill="x", pady=(4, 0))
         self.genesis_start = self.button(row, "Start Genesis farm", GREEN, self.genesis_go)
@@ -423,41 +433,143 @@ class App:
         self.genesis_stop_btn.pack(side="left", padx=6)
         self.genesis_info = self.label(row, "", size=9, color=MUTED)
         self.genesis_info.pack(side="left", padx=4)
+        self.genesis_set_mode("hard")
 
-    def genesis_selected(self):
-        return [u for u, v in self.genesis_vars.items() if v.get()]
+    @staticmethod
+    def chapter_label(key, name):
+        """'ch15 Pride Illuminates the Wo... (1)' from a chapter's full name."""
+        m = re.search(r'"([^"]+)"', name) or re.search(r":\s*(.+?)\s*\(", name)
+        title = (m.group(1) if m else name).strip()
+        title = title if len(title) <= 19 else title[:18].rstrip() + "…"
+        part = re.search(r"\((?:Part\s*)?(One|Two|Three|1|2|3)\)", name)
+        num = {"One": "1", "Two": "2", "Three": "3"}.get(part.group(1), part.group(1)) if part else ""
+        return f"{key} {title}" + (f" ({num})" if num else "")
 
-    def genesis_stages(self, units):
-        return sorted({s["stage"] for u in units for s in self.genesis_data[u]["stages"]},
-                      key=lambda k: (-int(k.split("-")[0]), int(k.split("-")[1])))
+    def genesis_grid(self, frame, mode):
+        data = self.genesis_data[mode]
+        tip = ("Tick units. The number beside one is how many of its stages to farm."
+               if mode == "hard" else
+               "Tick chapters. The number is how many of their Extra stages to farm "
+               "(clear them by hand once first).")
+        self.label(frame, tip, size=8, color=MUTED, wraplength=440, justify="left").pack(
+            anchor="w", pady=(6, 0))
+        grid = tk.Frame(frame, bg=PANEL)
+        grid.pack(fill="x", pady=(4, 4))
+        cols = 3 if mode == "hard" else 2
+        keys = sorted(data, key=str.lower) if mode == "hard" else list(data)
+        for i, key in enumerate(keys):
+            n = len(data[key]["stages"])
+            text = (key if mode == "hard" else
+                    self.chapter_label(key, data[key].get("name", "")))
+            var = tk.BooleanVar(value=False)
+            count = tk.IntVar(value=n)
+            cell = tk.Frame(grid, bg=PANEL)
+            cell.grid(row=i // cols, column=i % cols, sticky="w", padx=(0, 6))
+            spin = tk.Spinbox(cell, from_=1, to=n, width=2, textvariable=count, wrap=False,
+                              command=self.genesis_changed, bg=FIELD, fg=FG, buttonbackground=FIELD,
+                              insertbackground=FG, relief="flat", font=(FONT, 9), justify="center",
+                              highlightthickness=0)
+            spin.bind("<KeyRelease>", lambda _e: self.genesis_changed())
+            spin.bind("<FocusOut>", lambda _e: self.genesis_changed())
+            tk.Checkbutton(cell, text=text, variable=var, command=self.genesis_changed,
+                           bg=PANEL, fg=FG, activebackground=PANEL, activeforeground=FG,
+                           selectcolor=FIELD, highlightthickness=0, bd=0, font=(FONT, 9),
+                           anchor="w").pack(side="left")
+            self.genesis_vars[mode][key] = var
+            self.genesis_counts[mode][key] = count
+            self.genesis_spins[mode][key] = spin   # shown only while ticked
+        for c in range(cols):
+            grid.columnconfigure(c, weight=1)
+        if not keys:
+            self.label(grid, f"{self.GENESIS_MODES[mode][1]} not found", color=RED).grid(
+                row=0, column=0)
+        elif mode == "extra":
+            link = tk.Label(frame, text="All", bg=PANEL, fg=BLUE, cursor="hand2",
+                            font=(FONT, 8, "underline"))
+            link.pack(anchor="w")
+            link.bind("<Button-1>", lambda _e: self.genesis_tick_all())
+
+    def genesis_tick_all(self):
+        """Tick every pick, or untick them all if they're all ticked already."""
+        vars_ = self.genesis_vars[self.genesis_mode].values()
+        on = not all(v.get() for v in vars_)
+        for var in vars_:
+            var.set(on)
+        self.genesis_changed()
+
+    def genesis_set_mode(self, mode):
+        if self.genesis_running():
+            return
+        self.genesis_mode = mode
+        for m, frame in self.genesis_frames.items():
+            frame.pack_forget()
+        self.genesis_frames[mode].pack(fill="x", before=self.genesis_body_anchor)
+        for m, tab in self.genesis_tabs.items():
+            tab.config(bg=BLUE if m == mode else FIELD, fg=DARK if m == mode else FG)
+        self.genesis_start.config(text="Start Genesis farm" if mode == "hard" else "Start Ex farm")
+        self.genesis_changed()
+
+    def genesis_selected(self, mode=None):
+        return [k for k, v in self.genesis_vars[mode or self.genesis_mode].items() if v.get()]
+
+    def genesis_count_map(self, mode=None):
+        """{pick: stages to farm} for every pick (a blank or bad box counts as all of them)."""
+        mode = mode or self.genesis_mode
+        out = {}
+        for k, var in self.genesis_counts[mode].items():
+            n = len(self.genesis_data[mode][k]["stages"])
+            try:
+                out[k] = min(max(int(var.get()), 1), n)
+            except (tk.TclError, ValueError):
+                out[k] = n
+        return out
+
+    def genesis_stages(self, picks, mode=None):
+        import genesis_farm
+        mode = mode or self.genesis_mode
+        return [s["stage"] for s in genesis_farm.plan(self.genesis_data[mode], picks,
+                                                       self.genesis_count_map(mode))]
 
     def genesis_changed(self):
-        units = self.genesis_selected()
-        stages = self.genesis_stages(units)
-        self.genesis_info.config(text=f"{len(units)} units -> {len(stages)} stages · "
-                                      f"{len(stages) * 3} skips" if units else "tick the units to farm")
+        if not hasattr(self, "genesis_info"):
+            return
+        mode = self.genesis_mode
+        for key, spin in self.genesis_spins[mode].items():   # number boxes only while ticked
+            on = self.genesis_vars[mode][key].get()
+            if on and not spin.winfo_ismapped():
+                spin.pack(side="left", padx=(2, 0))
+            elif not on and spin.winfo_manager():
+                spin.pack_forget()
+        picks = self.genesis_selected()
+        stages = self.genesis_stages(picks)
+        per = 3 if mode == "hard" else 1
+        self.genesis_info.config(text=f"{len(stages)} stages · {len(stages) * per} skips"
+                                 if picks else "")
         self.update_buttons()
 
     def genesis_running(self):
         return self.genesis_worker is not None and self.genesis_worker.is_alive()
 
     def genesis_go(self):
-        units = self.genesis_selected()
-        if not units or self.running() or self.genesis_running():
+        mode = self.genesis_mode
+        picks = self.genesis_selected()
+        if not picks or self.running() or self.genesis_running():
             return
         self.save_settings()
-        stages = self.genesis_stages(units)
+        stages = self.genesis_stages(picks)
+        counts = self.genesis_count_map()
+        name = "Genesis farm" if mode == "hard" else "Ex Genesis farm"
         self.genesis_stop = threading.Event()
-        self.set_state("Genesis farm", f"{', '.join(units)} -> {len(stages)} stages")
-        self.log(f"--- Genesis farm: {', '.join(units)} ---", "muted")
+        self.set_state(name, f"{', '.join(picks)} -> {len(stages)} stages")
+        self.log(f"--- {name}: {', '.join(picks)} ---", "muted")
 
         def job():
             try:
                 import genesis_farm
                 reason = genesis_farm.GenesisFarm(log=lambda m: self.q.put(("log", m)),
-                                                  stop=self.genesis_stop).run(units)
+                                                  stop=self.genesis_stop, mode=mode).run(picks, counts)
             except Exception as e:
-                reason = f"Genesis farm error: {e}"
+                reason = f"{name} error: {e}"
                 self.q.put(("log", reason, "bad"))
             self.q.put(("gdone", reason))
 
@@ -694,9 +806,16 @@ class App:
         self.check_updates.set(s.get("check_updates", True))
         self.editor_view = s.get("editor_view", "flow")
         self.toggle_merc()
-        for u in s.get("genesis_units", []):
-            if u in self.genesis_vars:
-                self.genesis_vars[u].set(True)
+        for mode, prefix in (("hard", "genesis"), ("extra", "ex")):
+            for k in s.get(f"{prefix}_units", []):
+                if k in self.genesis_vars[mode]:
+                    self.genesis_vars[mode][k].set(True)
+            for k, n in (s.get(f"{prefix}_counts") or {}).items():
+                if k in self.genesis_counts[mode] and isinstance(n, int):
+                    self.genesis_counts[mode][k].set(
+                        min(max(n, 1), len(self.genesis_data[mode][k]["stages"])))
+        if s.get("genesis_mode") in self.GENESIS_MODES:
+            self.genesis_set_mode(s["genesis_mode"])
         self.genesis_changed()
 
     def save_settings(self):
@@ -707,7 +826,11 @@ class App:
                                             "import_asked": self.import_asked,
                                             "check_updates": self.check_updates.get(),
                                             "editor_view": self.editor_view,
-                                            "genesis_units": self.genesis_selected()}, indent=2))
+                                            "genesis_units": self.genesis_selected("hard"),
+                                            "genesis_counts": self.genesis_count_map("hard"),
+                                            "ex_units": self.genesis_selected("extra"),
+                                            "ex_counts": self.genesis_count_map("extra"),
+                                            "genesis_mode": self.genesis_mode}, indent=2))
         except OSError:
             pass
 
@@ -989,7 +1112,7 @@ class Customizer:
             return None
         if sel[0] == "step":
             return m["groups"].get(sel[1])
-        hits = [b for b in m["actions"] + m["markers"] if b["id"] == sel[1]]
+        hits = [b for b in m["actions"] + m["markers"] + m["every"] if b["id"] == sel[1]]
         return hits or None
 
     def highlight(self, name):
@@ -1041,11 +1164,13 @@ class Customizer:
             self.card(key, boxes[key])
 
         # built-in actions and markers: outside the loop
-        extras = [("ANY TIME", b) for b in m["actions"]] + [("MARKER", b) for b in m["markers"]]
+        extras = ([("ANY TIME", b) for b in m["actions"]] + [("MARKER", b) for b in m["markers"]]
+                  + [("EVERY SCRIPT", b) for b in m["every"]])
         if extras:
             c.create_text(x0, y - self.GAP_Y + 24, anchor="nw", fill=MUTED, font=(FONT, 8),
                           text="OUTSIDE THE LOOP  -  built-in actions run whenever their window "
-                               "shows; markers are only looked at, never tapped")
+                               "shows; markers are only looked at, never tapped; every-script "
+                               "buttons are pressed in all scripts, before their own steps")
             ey = y - self.GAP_Y + 44
             for i, (tag, b) in enumerate(extras):
                 x = x0 + (i % cols) * (self.CARD_W + self.GAP_X)
@@ -1079,6 +1204,11 @@ class Customizer:
             self.list_row(i, key, (8, y, width - 8, y + self.ROW_H))
             y += self.ROW_H + 6
         extras = m["actions"] + m["markers"]
+        if m["every"]:
+            c.create_text(16, y + 8, anchor="nw", fill=MUTED, font=(FONT, 8), width=width - 32,
+                          text="CHECKED BEFORE #1 (every script): "
+                               + ", ".join(self.pretty(b["name"]) for b in m["every"]))
+            y += 28
         if extras:
             c.create_text(16, y + 8, anchor="nw", fill=MUTED, font=(FONT, 8), width=width - 32,
                           text="NOT RANKED: " + ", ".join(b["name"] for b in extras) +
@@ -1289,13 +1419,16 @@ class Customizer:
         box.pack(fill="x", pady=(0, 6))
         tk.Label(box, image=self.photo(b, 260, 60), bg=DARK).pack(fill="x")
         app.label(box, b["name"], size=10, bold=True).pack(anchor="w", pady=(4, 0))
+        global_only = b.get("every") and not b["used"]   # pressed everywhere, not a step here
         about = (b["about"] if b["action"] else
                  "marker: only looked at, never tapped" if b["marker"] else
                  f"captured in: {b['home']}")
+        if global_only:
+            about += "\npressed in every script, before its own steps"
         if b.get("spot"):
             about += f"\ntaps a fixed spot ({b['spot'][0]:.0%} across, {b['spot'][1]:.0%} down)"
         app.label(box, about, size=8, color=MUTED, wraplength=250, justify="left").pack(anchor="w")
-        if not (b["marker"] or b["action"]):
+        if not (b["marker"] or b["action"] or global_only):
             var = tk.BooleanVar(value=b["counter"])
             tk.Checkbutton(box, text="Counts as a run", variable=var, bg=FIELD,
                            fg=GREEN if b["counter"] else FG, activebackground=FIELD,
@@ -1303,11 +1436,19 @@ class Customizer:
                            font=(FONT, 9), command=lambda: self.count(b, var.get())).pack(
                 anchor="w", pady=(4, 0))
         if not (b["marker"] or b["action"]):
+            evar = tk.BooleanVar(value=bool(b.get("every")))
+            tk.Checkbutton(box, text="Press in every script (popups like the Peddler Shop's "
+                                     "View Later)", variable=evar, bg=FIELD, wraplength=215,
+                           justify="left", fg=ORANGE if b.get("every") else FG,
+                           activebackground=FIELD, activeforeground=FG, selectcolor=PANEL,
+                           highlightthickness=0, bd=0, font=(FONT, 9),
+                           command=lambda: self.every(b, evar.get())).pack(anchor="w", pady=(4, 0))
+        if not (b["marker"] or b["action"] or global_only):
             self.step_chooser(box, b)
         grid = tk.Frame(box, bg=FIELD)
         grid.pack(fill="x", pady=(4, 0))
         grid.columnconfigure((0, 1), weight=1)
-        buttons = [("Remove from script", lambda: self.use(b, False))]
+        buttons = [] if global_only else [("Remove from script", lambda: self.use(b, False))]
         if not b["action"]:
             buttons += [("Delete", lambda: self.delete(b)),
                         ("Re-capture", lambda: self.grab(b["home"], b["name"])),
@@ -1361,7 +1502,7 @@ class Customizer:
         c.delete("all")
         width = max(c.winfo_width(), self.TILE_W + 20)
         word = self.search.get().strip().lower()
-        items = [b for b in farm.describe_library(self.script) if not b["used"]
+        items = [b for b in farm.describe_library(self.script) if not b["used"] and not b["every"]
                  and (not word or word in b["name"].lower() or word in b["home"].lower())]
         if not items:
             c.create_text(width // 2, 40, fill=MUTED, font=(FONT, 10), text=(
@@ -1397,6 +1538,16 @@ class Customizer:
                      f"(captured in {b['home']})", "info")
         if on and not b["action"] and not b["marker"]:
             self.selected = ("step", farm.group_key(b["name"], farm.step_map(self.script)))
+        self.refresh()
+
+    def every(self, b, on):
+        """Press this button in every script (it then leaves this script's own steps)."""
+        farm.set_every_script(b["id"], on)
+        if on and b["used"]:
+            farm.set_used(self.script, b["id"], False)
+        self.app.log(f"{b['name']} is {'now pressed in every script' if on else 'no longer pressed in every script'}"
+                     + ("" if on else f" (add it to a script from the list to use it there)"), "info")
+        self.selected = ("entry", b["id"]) if on else None
         self.refresh()
 
     def count(self, b, on):
@@ -1530,13 +1681,19 @@ class Customizer:
 
     def delete(self, b):
         users = [s for s in farm.list_scripts() if b["id"] in farm.used_ids(s)]
+        if b.get("every"):
+            users.append("every script")
         if not messagebox.askyesno(
                 "Delete button", f"Delete {b['name']} (captured in {b['home']}) from the list?\n\n"
                 f"Used by: {', '.join(users) or 'no script'}\n\nThe file is moved to the "
                 f"{b['home']} folder's _old folder, not erased.", parent=self.win):
             return
         for s in users:  # keep their current picks fixed, minus this one
+            if s == "every script":
+                continue
             farm.set_used(s, b["id"], False)
+        if b.get("every"):
+            farm.set_every_script(b["id"], False)
         farm.remove_image(b["home"], b["name"])
         self.app.log(f"Deleted {b['name']} (moved to {b['home']}/_old)", "info")
         self.refresh()

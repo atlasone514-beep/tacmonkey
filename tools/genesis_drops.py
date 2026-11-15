@@ -1,14 +1,17 @@
-"""Read the loot of every Genesis Hard stage through the TAC Auto Tap mod (v1.2+).
+"""Read the loot of every Genesis Hard (or Extra) stage through the TAC Auto Tap mod (v1.2+).
 
 Start with the game on the Genesis chapter list. For each chapter (ch19 = top of the list ...
-ch1 = bottom): open it -> QUEST -> Hard -> for each of the 5 stages: tap it, check the popup
+ch1 = bottom): open it -> QUEST -> Hard (or Extra) -> for each of the 5 stages: tap it, check the popup
 names that stage, open the magnifier (Quest Details), read every Loot entry from the game data
 ("items"), save a stitched screenshot of the whole Loot row, then close back out.
 Never presses OK, so no AP / tickets / attempts are used.
 
     python genesis_drops.py              all chapters
     python genesis_drops.py 19 18        only those chapters (your numbering)
-Results are saved after every stage (results.json), so a re-run skips what's done.
+    python genesis_drops.py --extra      the Extra stages (third press of the Normal/Hard
+                                         switch; only ch7 and later have them)
+Results are saved after every stage (results.json / results_extra.json), so a re-run skips
+what's done.
 """
 import json
 import re
@@ -24,7 +27,12 @@ sys.path.insert(0, str(REPO / "app"))
 import farm  # noqa: E402
 
 OUT = REPO / "data" / "genesis"   # results.json + one loot screenshot per stage
-RESULTS = OUT / "results.json"
+EXTRA = "--extra" in sys.argv
+MODE = "Extra" if EXTRA else "Hard"
+TITLE_MODE = "(?:Extra|EX)" if EXTRA else "Hard"      # the popup says "Extra 1" or (ch19) "EX 1"
+MODE_PIC = "btn_scenario_extra" if EXTRA else "btn_scenario_hard"   # the switch's sprite
+RESULTS = OUT / ("results_extra.json" if EXTRA else "results.json")
+SHOT_PREFIX = "ex" if EXTRA else ""                   # loot screenshots: ex7-1.png / 7-1.png
 
 LIST_X, SLOTS = 0.777, (0.365, 0.599, 0.834)        # chapter list entries (window fractions)
 DOWN = (0.779, 0.974)                                 # chapter list: next page
@@ -36,6 +44,7 @@ INFO = (0.710, 0.398)                                 # popup: magnifying glass
 OUTSIDE = (0.12, 0.75)                                # empty spot: closes details / popup
 LOOT = (0.40, 0.853)                                  # Loot row once Quest Details is scrolled down
 MAP_BACK, TOP_BACK = (0.075, 0.933), (0.074, 0.935)
+NOTICE, NOTICE_OK = (0.5, 0.35), (0.5, 0.672)         # "Clear ... EX 1 to unlock." + its OK
 
 
 def log(msg):
@@ -128,12 +137,13 @@ def open_chapter(iname):
     raise RuntimeError(f"{iname}: not found in the chapter list")
 
 
-def set_hard():
+def set_mode():
+    """Press the Normal/Hard/Extra switch until it shows MODE (False if this chapter lacks it)."""
     for _ in range(4):
         pics = inspect(DIFF)
-        if "btn_scenario_hard" in pics:
+        if MODE_PIC in pics:
             return True
-        if "btn_scenario_normal" in pics:
+        if "btn_scenario_" in pics:
             tap(DIFF)
         time.sleep(1.5)
     return False
@@ -141,20 +151,28 @@ def set_hard():
 
 def popup_title():
     for t in texts(inspect(POPUP_TITLE)):
-        if re.search(r"\bHard\s*\d+\s*$", t):   # "<chapter> - Hard 2" (ch12 writes it without the dash)
+        if re.search(rf"\b{TITLE_MODE}\s*\d+\s*$", t):   # "<chapter> - Hard 2" (ch12 writes it without the dash)
             return t
     return None
 
 
 def popup_open():
-    return "GenesisQuestConfirm" in probe(OUTSIDE) or "QuestDetail" in probe(OUTSIDE)
+    here = probe(OUTSIDE)
+    return "GenesisQuestConfirm" in here or "QuestDetail" in here or "Win_Btn_Decide" in here
+
+
+def notice():
+    """The text of a game notice (e.g. "Clear ... EX 1 to unlock."), or None."""
+    if "Win_Btn_Decide" not in probe(NOTICE):
+        return None
+    return " ".join(texts(inspect(NOTICE))) or "?"
 
 
 def close_all():
     for _ in range(4):
         if not popup_open():
             return True
-        tap(OUTSIDE)
+        tap(NOTICE_OK if "Win_Btn_Decide" in probe(NOTICE_OK) else OUTSIDE)
         time.sleep(1.3)
     return not popup_open()
 
@@ -198,11 +216,17 @@ def loot_strip():
 
 def read_stage(ch, st):
     tap(NODES[st - 1])
-    title = wait_for(popup_title, 8)
+    title = wait_for(lambda: popup_title() or (notice() and "notice"), 8)
+    if title == "notice":
+        text = notice()
+        close_all()
+        if "unlock" in text.lower():
+            return {"stage": st, "locked": True, "error": f"locked: {text}"}
+        return {"stage": st, "error": f"notice: {text}"}
     if not title:
         close_all()
         return {"error": "stage popup didn't open"}
-    m = re.search(r"\bHard\s*(\d+)\s*$", title)
+    m = re.search(rf"\b{TITLE_MODE}\s*(\d+)\s*$", title)
     got = int(m.group(1)) if m else st
     opened = False
     for _ in range(4):                 # the popup animates in and may ignore an early press
@@ -227,11 +251,11 @@ def read_stage(ch, st):
         bar = np.full((44, strip.shape[1], 3), 30, np.uint8)
         cv2.putText(bar, label.encode("ascii", "replace").decode(), (10, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2, cv2.LINE_AA)
-        cv2.imwrite(str(OUT / f"{ch}-{got}.png"), np.vstack([bar, strip]))
+        cv2.imwrite(str(OUT / f"{SHOT_PREFIX}{ch}-{got}.png"), np.vstack([bar, strip]))
     close_all()
     res = {"title": title, "stage": got, "loot": loot}
     if got != st:
-        res["note"] = f"tapped node {st} but the popup was Hard {got}"
+        res["note"] = f"tapped node {st} but the popup was {MODE} {got}"
     if not loot:
         res["error"] = f"no loot read ({reply[:120]})"
     return res
@@ -261,22 +285,26 @@ def main():
     if len(chapters) < 10:
         raise SystemExit("couldn't read the chapter list - start on the Genesis chapter list")
     total = len(chapters)
-    wanted = {int(a) for a in sys.argv[1:]} or set(range(1, total + 1))
-    log(f"{total} chapters in the list; doing {sorted(wanted, reverse=True)}")
+    wanted = {int(a) for a in sys.argv[1:] if a.isdigit()} or set(range(1, total + 1))
+    log(f"{total} chapters in the list; {MODE} stages of {sorted(wanted, reverse=True)}")
     for idx, (iname, name) in enumerate(chapters):
         ch = total - idx                      # top of the list = highest number
         if ch not in wanted:
             continue
         todo = [st for st in range(1, 6) if "loot" not in results.get(f"{ch}-{st}", {})
                 or not results[f"{ch}-{st}"]["loot"]]
+        if results.get(f"ch{ch}", {}).get("error"):
+            log(f"ch{ch}: no {MODE} stages (seen before)")
+            continue
         if not todo:
             log(f"ch{ch} already done")
             continue
         log(f"ch{ch} {iname} {name}")
         open_chapter(iname)
-        if not set_hard():
-            log(f"  ch{ch}: couldn't switch to Hard - skipped")
-            results[f"ch{ch}"] = {"error": "no Hard mode", "iname": iname, "name": name}
+        if not set_mode():
+            log(f"  ch{ch}: couldn't switch to {MODE} - skipped")
+            results[f"ch{ch}"] = {"error": f"no {MODE} mode", "iname": iname, "name": name}
+            RESULTS.write_text(json.dumps(results, indent=1, ensure_ascii=False), encoding="utf-8")
         else:
             for st in todo:
                 r = read_stage(ch, st)

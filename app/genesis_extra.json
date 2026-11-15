@@ -1,0 +1,981 @@
+{
+ "ALL": {
+  "stages": [
+   {
+    "stage": "19-1",
+    "chapter": 19,
+    "hard": 1,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   },
+   {
+    "stage": "19-2",
+    "chapter": 19,
+    "hard": 2,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   },
+   {
+    "stage": "19-3",
+    "chapter": 19,
+    "hard": 3,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   },
+   {
+    "stage": "19-4",
+    "chapter": 19,
+    "hard": 4,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   },
+   {
+    "stage": "19-5",
+    "chapter": 19,
+    "hard": 5,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   },
+   {
+    "stage": "18-1",
+    "chapter": 18,
+    "hard": 1,
+    "chapter_iname": "GENESIS_09_2",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+   },
+   {
+    "stage": "18-2",
+    "chapter": 18,
+    "hard": 2,
+    "chapter_iname": "GENESIS_09_2",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+   },
+   {
+    "stage": "18-3",
+    "chapter": 18,
+    "hard": 3,
+    "chapter_iname": "GENESIS_09_2",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+   },
+   {
+    "stage": "18-4",
+    "chapter": 18,
+    "hard": 4,
+    "chapter_iname": "GENESIS_09_2",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+   },
+   {
+    "stage": "18-5",
+    "chapter": 18,
+    "hard": 5,
+    "chapter_iname": "GENESIS_09_2",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+   },
+   {
+    "stage": "17-1",
+    "chapter": 17,
+    "hard": 1,
+    "chapter_iname": "GENESIS_09_1",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+   },
+   {
+    "stage": "17-2",
+    "chapter": 17,
+    "hard": 2,
+    "chapter_iname": "GENESIS_09_1",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+   },
+   {
+    "stage": "17-3",
+    "chapter": 17,
+    "hard": 3,
+    "chapter_iname": "GENESIS_09_1",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+   },
+   {
+    "stage": "17-4",
+    "chapter": 17,
+    "hard": 4,
+    "chapter_iname": "GENESIS_09_1",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+   },
+   {
+    "stage": "17-5",
+    "chapter": 17,
+    "hard": 5,
+    "chapter_iname": "GENESIS_09_1",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+   },
+   {
+    "stage": "16-1",
+    "chapter": 16,
+    "hard": 1,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   },
+   {
+    "stage": "16-2",
+    "chapter": 16,
+    "hard": 2,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   },
+   {
+    "stage": "16-3",
+    "chapter": 16,
+    "hard": 3,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   },
+   {
+    "stage": "16-4",
+    "chapter": 16,
+    "hard": 4,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   },
+   {
+    "stage": "16-5",
+    "chapter": 16,
+    "hard": 5,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   },
+   {
+    "stage": "15-1",
+    "chapter": 15,
+    "hard": 1,
+    "chapter_iname": "GENESIS_08_1",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+   },
+   {
+    "stage": "15-2",
+    "chapter": 15,
+    "hard": 2,
+    "chapter_iname": "GENESIS_08_1",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+   },
+   {
+    "stage": "15-3",
+    "chapter": 15,
+    "hard": 3,
+    "chapter_iname": "GENESIS_08_1",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+   },
+   {
+    "stage": "15-4",
+    "chapter": 15,
+    "hard": 4,
+    "chapter_iname": "GENESIS_08_1",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+   },
+   {
+    "stage": "15-5",
+    "chapter": 15,
+    "hard": 5,
+    "chapter_iname": "GENESIS_08_1",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+   },
+   {
+    "stage": "14-1",
+    "chapter": 14,
+    "hard": 1,
+    "chapter_iname": "GENESIS_07_2",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+   },
+   {
+    "stage": "14-2",
+    "chapter": 14,
+    "hard": 2,
+    "chapter_iname": "GENESIS_07_2",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+   },
+   {
+    "stage": "14-3",
+    "chapter": 14,
+    "hard": 3,
+    "chapter_iname": "GENESIS_07_2",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+   },
+   {
+    "stage": "14-4",
+    "chapter": 14,
+    "hard": 4,
+    "chapter_iname": "GENESIS_07_2",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+   },
+   {
+    "stage": "14-5",
+    "chapter": 14,
+    "hard": 5,
+    "chapter_iname": "GENESIS_07_2",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+   },
+   {
+    "stage": "13-1",
+    "chapter": 13,
+    "hard": 1,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   },
+   {
+    "stage": "13-2",
+    "chapter": 13,
+    "hard": 2,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   },
+   {
+    "stage": "13-3",
+    "chapter": 13,
+    "hard": 3,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   },
+   {
+    "stage": "13-4",
+    "chapter": 13,
+    "hard": 4,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   },
+   {
+    "stage": "13-5",
+    "chapter": 13,
+    "hard": 5,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   },
+   {
+    "stage": "12-1",
+    "chapter": 12,
+    "hard": 1,
+    "chapter_iname": "GENESIS_06_2",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+   },
+   {
+    "stage": "12-2",
+    "chapter": 12,
+    "hard": 2,
+    "chapter_iname": "GENESIS_06_2",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+   },
+   {
+    "stage": "12-3",
+    "chapter": 12,
+    "hard": 3,
+    "chapter_iname": "GENESIS_06_2",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+   },
+   {
+    "stage": "12-4",
+    "chapter": 12,
+    "hard": 4,
+    "chapter_iname": "GENESIS_06_2",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+   },
+   {
+    "stage": "12-5",
+    "chapter": 12,
+    "hard": 5,
+    "chapter_iname": "GENESIS_06_2",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+   },
+   {
+    "stage": "11-1",
+    "chapter": 11,
+    "hard": 1,
+    "chapter_iname": "GENESIS_06_1",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+   },
+   {
+    "stage": "11-2",
+    "chapter": 11,
+    "hard": 2,
+    "chapter_iname": "GENESIS_06_1",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+   },
+   {
+    "stage": "11-3",
+    "chapter": 11,
+    "hard": 3,
+    "chapter_iname": "GENESIS_06_1",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+   },
+   {
+    "stage": "11-4",
+    "chapter": 11,
+    "hard": 4,
+    "chapter_iname": "GENESIS_06_1",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+   },
+   {
+    "stage": "11-5",
+    "chapter": 11,
+    "hard": 5,
+    "chapter_iname": "GENESIS_06_1",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+   },
+   {
+    "stage": "10-1",
+    "chapter": 10,
+    "hard": 1,
+    "chapter_iname": "GENESIS_05_2",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+   },
+   {
+    "stage": "10-2",
+    "chapter": 10,
+    "hard": 2,
+    "chapter_iname": "GENESIS_05_2",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+   },
+   {
+    "stage": "10-3",
+    "chapter": 10,
+    "hard": 3,
+    "chapter_iname": "GENESIS_05_2",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+   },
+   {
+    "stage": "10-4",
+    "chapter": 10,
+    "hard": 4,
+    "chapter_iname": "GENESIS_05_2",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+   },
+   {
+    "stage": "10-5",
+    "chapter": 10,
+    "hard": 5,
+    "chapter_iname": "GENESIS_05_2",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+   },
+   {
+    "stage": "9-1",
+    "chapter": 9,
+    "hard": 1,
+    "chapter_iname": "GENESIS_05_1",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+   },
+   {
+    "stage": "9-2",
+    "chapter": 9,
+    "hard": 2,
+    "chapter_iname": "GENESIS_05_1",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+   },
+   {
+    "stage": "9-3",
+    "chapter": 9,
+    "hard": 3,
+    "chapter_iname": "GENESIS_05_1",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+   },
+   {
+    "stage": "9-4",
+    "chapter": 9,
+    "hard": 4,
+    "chapter_iname": "GENESIS_05_1",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+   },
+   {
+    "stage": "9-5",
+    "chapter": 9,
+    "hard": 5,
+    "chapter_iname": "GENESIS_05_1",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+   },
+   {
+    "stage": "8-1",
+    "chapter": 8,
+    "hard": 1,
+    "chapter_iname": "GENESIS_04_2",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+   },
+   {
+    "stage": "8-2",
+    "chapter": 8,
+    "hard": 2,
+    "chapter_iname": "GENESIS_04_2",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+   },
+   {
+    "stage": "8-3",
+    "chapter": 8,
+    "hard": 3,
+    "chapter_iname": "GENESIS_04_2",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+   },
+   {
+    "stage": "8-4",
+    "chapter": 8,
+    "hard": 4,
+    "chapter_iname": "GENESIS_04_2",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+   },
+   {
+    "stage": "8-5",
+    "chapter": 8,
+    "hard": 5,
+    "chapter_iname": "GENESIS_04_2",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+   },
+   {
+    "stage": "7-1",
+    "chapter": 7,
+    "hard": 1,
+    "chapter_iname": "GENESIS_04_1",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+   },
+   {
+    "stage": "7-2",
+    "chapter": 7,
+    "hard": 2,
+    "chapter_iname": "GENESIS_04_1",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+   },
+   {
+    "stage": "7-3",
+    "chapter": 7,
+    "hard": 3,
+    "chapter_iname": "GENESIS_04_1",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+   },
+   {
+    "stage": "7-4",
+    "chapter": 7,
+    "hard": 4,
+    "chapter_iname": "GENESIS_04_1",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+   },
+   {
+    "stage": "7-5",
+    "chapter": 7,
+    "hard": 5,
+    "chapter_iname": "GENESIS_04_1",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+   }
+  ]
+ },
+ "ch19": {
+  "name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)",
+  "stages": [
+   {
+    "stage": "19-1",
+    "chapter": 19,
+    "hard": 1,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   },
+   {
+    "stage": "19-2",
+    "chapter": 19,
+    "hard": 2,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   },
+   {
+    "stage": "19-3",
+    "chapter": 19,
+    "hard": 3,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   },
+   {
+    "stage": "19-4",
+    "chapter": 19,
+    "hard": 4,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   },
+   {
+    "stage": "19-5",
+    "chapter": 19,
+    "hard": 5,
+    "chapter_iname": "GENESIS_09_3",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+   }
+  ]
+ },
+ "ch18": {
+  "name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)",
+  "stages": [
+   {
+    "stage": "18-1",
+    "chapter": 18,
+    "hard": 1,
+    "chapter_iname": "GENESIS_09_2",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+   },
+   {
+    "stage": "18-2",
+    "chapter": 18,
+    "hard": 2,
+    "chapter_iname": "GENESIS_09_2",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+   },
+   {
+    "stage": "18-3",
+    "chapter": 18,
+    "hard": 3,
+    "chapter_iname": "GENESIS_09_2",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+   },
+   {
+    "stage": "18-4",
+    "chapter": 18,
+    "hard": 4,
+    "chapter_iname": "GENESIS_09_2",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+   },
+   {
+    "stage": "18-5",
+    "chapter": 18,
+    "hard": 5,
+    "chapter_iname": "GENESIS_09_2",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+   }
+  ]
+ },
+ "ch17": {
+  "name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)",
+  "stages": [
+   {
+    "stage": "17-1",
+    "chapter": 17,
+    "hard": 1,
+    "chapter_iname": "GENESIS_09_1",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+   },
+   {
+    "stage": "17-2",
+    "chapter": 17,
+    "hard": 2,
+    "chapter_iname": "GENESIS_09_1",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+   },
+   {
+    "stage": "17-3",
+    "chapter": 17,
+    "hard": 3,
+    "chapter_iname": "GENESIS_09_1",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+   },
+   {
+    "stage": "17-4",
+    "chapter": 17,
+    "hard": 4,
+    "chapter_iname": "GENESIS_09_1",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+   },
+   {
+    "stage": "17-5",
+    "chapter": 17,
+    "hard": 5,
+    "chapter_iname": "GENESIS_09_1",
+    "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+   }
+  ]
+ },
+ "ch16": {
+  "name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)",
+  "stages": [
+   {
+    "stage": "16-1",
+    "chapter": 16,
+    "hard": 1,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   },
+   {
+    "stage": "16-2",
+    "chapter": 16,
+    "hard": 2,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   },
+   {
+    "stage": "16-3",
+    "chapter": 16,
+    "hard": 3,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   },
+   {
+    "stage": "16-4",
+    "chapter": 16,
+    "hard": 4,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   },
+   {
+    "stage": "16-5",
+    "chapter": 16,
+    "hard": 5,
+    "chapter_iname": "GENESIS_08_2",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+   }
+  ]
+ },
+ "ch15": {
+  "name": "Chapter 8 \"Pride Illuminates the World\" (Part One)",
+  "stages": [
+   {
+    "stage": "15-1",
+    "chapter": 15,
+    "hard": 1,
+    "chapter_iname": "GENESIS_08_1",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+   },
+   {
+    "stage": "15-2",
+    "chapter": 15,
+    "hard": 2,
+    "chapter_iname": "GENESIS_08_1",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+   },
+   {
+    "stage": "15-3",
+    "chapter": 15,
+    "hard": 3,
+    "chapter_iname": "GENESIS_08_1",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+   },
+   {
+    "stage": "15-4",
+    "chapter": 15,
+    "hard": 4,
+    "chapter_iname": "GENESIS_08_1",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+   },
+   {
+    "stage": "15-5",
+    "chapter": 15,
+    "hard": 5,
+    "chapter_iname": "GENESIS_08_1",
+    "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+   }
+  ]
+ },
+ "ch14": {
+  "name": "Chapter 7 \"Greed in My Heart\" (Part Two)",
+  "stages": [
+   {
+    "stage": "14-1",
+    "chapter": 14,
+    "hard": 1,
+    "chapter_iname": "GENESIS_07_2",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+   },
+   {
+    "stage": "14-2",
+    "chapter": 14,
+    "hard": 2,
+    "chapter_iname": "GENESIS_07_2",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+   },
+   {
+    "stage": "14-3",
+    "chapter": 14,
+    "hard": 3,
+    "chapter_iname": "GENESIS_07_2",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+   },
+   {
+    "stage": "14-4",
+    "chapter": 14,
+    "hard": 4,
+    "chapter_iname": "GENESIS_07_2",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+   },
+   {
+    "stage": "14-5",
+    "chapter": 14,
+    "hard": 5,
+    "chapter_iname": "GENESIS_07_2",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+   }
+  ]
+ },
+ "ch13": {
+  "name": "Chapter 7 \"Greed in My Heart\" (Part One)",
+  "stages": [
+   {
+    "stage": "13-1",
+    "chapter": 13,
+    "hard": 1,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   },
+   {
+    "stage": "13-2",
+    "chapter": 13,
+    "hard": 2,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   },
+   {
+    "stage": "13-3",
+    "chapter": 13,
+    "hard": 3,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   },
+   {
+    "stage": "13-4",
+    "chapter": 13,
+    "hard": 4,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   },
+   {
+    "stage": "13-5",
+    "chapter": 13,
+    "hard": 5,
+    "chapter_iname": "GENESIS_07_1",
+    "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+   }
+  ]
+ },
+ "ch12": {
+  "name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)",
+  "stages": [
+   {
+    "stage": "12-1",
+    "chapter": 12,
+    "hard": 1,
+    "chapter_iname": "GENESIS_06_2",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+   },
+   {
+    "stage": "12-2",
+    "chapter": 12,
+    "hard": 2,
+    "chapter_iname": "GENESIS_06_2",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+   },
+   {
+    "stage": "12-3",
+    "chapter": 12,
+    "hard": 3,
+    "chapter_iname": "GENESIS_06_2",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+   },
+   {
+    "stage": "12-4",
+    "chapter": 12,
+    "hard": 4,
+    "chapter_iname": "GENESIS_06_2",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+   },
+   {
+    "stage": "12-5",
+    "chapter": 12,
+    "hard": 5,
+    "chapter_iname": "GENESIS_06_2",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+   }
+  ]
+ },
+ "ch11": {
+  "name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)",
+  "stages": [
+   {
+    "stage": "11-1",
+    "chapter": 11,
+    "hard": 1,
+    "chapter_iname": "GENESIS_06_1",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+   },
+   {
+    "stage": "11-2",
+    "chapter": 11,
+    "hard": 2,
+    "chapter_iname": "GENESIS_06_1",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+   },
+   {
+    "stage": "11-3",
+    "chapter": 11,
+    "hard": 3,
+    "chapter_iname": "GENESIS_06_1",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+   },
+   {
+    "stage": "11-4",
+    "chapter": 11,
+    "hard": 4,
+    "chapter_iname": "GENESIS_06_1",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+   },
+   {
+    "stage": "11-5",
+    "chapter": 11,
+    "hard": 5,
+    "chapter_iname": "GENESIS_06_1",
+    "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+   }
+  ]
+ },
+ "ch10": {
+  "name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)",
+  "stages": [
+   {
+    "stage": "10-1",
+    "chapter": 10,
+    "hard": 1,
+    "chapter_iname": "GENESIS_05_2",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+   },
+   {
+    "stage": "10-2",
+    "chapter": 10,
+    "hard": 2,
+    "chapter_iname": "GENESIS_05_2",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+   },
+   {
+    "stage": "10-3",
+    "chapter": 10,
+    "hard": 3,
+    "chapter_iname": "GENESIS_05_2",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+   },
+   {
+    "stage": "10-4",
+    "chapter": 10,
+    "hard": 4,
+    "chapter_iname": "GENESIS_05_2",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+   },
+   {
+    "stage": "10-5",
+    "chapter": 10,
+    "hard": 5,
+    "chapter_iname": "GENESIS_05_2",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+   }
+  ]
+ },
+ "ch9": {
+  "name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)",
+  "stages": [
+   {
+    "stage": "9-1",
+    "chapter": 9,
+    "hard": 1,
+    "chapter_iname": "GENESIS_05_1",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+   },
+   {
+    "stage": "9-2",
+    "chapter": 9,
+    "hard": 2,
+    "chapter_iname": "GENESIS_05_1",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+   },
+   {
+    "stage": "9-3",
+    "chapter": 9,
+    "hard": 3,
+    "chapter_iname": "GENESIS_05_1",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+   },
+   {
+    "stage": "9-4",
+    "chapter": 9,
+    "hard": 4,
+    "chapter_iname": "GENESIS_05_1",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+   },
+   {
+    "stage": "9-5",
+    "chapter": 9,
+    "hard": 5,
+    "chapter_iname": "GENESIS_05_1",
+    "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+   }
+  ]
+ },
+ "ch8": {
+  "name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)",
+  "stages": [
+   {
+    "stage": "8-1",
+    "chapter": 8,
+    "hard": 1,
+    "chapter_iname": "GENESIS_04_2",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+   },
+   {
+    "stage": "8-2",
+    "chapter": 8,
+    "hard": 2,
+    "chapter_iname": "GENESIS_04_2",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+   },
+   {
+    "stage": "8-3",
+    "chapter": 8,
+    "hard": 3,
+    "chapter_iname": "GENESIS_04_2",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+   },
+   {
+    "stage": "8-4",
+    "chapter": 8,
+    "hard": 4,
+    "chapter_iname": "GENESIS_04_2",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+   },
+   {
+    "stage": "8-5",
+    "chapter": 8,
+    "hard": 5,
+    "chapter_iname": "GENESIS_04_2",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+   }
+  ]
+ },
+ "ch7": {
+  "name": "Chapter 4 \"Swallow that Gluttony\" (Part One)",
+  "stages": [
+   {
+    "stage": "7-1",
+    "chapter": 7,
+    "hard": 1,
+    "chapter_iname": "GENESIS_04_1",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+   },
+   {
+    "stage": "7-2",
+    "chapter": 7,
+    "hard": 2,
+    "chapter_iname": "GENESIS_04_1",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+   },
+   {
+    "stage": "7-3",
+    "chapter": 7,
+    "hard": 3,
+    "chapter_iname": "GENESIS_04_1",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+   },
+   {
+    "stage": "7-4",
+    "chapter": 7,
+    "hard": 4,
+    "chapter_iname": "GENESIS_04_1",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+   },
+   {
+    "stage": "7-5",
+    "chapter": 7,
+    "hard": 5,
+    "chapter_iname": "GENESIS_04_1",
+    "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+   }
+  ]
+ }
+}
