@@ -7,7 +7,7 @@ your mouse.
 ## Install (no Python needed)
 
 1. Download `TACMonkey-Setup-<version>.exe` from the
-   [Releases](https://github.com/MohammedEmad638/tacmonkey/releases) page.
+   [Releases](https://github.com/atlasone514-beep/tacmonkey/releases) page.
 2. Close the game and run the setup. It finds the game folder by itself (or pick it), and can
    download BepInEx for you from the official build server.
 3. Start the game once: the first start with BepInEx takes a minute or two.
