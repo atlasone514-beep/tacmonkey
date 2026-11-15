@@ -115,6 +115,7 @@ def main():
            "--workpath", BUILD / "work", "--specpath", BUILD]
     run(pyi + ["--windowed", "--name", "TACMonkey", "--distpath", BUILD / "app",
                "--add-data", f"{REPO / 'app' / 'genesis_shards.json'};.",
+               "--add-data", f"{REPO / 'app' / 'genesis_extra.json'};.",
                REPO / "app" / "farm_ui.pyw"])
     app = BUILD / "app" / "TACMonkey"
     with zipfile.ZipFile(PAYLOAD / "app.zip", "w", zipfile.ZIP_DEFLATED) as z:

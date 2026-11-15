@@ -1,0 +1,115 @@
+Genesis Extra stages - gear Diagram Pieces (read from the game's loot lists)
+Every Extra stage also drops a [3-Title] Boss Challenge Ticket, the six elemental Soul
+Shards and Branch. 'guessed' = locked when scanned, listed with its chapter's pieces.
+
+ch19  Final Chapter "Here Lies Our Original Sin" (Part Three)
+  EX 19-1: Primordial Chain Diagram Piece, Dragon Princess Formal Dress Diagram Piece
+  EX 19-2: Primordial Chain Diagram Piece, Dragon Princess Formal Dress Diagram Piece  (guessed - locked)
+  EX 19-3: Primordial Chain Diagram Piece, Dragon Princess Formal Dress Diagram Piece  (guessed - locked)
+  EX 19-4: Primordial Chain Diagram Piece, Dragon Princess Formal Dress Diagram Piece  (guessed - locked)
+  EX 19-5: Primordial Chain Diagram Piece, Dragon Princess Formal Dress Diagram Piece  (guessed - locked)
+
+ch18  Final Chapter "Here Lies Our Original Sin" (Part Two)
+  EX 18-1: Sephira's Warboots Diagram Piece
+  EX 18-2: Sephira's Warboots Diagram Piece  (guessed - locked)
+  EX 18-3: Sephira's Warboots Diagram Piece  (guessed - locked)
+  EX 18-4: Sephira's Warboots Diagram Piece  (guessed - locked)
+  EX 18-5: Sephira's Warboots Diagram Piece  (guessed - locked)
+
+ch17  Final Chapter "Here Lies Our Original Sin" (Part 1)
+  EX 17-1: Protective Battle Gauntlet Diagram Piece
+  EX 17-2: Protective Battle Gauntlet Diagram Piece  (guessed - locked)
+  EX 17-3: Protective Battle Gauntlet Diagram Piece  (guessed - locked)
+  EX 17-4: Protective Battle Gauntlet Diagram Piece  (guessed - locked)
+  EX 17-5: Protective Battle Gauntlet Diagram Piece  (guessed - locked)
+
+ch16  Chapter 8 "Pride Illuminates the World" (Part Two)
+  EX 16-1: Thora Cloak Diagram Piece, Seldom Gardener's Ribbon Diagram Piece
+  EX 16-2: Thora Cloak Diagram Piece, Seldom Gardener's Ribbon Diagram Piece  (guessed - locked)
+  EX 16-3: Thora Cloak Diagram Piece, Seldom Gardener's Ribbon Diagram Piece  (guessed - locked)
+  EX 16-4: Thora Cloak Diagram Piece, Seldom Gardener's Ribbon Diagram Piece  (guessed - locked)
+  EX 16-5: Thora Cloak Diagram Piece, Seldom Gardener's Ribbon Diagram Piece  (guessed - locked)
+
+ch15  Chapter 8 "Pride Illuminates the World" (Part One)
+  EX 15-1: Agent's Boots Diagram Piece
+  EX 15-2: Agent's Boots Diagram Piece
+  EX 15-3: Agent's Boots Diagram Piece
+  EX 15-4: Agent's Boots Diagram Piece
+  EX 15-5: Agent's Boots Diagram Piece
+
+ch14  Chapter 7 "Greed in My Heart" (Part Two)
+  EX 14-1: Dragoncrest Holy Ring Diagram Piece, War God Mantle Diagram Piece
+  EX 14-2: Dragoncrest Holy Ring Diagram Piece, War God Mantle Diagram Piece  (guessed - locked)
+  EX 14-3: Dragoncrest Holy Ring Diagram Piece, War God Mantle Diagram Piece  (guessed - locked)
+  EX 14-4: Dragoncrest Holy Ring Diagram Piece, War God Mantle Diagram Piece  (guessed - locked)
+  EX 14-5: Dragoncrest Holy Ring Diagram Piece, War God Mantle Diagram Piece  (guessed - locked)
+
+ch13  Chapter 7 "Greed in My Heart" (Part One)
+  EX 13-1: Reformer's Battledress Diagram Piece, Blue Ribbon of Rending White Diagram Piece
+  EX 13-2: Reformer's Battledress Diagram Piece, Blue Ribbon of Rending White Diagram Piece
+  EX 13-3: Reformer's Battledress Diagram Piece, Blue Ribbon of Rending White Diagram Piece
+  EX 13-4: Reformer's Battledress Diagram Piece, Blue Ribbon of Rending White Diagram Piece
+  EX 13-5: Reformer's Battledress Diagram Piece, Blue Ribbon of Rending White Diagram Piece
+
+ch12  Chapter 6 "Wrath Signifies Justice" (Part Two)
+  EX 12-1: Successor's Gloves Diagram Piece
+  EX 12-2: Minute Hand of Reminiscence Diagram Piece
+  EX 12-3: Successor's Gloves Diagram Piece
+  EX 12-4: Minute Hand of Reminiscence Diagram Piece
+  EX 12-5: Successor's Gloves Diagram Piece, Minute Hand of Reminiscence Diagram Piece
+
+ch11  Chapter 6 "Wrath Signifies Justice" (Part One)
+  EX 11-1: Heaven's Light Faulds Diagram Piece
+  EX 11-2: Heaven's Light Faulds Diagram Piece
+  EX 11-3: Heaven's Light Faulds Diagram Piece
+  EX 11-4: Heaven's Light Faulds Diagram Piece
+  EX 11-5: Heaven's Light Faulds Diagram Piece
+
+ch10  Chapter 5 "Even If My Heart Aches in Envy" (Part Two)
+  EX 10-1: Azure Spirit Princess' Veil Diagram Piece
+  EX 10-2: Azure Spirit Princess' Veil Diagram Piece  (guessed - locked)
+  EX 10-3: Azure Spirit Princess' Veil Diagram Piece  (guessed - locked)
+  EX 10-4: Azure Spirit Princess' Veil Diagram Piece  (guessed - locked)
+  EX 10-5: Azure Spirit Princess' Veil Diagram Piece  (guessed - locked)
+
+ch9  Chapter 5 "Even If My Heart Aches in Envy" (Part One)
+  EX 9-1: White-Silver Battledress Diagram Piece
+  EX 9-2: White-Silver Battledress Diagram Piece
+  EX 9-3: White-Silver Battledress Diagram Piece
+  EX 9-4: White-Silver Battledress Diagram Piece
+  EX 9-5: White-Silver Battledress Diagram Piece
+
+ch8  Chapter 4 "Swallow that Gluttony" (Part Two)
+  EX 8-1: Brand of Gluttony Diagram Piece
+  EX 8-2: Brand of Gluttony Diagram Piece
+  EX 8-3: Brand of Gluttony Diagram Piece
+  EX 8-4: Brand of Gluttony Diagram Piece
+  EX 8-5: Brand of Gluttony Diagram Piece
+
+ch7  Chapter 4 "Swallow that Gluttony" (Part One)
+  EX 7-1: Zuka Crown Diagram Piece
+  EX 7-2: Zuka Crown Diagram Piece
+  EX 7-3: Zuka Crown Diagram Piece
+  EX 7-4: Zuka Crown Diagram Piece
+  EX 7-5: Zuka Crown Diagram Piece
+
+By Diagram Piece
+
+  Agent's Boots Diagram Piece: 15-1, 15-2, 15-3, 15-4, 15-5
+  Azure Spirit Princess' Veil Diagram Piece: 10-1, 10-2, 10-3, 10-4, 10-5
+  Blue Ribbon of Rending White Diagram Piece: 13-1, 13-2, 13-3, 13-4, 13-5
+  Brand of Gluttony Diagram Piece: 8-1, 8-2, 8-3, 8-4, 8-5
+  Dragon Princess Formal Dress Diagram Piece: 19-1, 19-2, 19-3, 19-4, 19-5
+  Dragoncrest Holy Ring Diagram Piece: 14-1, 14-2, 14-3, 14-4, 14-5
+  Heaven's Light Faulds Diagram Piece: 11-1, 11-2, 11-3, 11-4, 11-5
+  Minute Hand of Reminiscence Diagram Piece: 12-2, 12-4, 12-5
+  Primordial Chain Diagram Piece: 19-1, 19-2, 19-3, 19-4, 19-5
+  Protective Battle Gauntlet Diagram Piece: 17-1, 17-2, 17-3, 17-4, 17-5
+  Reformer's Battledress Diagram Piece: 13-1, 13-2, 13-3, 13-4, 13-5
+  Seldom Gardener's Ribbon Diagram Piece: 16-1, 16-2, 16-3, 16-4, 16-5
+  Sephira's Warboots Diagram Piece: 18-1, 18-2, 18-3, 18-4, 18-5
+  Successor's Gloves Diagram Piece: 12-1, 12-3, 12-5
+  Thora Cloak Diagram Piece: 16-1, 16-2, 16-3, 16-4, 16-5
+  War God Mantle Diagram Piece: 14-1, 14-2, 14-3, 14-4, 14-5
+  White-Silver Battledress Diagram Piece: 9-1, 9-2, 9-3, 9-4, 9-5
+  Zuka Crown Diagram Piece: 7-1, 7-2, 7-3, 7-4, 7-5
