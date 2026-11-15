@@ -75,7 +75,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-VERSION = "1.2.1"   # TACMonkey release (the setup and the window show it)
+VERSION = "1.3.0"   # TACMonkey release (the setup and the window show it)
 MOD_VERSION = "1.2.1"  # TAC Auto Tap version shipped with this release (release/build.py checks it)
 WINDOW_TITLE = "The Alchemist Code"
 # APP_DIR holds your buttons, scripts and settings; RES_DIR the files shipped with the program.
@@ -91,6 +91,7 @@ REF_FILE = BUTTON_DIR / "_ref_width.json"   # frame width each template was grab
 SCRIPTS_DIR = APP_DIR / "scripts"  # one folder per extra script (see load_templates)
 DEFAULT_SCRIPT = "Default"                       # the buttons/ folder on its own
 SPOTS_FILE = "taps.json"                         # optional fixed tap spots (see load_spots)
+EVERY_FILE = BUTTON_DIR / "_every_script.json"   # buttons pressed in every script (see every_script_ids)
 FLOW_FILE = "flow.json"                          # which button followed which in runs (FlowRecorder)
 SCRIPT_FILE = "script.json"                      # per-script settings: {"use": [...], "count": [...]}
 THRESHOLD = 0.85        # match confidence 0-1. Lower it if a button is missed.
@@ -706,6 +707,41 @@ def set_counter(script, name, on):
     _write_settings(script, settings)
 
 
+# Buttons pressed in every script, e.g. "View Later" on the Peddler Shop popup that can show
+# up after any quest. They're checked before the script's own steps, and aren't part of any
+# script's steps, priority or flow.
+EVERY_PREFIX = "*"   # their step keys in the farm loop, so they never clash with a script's steps
+
+
+def every_script_ids():
+    """Pool ids ("<home>/<name>") pressed in every script."""
+    try:
+        ids = json.loads(EVERY_FILE.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return []
+    return [i for i in ids if isinstance(i, str) and "/" in i] if isinstance(ids, list) else []
+
+
+def set_every_script(button_id, on):
+    ids = set(every_script_ids())
+    ids = ids | {button_id} if on else ids - {button_id}
+    BUTTON_DIR.mkdir(parents=True, exist_ok=True)
+    EVERY_FILE.write_text(json.dumps(sorted(ids), indent=2), encoding="utf-8")
+
+
+def every_script_templates(script=None):
+    """[(name, image, ref)] of the every-script buttons this script doesn't pick itself."""
+    own = set(used_ids(script))
+    want = {i for i in every_script_ids() if i not in own}
+    return sorted(((name, tpl, ref) for button_id, name, _, tpl, ref in library()
+                   if button_id in want), key=lambda t: t[0])
+
+
+def every_script_groups(templates):
+    """{"*view later": [(name, image, ref)]}: one step each, checked before the script's."""
+    return {EVERY_PREFIX + name: [(name, tpl, ref)] for name, tpl, ref in templates}
+
+
 # Built-in actions: pool entries with no image, done through the TAC Auto Tap mod. A script
 # picks them in Customize like any button. They're checked before the images on every scan.
 ACTION_HOME = "Built-in"
@@ -739,18 +775,20 @@ def describe_library(script=None):
     """Every pool entry for the customizer, in priority order: dicts with id, name, home, img,
     ref, used (this script uses it), counter, spot, marker, action (built-in, no image)."""
     used = set(used_ids(script))
+    every = set(every_script_ids())
     counters = counter_names(script)
     spots = load_spots(script)
     steps = step_map(script)
     out = [{"id": aid, "name": name, "home": ACTION_HOME, "img": action_badge("AP refill\n7 Alch. Drops"),
             "ref": None, "used": aid in used, "counter": False, "marker": False, "spot": None,
-            "action": True, "about": about} for aid, (name, about) in ACTIONS.items()]
+            "action": True, "every": False, "about": about} for aid, (name, about) in ACTIONS.items()]
     for button_id, name, home, tpl, ref in sorted(library(), key=lambda b: (b[1], b[2])):
         marker = name.startswith("x_")
         out.append({"id": button_id, "name": name, "home": home, "img": tpl, "ref": ref,
                     "used": button_id in used, "counter": name in counters, "marker": marker,
                     "spot": None if marker else spots.get(group_key(name, steps)),
-                    "step": group_key(name, steps), "action": False})
+                    "step": group_key(name, steps), "action": False,
+                    "every": button_id in every})
     return out
 
 
@@ -807,8 +845,11 @@ def flow_model(script=None):
     (same number = variants of one step), in the order runs went through them.
 
     {"groups": {key: [entries]}, "order": [keys], "pairs": {(ka, kb): n}, "pressed": {key: n},
-     "learned": bool, "actions": [entries], "markers": [entries]} - entries as describe_library."""
-    entries = [b for b in describe_library(script) if b["used"]]
+     "learned": bool, "actions": [entries], "markers": [entries], "every": [entries]} - entries
+    as describe_library ("every": buttons pressed in every script that this one doesn't pick)."""
+    library_entries = describe_library(script)
+    entries = [b for b in library_entries if b["used"]]
+    every = [b for b in library_entries if b["every"] and not b["used"]]
     actions = [b for b in entries if b["action"]]
     markers = [b for b in entries if not b["action"] and b["marker"]]
     groups = {}
@@ -829,7 +870,7 @@ def flow_model(script=None):
     return {"groups": groups, "order": flow_order(priority, gpairs, gpressed),
             "priority": priority, "custom_priority": bool(own),
             "pairs": gpairs, "pressed": gpressed, "learned": bool(gpairs),
-            "actions": actions, "markers": markers}
+            "actions": actions, "markers": markers, "every": every}
 
 
 def flow_order(keys, pairs, pressed):
@@ -1094,8 +1135,10 @@ def check(script=None):
     frame = capture(hwnd, region)
     if frame is None:
         sys.exit("Captured a black frame - make sure the game is open and not minimized.")
-    scores = [(name, match(frame, tpl, ref)[0]) for name, tpl, ref in templates]
-    groups = group_templates(templates, priority_order(script), step_map(script))
+    every = every_script_templates(script)
+    scores = [(name, match(frame, tpl, ref)[0]) for name, tpl, ref in templates + every]
+    groups = {**every_script_groups(every),
+              **group_templates(templates, priority_order(script), step_map(script))}
     back = act_finished(frame, groups, split_markers(templates))
     if AP_REFILL in used_actions(script) and ap_window_open():
         action = "Replenish AP is open -> would refill AP with 7 Alchemy Drops"
@@ -1139,11 +1182,15 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
 
     templates = load_templates(script)
     groups = group_templates(templates, priority_order(script), step_map(script))
+    log(f"Loaded {len(templates)} buttons: {', '.join(n for n, _, _ in templates)}")
+    log("Priority: " + " > ".join(groups) + (" (own list)" if priority_order(script) else ""))
+    every = every_script_templates(script)
+    if every:
+        log("Pressed in every script (checked first): " + ", ".join(n for n, _, _ in every))
+        groups = {**every_script_groups(every), **groups}
     markers = split_markers(templates)
     spots = load_spots(script)
     counters = counter_names(script, templates)
-    log(f"Loaded {len(templates)} buttons: {', '.join(n for n, _, _ in templates)}")
-    log("Priority: " + " > ".join(groups) + (" (own list)" if priority_order(script) else ""))
     log(f"Run counter: {', '.join(sorted(counters)) or 'none - runs are not counted'}")
     if spots:
         log("Fixed tap spots: " + ", ".join(f"{b} at {x:.0%} across, {y:.0%} down"
@@ -1278,13 +1325,14 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
                     say(f"{name} tapped {streak} times in a row and the screen hasn't moved on "
                         f"- saved {shot.name} in the stuck folder")
                 last = f"{name} ({score:.2f})"
-                if streak == 1:
+                if streak == 1 and not button.startswith(EVERY_PREFIX):
                     flow.press(name)
                 last_click[button] = last_action = time.time()
                 warned = False
                 if button == QUEST_BUTTON:
                     went_back = False
-                if name in counters and streak == 1:  # repeat taps are still the same screen
+                if name in counters and streak == 1 and not button.startswith(EVERY_PREFIX):
+                    # (repeat taps are still the same screen)
                     runs += 1
                     log(f"  runs completed: {runs}")
                     if max_runs and runs >= max_runs:

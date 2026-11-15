@@ -1,7 +1,7 @@
 # tacmonkey
 
 Automation for The Alchemist Code (TagaReconstruction private server): story/event farming by
-button images, a Genesis unit-shard farm, and an in-game mod that presses buttons without using
+button images, Genesis unit-shard and Ex (Extra stage) farms, and an in-game mod that presses buttons without using
 your mouse.
 
 ## Install (no Python needed)
@@ -32,10 +32,10 @@ If the game has a different mod version than the app expects, the log says so.
 
 | Folder | What's in it |
 |---|---|
-| `app/` | The farm (`farm.py`), its window (`farm_ui.pyw`) and the Genesis unit farm (`genesis_farm.py`) |
+| `app/` | The farm (`farm.py`), its window (`farm_ui.pyw`) and the Genesis / Ex Genesis farm (`genesis_farm.py`) |
 | `mod/TACAutoTap/` | BepInEx 6 IL2CPP plugin: presses UI buttons from inside the game over 127.0.0.1:47613 |
-| `tools/` | `modtest.py` (talk to the mod by hand), Genesis loot reader/report, and the BepInEx loader patcher |
-| `data/genesis/` | Unit shard drops of all 95 Genesis Hard stages (table, list, full loot CSV, raw results) |
+| `tools/` | `modtest.py` (talk to the mod by hand), Genesis loot reader (`--extra` for Extra stages) and reports, and the BepInEx loader patcher |
+| `data/genesis/` | Unit shard drops of all 95 Genesis Hard stages (table, list, full loot CSV, raw results), and what the Extra stages drop |
 | `installer/`, `release/` | The setup program and the script that builds a release |
 | `docs/NOTES.md` | How the mod setup works and what was checked |
 
@@ -77,11 +77,29 @@ at and never tapped.
 Some old story-farm behaviour still depends on fixed numbers: `01` topmost quest, `08` tap
 anywhere, `09` default run counter, `10` act, and the `x_quest_done` / `x_back` markers.
 
+**Every script:** some popups can show up in any script, like the Peddler Shop after a quest.
+Capture its **View Later** button once, click its card and tick **Press in every script**. Every
+script then checks it before its own steps. It isn't part of any script's steps or priority.
+
 **Sharing:** **Export script** writes one `.tacscript` file with the images the script uses,
 plus its steps, priority, run counter, tap spots and learned arrows. Your friend opens it with
 **Import** (main window) or **Import script** (Customize). It becomes a new script with its own
 copy of the images, so nothing they already have is overwritten. Then they press **Check
 screen** to see whether the images match on their window.
+
+## Genesis farm
+
+Needs the mod. Start from the home screen or anywhere in Genesis.
+
+- **Units (Hard):** tick the units whose shards you want. The number that appears beside a
+  ticked unit is how many of its stages to farm, newest chapter first. Each stage is skipped
+  with 3 skip tickets.
+- **Ex chapters (Extra):** the third setting of the map's Normal/Hard switch, from Eulalia's
+  chapter (ch7) on. Tick chapters; the number is how many of their 5 Extra stages to farm. Each
+  has 1 attempt a day (1 skip ticket). Extra stages you haven't cleared by hand are locked and
+  skipped.
+
+When AP runs out, both refill it with 7 Alchemy Drops.
 
 ## Build the mod
 
