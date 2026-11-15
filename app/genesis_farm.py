@@ -1,4 +1,7 @@
 """Genesis unit farm: skip-ticket the Genesis Hard stages that drop the units you pick.
+Ex Genesis farm: the same for the Extra stages (third setting of the map's Normal/Hard switch,
+ch7 and later): pick chapters and how many of their 5 Extra stages to do. Extra stages give
+1 attempt a day and must be cleared once by hand before they can be skipped.
 
 Needs the TAC Auto Tap mod (v1.2+) running in the game - everything is pressed and read through
 it, so the mouse is never used. For every stage that drops a chosen unit:
@@ -6,9 +9,11 @@ it, so the mouse is never used. For every stage that drops a chosen unit:
     -> rewards -> OK -> Back to the map
 When AP runs out: Replenish AP -> Alchemy Drops -> set 7 pcs -> OK -> OK, then carry on.
 Stages with no attempts left today are skipped. The unit -> stage map comes from
-genesis_shards.json (built from the loot of all 95 Genesis Hard stages).
+genesis_shards.json (built from the loot of all 95 Genesis Hard stages); the Extra stages'
+from genesis_extra.json (tools/genesis_drops.py --extra, then tools/genesis_extra_report.py).
 
     python genesis_farm.py Matia "Dark Julia"      (command line; the farm window has a picker)
+    python genesis_farm.py --extra ALL             every Extra stage you have cleared
 """
 import json
 import re
@@ -20,6 +25,8 @@ from pathlib import Path
 import farm
 
 SHARDS_FILE = farm.RES_DIR / "genesis_shards.json"
+EXTRA_FILE = farm.RES_DIR / "genesis_extra.json"
+ALL_EXTRA = "ALL"            # the Ex farm's "every Extra stage" pick (a key in genesis_extra.json)
 AP_ITEM = "Alchemy Drops"   # exact row name; not "Alchemy Droplets" / event drops
 AP_PCS = 7                  # always use this many per refill
 SKIPS = 3                   # skips per stage (the daily Hard attempts)
@@ -31,6 +38,11 @@ QUEST_BTN = (0.836, 0.512)
 DIFF = (0.127, 0.168)
 NODES = ((0.1936, 0.4195), (0.3258, 0.5738), (0.4627, 0.4195), (0.5977, 0.5738), (0.7318, 0.4195))
 POPUP_TITLE, POPUP_OK = (0.40, 0.40), (0.5, 0.641)
+NOTICE, NOTICE_OK = (0.5, 0.35), (0.5, 0.672)   # e.g. "Clear ... EX 1 to unlock." + its OK
+MODES = {  # map switch sprite, how the stage popup ends its title, log label
+    "hard": ("btn_scenario_hard", r"Hard", "Hard"),
+    "extra": ("btn_scenario_extra", r"(?:Extra|EX)", "EX"),
+}
 ATTEMPTS_USED, ATTEMPTS_MAX = (0.693, 0.474), (0.72, 0.474)   # popup "Attempts 0/3"
 OUTSIDE = (0.12, 0.75)
 MAP_BACK, TOP_BACK, TEAM_BACK = (0.075, 0.933), (0.074, 0.935), (0.062, 0.941)
@@ -41,10 +53,26 @@ class Stop(Exception):
     pass
 
 
+def plan(data, units, counts=None):
+    """The stages to farm, newest chapter first: each unit's stages in the data's order, only
+    its first counts[unit] of them when a count is set. Stages shared by units are done once."""
+    stages = {}
+    for u in units:
+        lst = data[u]["stages"]
+        n = (counts or {}).get(u)
+        if isinstance(n, int) and 0 < n < len(lst):
+            lst = lst[:n]
+        for st in lst:
+            stages[st["stage"]] = st
+    return sorted(stages.values(), key=lambda s: (-s["chapter"], s["hard"]))
+
+
 class GenesisFarm:
-    def __init__(self, log=print, stop=None):
+    def __init__(self, log=print, stop=None, mode="hard"):
         self.log = log
         self.stop = stop or threading.Event()
+        self.mode = mode
+        self.pic, self.title_re, self.label = MODES[mode]
         self.shards = {}   # unit -> shards got this session
 
     # ---------- talking to the mod ----------
@@ -136,10 +164,19 @@ class GenesisFarm:
     def close_popups(self):
         for _ in range(4):
             here = self.probe(OUTSIDE)
-            if "GenesisQuestConfirm" not in here and "QuestDetail" not in here:
+            if "Win_Btn_Decide" in here:          # a game notice: its OK closes it
+                self.tap(NOTICE_OK)
+            elif "GenesisQuestConfirm" in here or "QuestDetail" in here:
+                self.tap(OUTSIDE)
+            else:
                 return
-            self.tap(OUTSIDE)
             self.sleep(1.3)
+
+    def notice(self):
+        """The text of a game notice (e.g. "Clear ... EX 1 to unlock."), or None."""
+        if "Win_Btn_Decide" not in self.probe(NOTICE):
+            return None
+        return " ".join(self.texts(self.inspect(NOTICE))) or "?"
 
     # ---------- chapter / stage ----------
     def chapter_in_slot(self, y):
@@ -166,24 +203,25 @@ class GenesisFarm:
                             break
                     else:
                         raise RuntimeError(f"{iname}: quest map didn't open")
-                    return self.set_hard()
+                    return self.set_mode()
             self.tap(DOWN)
             self.sleep(1.2)
         raise RuntimeError(f"{iname}: not in the Genesis chapter list")
 
-    def set_hard(self):
+    def set_mode(self):
+        """Press the map's Normal/Hard/Extra switch until it shows this farm's mode."""
         for _ in range(4):
             pics = self.inspect(DIFF)
-            if "btn_scenario_hard" in pics:
+            if self.pic in pics:
                 return True
-            if "btn_scenario_normal" in pics:
+            if "btn_scenario_" in pics:
                 self.tap(DIFF)
             self.sleep(1.5)
-        raise RuntimeError("couldn't switch the map to Hard")
+        raise RuntimeError(f"couldn't switch the map to {self.label}")
 
     def popup_title(self):
         for t in self.texts(self.inspect(POPUP_TITLE)):
-            if re.search(r"\bHard\s*\d+\s*$", t):
+            if re.search(rf"\b{self.title_re}\s*\d+\s*$", t):
                 return t
         return None
 
@@ -286,7 +324,8 @@ class GenesisFarm:
         return "other", els
 
     def skip_stage(self, key):
-        """On the team screen: skip until no attempts are left. Returns shards got."""
+        """On the team screen: skip as many times as attempts allow (up to SKIPS). Returns
+        (shards got, whether it skipped)."""
         got = {}
         did_skip = False
         for _ in range(30):
@@ -329,7 +368,8 @@ class GenesisFarm:
         raise RuntimeError(f"{key}: stuck after skipping")
 
     def reward_shards(self, els):
-        """(unit, count) for the unit shards on the rewards screen."""
+        """(name, count) for the unit shards (and, on Extra stages, Diagram Pieces) on the
+        rewards screen."""
         node = next((e for e in els if "itemlist" in e["path"] and e["path"].endswith("dropitem")), None)
         if not node:
             return []
@@ -337,6 +377,8 @@ class GenesisFarm:
         out = []
         for chunk in reply.split(" ||| ")[1:]:
             m = re.search(r"name=([^,>]+) Soul Shard,type=UnitPiece", chunk)
+            if not m and self.mode == "extra":
+                m = re.search(r"name=([^,>]+ Diagram Piece),type=ItemPiecePiece", chunk)
             if m:
                 # labels read e.g. "*", "3", "(Owned: 49)" - the count sits right before "(Owned"
                 t = self.texts(chunk)
@@ -346,11 +388,17 @@ class GenesisFarm:
         return out
 
     def farm_stage(self, st):
-        key = st["stage"]
-        self.set_hard()
+        key = st["stage"] if self.mode == "hard" else f"EX {st['stage']}"
+        self.set_mode()
         self.tap(NODES[st["hard"] - 1])
-        title = self.wait_for(self.popup_title, 8)
-        if not title or not re.search(rf"\bHard\s*{st['hard']}\s*$", title):
+        title = self.wait_for(lambda: self.popup_title() or (self.notice() and "notice"), 8)
+        if title == "notice":
+            text = self.notice()
+            self.close_popups()
+            why = "locked - clear it by hand once" if "unlock" in text.lower() else text
+            self.log(f"  {key}: {why} - skipped")
+            return
+        if not title or not re.search(rf"\b{self.title_re}\s*{st['hard']}\s*$", title):
             self.close_popups()
             self.log(f"  {key}: stage popup didn't open as expected ({title}) - skipped")
             return
@@ -367,7 +415,8 @@ class GenesisFarm:
         self.sleep(1.0)
         got, skipped = self.skip_stage(key)
         if not skipped:
-            self.log(f"  {key}: no attempts left today - skipped")
+            self.log(f"  {key}: no attempts left today - skipped" if self.mode == "hard" else
+                     f"  {key}: can't skip - no attempt left today, or not cleared by hand yet")
         else:
             txt = ", ".join(f"{u} x{n}" for u, n in got.items()) or "no shards this time"
             self.log(f"  {key}: done - {txt}")
@@ -385,17 +434,16 @@ class GenesisFarm:
             raise RuntimeError(f"{key}: didn't get back to the map")
         self.sleep(0.8)
 
-    def run(self, units):
-        data = json.loads(SHARDS_FILE.read_text(encoding="utf-8"))
+    def run(self, units, counts=None):
+        """units: unit names (Hard) or chapters like "ch15" / ALL_EXTRA (Extra).
+        counts: {unit: how many of its stages to farm} (missing = all of them)."""
+        data = load_data(self.mode)
         unknown = [u for u in units if u not in data]
         if unknown:
-            raise RuntimeError(f"unknown units: {unknown}")
-        stages = {}
-        for u in units:
-            for st in data[u]["stages"]:
-                stages[st["stage"]] = st
-        order = sorted(stages.values(), key=lambda s: (-s["chapter"], s["hard"]))
-        self.log(f"Genesis farm: {', '.join(units)} -> {len(order)} stages: "
+            raise RuntimeError(f"unknown picks: {unknown}")
+        order = plan(data, units, counts)
+        name = "Genesis farm" if self.mode == "hard" else "Ex Genesis farm"
+        self.log(f"{name}: {', '.join(units)} -> {len(order)} {self.label} stages: "
                  f"{', '.join(s['stage'] for s in order)}")
         try:
             chapter = None
@@ -407,12 +455,19 @@ class GenesisFarm:
                 self.farm_stage(st)
             self.go_genesis()
             summary = ", ".join(f"{u} x{n}" for u, n in self.shards.items()) or "none"
-            self.log(f"Genesis farm finished. Shards this run: {summary}")
+            self.log(f"{name} finished. Shards this run: {summary}")
             return "Finished."
         except Stop:
-            self.log("Genesis farm stopped.")
+            self.log(f"{name} stopped.")
             return "Stopped."
 
 
+def load_data(mode="hard"):
+    """{pick: {"stages": [...]}}: units (Hard) or chapters ("ch15") + ALL_EXTRA (Extra)."""
+    return json.loads((SHARDS_FILE if mode == "hard" else EXTRA_FILE).read_text(encoding="utf-8"))
+
+
 if __name__ == "__main__":
-    print(GenesisFarm().run(sys.argv[1:]))
+    args = sys.argv[1:]
+    mode = "extra" if "--extra" in args else "hard"
+    print(GenesisFarm(mode=mode).run([a for a in args if a != "--extra"]))

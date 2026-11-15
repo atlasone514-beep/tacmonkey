@@ -1,0 +1,2453 @@
+{
+ "19-1": {
+  "title": "Here Lies Our Original Sin (Part Three) - EX 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ESAI01",
+    "name": "Primordial Chain Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_UROB_LEGA01",
+    "name": "Dragon Princess Formal Dress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_09_3",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 19,
+  "chapter_iname": "GENESIS_09_3",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+ },
+ "19-2": {
+  "stage": 2,
+  "locked": true,
+  "error": "locked: Clear Here Lies Our Original Sin (Part Three) - EX 1 to unlock.",
+  "chapter": 19,
+  "chapter_iname": "GENESIS_09_3",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+ },
+ "19-3": {
+  "stage": 3,
+  "locked": true,
+  "error": "locked: Clear Here Lies Our Original Sin (Part Three) - EX 2 to unlock.",
+  "chapter": 19,
+  "chapter_iname": "GENESIS_09_3",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+ },
+ "19-4": {
+  "stage": 4,
+  "locked": true,
+  "error": "locked: Clear Here Lies Our Original Sin (Part Three) - EX 3 to unlock.",
+  "chapter": 19,
+  "chapter_iname": "GENESIS_09_3",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+ },
+ "19-5": {
+  "stage": 5,
+  "locked": true,
+  "error": "locked: Clear Here Lies Our Original Sin (Part Three) - EX 4 to unlock.",
+  "chapter": 19,
+  "chapter_iname": "GENESIS_09_3",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Three)"
+ },
+ "18-1": {
+  "title": "Here Lies Our Original Sin (Part Two) - EX 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MATH01",
+    "name": "Sephira's Warboots Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_09_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 18,
+  "chapter_iname": "GENESIS_09_2",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+ },
+ "18-2": {
+  "stage": 2,
+  "locked": true,
+  "error": "locked: Clear Here Lies Our Original Sin (Part Two) - EX 1 to unlock.",
+  "chapter": 18,
+  "chapter_iname": "GENESIS_09_2",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+ },
+ "18-3": {
+  "stage": 3,
+  "locked": true,
+  "error": "locked: Clear Here Lies Our Original Sin (Part Two) - EX 2 to unlock.",
+  "chapter": 18,
+  "chapter_iname": "GENESIS_09_2",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+ },
+ "18-4": {
+  "stage": 4,
+  "locked": true,
+  "error": "locked: Clear Here Lies Our Original Sin (Part Two) - EX 3 to unlock.",
+  "chapter": 18,
+  "chapter_iname": "GENESIS_09_2",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+ },
+ "18-5": {
+  "stage": 5,
+  "locked": true,
+  "error": "locked: Clear Here Lies Our Original Sin (Part Two) - EX 4 to unlock.",
+  "chapter": 18,
+  "chapter_iname": "GENESIS_09_2",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part Two)"
+ },
+ "17-1": {
+  "title": "Here Lies Our Original Sin (Part One) - EX 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_MESA01",
+    "name": "Protective Battle Gauntlet Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_09_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 17,
+  "chapter_iname": "GENESIS_09_1",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+ },
+ "17-2": {
+  "stage": 2,
+  "locked": true,
+  "error": "locked: Clear Here Lies Our Original Sin (Part One) - EX 1 to unlock.",
+  "chapter": 17,
+  "chapter_iname": "GENESIS_09_1",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+ },
+ "17-3": {
+  "stage": 3,
+  "locked": true,
+  "error": "locked: Clear Here Lies Our Original Sin (Part One) - EX 2 to unlock.",
+  "chapter": 17,
+  "chapter_iname": "GENESIS_09_1",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+ },
+ "17-4": {
+  "stage": 4,
+  "locked": true,
+  "error": "locked: Clear Here Lies Our Original Sin (Part One) - EX 3 to unlock.",
+  "chapter": 17,
+  "chapter_iname": "GENESIS_09_1",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+ },
+ "17-5": {
+  "stage": 5,
+  "locked": true,
+  "error": "locked: Clear Here Lies Our Original Sin (Part One) - EX 4 to unlock.",
+  "chapter": 17,
+  "chapter_iname": "GENESIS_09_1",
+  "chapter_name": "Final Chapter \"Here Lies Our Original Sin\" (Part 1)"
+ },
+ "16-1": {
+  "title": "Pride Illuminates the World (Part Two) - EX 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SHAH01",
+    "name": "Thora Cloak Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_HELENE01",
+    "name": "Seldom Gardener's Ribbon Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_08_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 16,
+  "chapter_iname": "GENESIS_08_2",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+ },
+ "16-2": {
+  "stage": 2,
+  "locked": true,
+  "error": "locked: Clear Pride Illuminates the World (Part Two) - EX 1 to unlock.",
+  "chapter": 16,
+  "chapter_iname": "GENESIS_08_2",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+ },
+ "16-3": {
+  "stage": 3,
+  "locked": true,
+  "error": "locked: Clear Pride Illuminates the World (Part Two) - EX 2 to unlock.",
+  "chapter": 16,
+  "chapter_iname": "GENESIS_08_2",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+ },
+ "16-4": {
+  "stage": 4,
+  "locked": true,
+  "error": "locked: Clear Pride Illuminates the World (Part Two) - EX 3 to unlock.",
+  "chapter": 16,
+  "chapter_iname": "GENESIS_08_2",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+ },
+ "16-5": {
+  "stage": 5,
+  "locked": true,
+  "error": "locked: Clear Pride Illuminates the World (Part Two) - EX 4 to unlock.",
+  "chapter": 16,
+  "chapter_iname": "GENESIS_08_2",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part Two)"
+ },
+ "15-1": {
+  "title": "Pride Illuminates the World (Part One) - EX 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_IGNA01",
+    "name": "Agent's Boots Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_08_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 15,
+  "chapter_iname": "GENESIS_08_1",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+ },
+ "15-2": {
+  "title": "Pride Illuminates the World (Part One) - EX 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_IGNA01",
+    "name": "Agent's Boots Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_08_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 15,
+  "chapter_iname": "GENESIS_08_1",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+ },
+ "15-3": {
+  "title": "Pride Illuminates the World (Part One) - EX 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_IGNA01",
+    "name": "Agent's Boots Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_08_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 15,
+  "chapter_iname": "GENESIS_08_1",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+ },
+ "15-4": {
+  "title": "Pride Illuminates the World (Part One) - EX 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_IGNA01",
+    "name": "Agent's Boots Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_08_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 15,
+  "chapter_iname": "GENESIS_08_1",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+ },
+ "15-5": {
+  "title": "Pride Illuminates the World (Part One) - EX 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_IGNA01",
+    "name": "Agent's Boots Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_08_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 15,
+  "chapter_iname": "GENESIS_08_1",
+  "chapter_name": "Chapter 8 \"Pride Illuminates the World\" (Part One)"
+ },
+ "14-1": {
+  "title": "\"Greed in My Heart\" (Part Two) - EX 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BENIKA01",
+    "name": "Dragoncrest Holy Ring Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_KUBERA01",
+    "name": "War God Mantle Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_07_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 14,
+  "chapter_iname": "GENESIS_07_2",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+ },
+ "14-2": {
+  "stage": 2,
+  "locked": true,
+  "error": "locked: Clear \"Greed in My Heart\" (Part Two) - EX 1 to unlock.",
+  "chapter": 14,
+  "chapter_iname": "GENESIS_07_2",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+ },
+ "14-3": {
+  "stage": 3,
+  "locked": true,
+  "error": "locked: Clear \"Greed in My Heart\" (Part Two) - EX 2 to unlock.",
+  "chapter": 14,
+  "chapter_iname": "GENESIS_07_2",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+ },
+ "14-4": {
+  "stage": 4,
+  "locked": true,
+  "error": "locked: Clear \"Greed in My Heart\" (Part Two) - EX 3 to unlock.",
+  "chapter": 14,
+  "chapter_iname": "GENESIS_07_2",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+ },
+ "14-5": {
+  "stage": 5,
+  "locked": true,
+  "error": "locked: Clear \"Greed in My Heart\" (Part Two) - EX 4 to unlock.",
+  "chapter": 14,
+  "chapter_iname": "GENESIS_07_2",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part Two)"
+ },
+ "13-1": {
+  "title": "Greed in My Heart (Part One) - EX 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NEW_NIMURU01",
+    "name": "Reformer's Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BIAN01",
+    "name": "Blue Ribbon of Rending White Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_07_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 13,
+  "chapter_iname": "GENESIS_07_1",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+ },
+ "13-2": {
+  "title": "Greed in My Heart (Part One) - EX 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NEW_NIMURU01",
+    "name": "Reformer's Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BIAN01",
+    "name": "Blue Ribbon of Rending White Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_GE_TICKET_07_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 13,
+  "chapter_iname": "GENESIS_07_1",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+ },
+ "13-3": {
+  "title": "Greed in My Heart (Part One) - EX 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NEW_NIMURU01",
+    "name": "Reformer's Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BIAN01",
+    "name": "Blue Ribbon of Rending White Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_07_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 13,
+  "chapter_iname": "GENESIS_07_1",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+ },
+ "13-4": {
+  "title": "Greed in My Heart (Part One) - EX 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NEW_NIMURU01",
+    "name": "Reformer's Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BIAN01",
+    "name": "Blue Ribbon of Rending White Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_07_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 13,
+  "chapter_iname": "GENESIS_07_1",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+ },
+ "13-5": {
+  "title": "Greed in My Heart (Part One) - EX 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NEW_NIMURU01",
+    "name": "Reformer's Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_BIAN01",
+    "name": "Blue Ribbon of Rending White Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_07_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 13,
+  "chapter_iname": "GENESIS_07_1",
+  "chapter_name": "Chapter 7 \"Greed in My Heart\" (Part One)"
+ },
+ "12-1": {
+  "title": "Wrath Signifies Justice (Part Two) EX 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SURUB01",
+    "name": "Successor's Gloves Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 12,
+  "chapter_iname": "GENESIS_06_2",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+ },
+ "12-2": {
+  "title": "Wrath Signifies Justice (Part Two) EX 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_QENS01",
+    "name": "Minute Hand of Reminiscence Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 12,
+  "chapter_iname": "GENESIS_06_2",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+ },
+ "12-3": {
+  "title": "Wrath Signifies Justice (Part Two) EX 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SURUB01",
+    "name": "Successor's Gloves Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 12,
+  "chapter_iname": "GENESIS_06_2",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+ },
+ "12-4": {
+  "title": "Wrath Signifies Justice (Part Two) EX 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_QENS01",
+    "name": "Minute Hand of Reminiscence Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 12,
+  "chapter_iname": "GENESIS_06_2",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+ },
+ "12-5": {
+  "title": "Wrath Signifies Justice (Part Two) EX 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_SURUB01",
+    "name": "Successor's Gloves Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_QENS01",
+    "name": "Minute Hand of Reminiscence Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 12,
+  "chapter_iname": "GENESIS_06_2",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part Two)"
+ },
+ "11-1": {
+  "title": "Wrath Signifies Justice (Part One) - EX 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANDEC01",
+    "name": "Heaven's Light Faulds Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 11,
+  "chapter_iname": "GENESIS_06_1",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+ },
+ "11-2": {
+  "title": "Wrath Signifies Justice (Part One) - EX 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANDEC01",
+    "name": "Heaven's Light Faulds Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 11,
+  "chapter_iname": "GENESIS_06_1",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+ },
+ "11-3": {
+  "title": "Wrath Signifies Justice (Part One) - EX 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANDEC01",
+    "name": "Heaven's Light Faulds Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 11,
+  "chapter_iname": "GENESIS_06_1",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+ },
+ "11-4": {
+  "title": "Wrath Signifies Justice (Part One) - EX 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANDEC01",
+    "name": "Heaven's Light Faulds Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 11,
+  "chapter_iname": "GENESIS_06_1",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+ },
+ "11-5": {
+  "title": "Wrath Signifies Justice (Part One) - EX 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_ANDEC01",
+    "name": "Heaven's Light Faulds Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_06_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 11,
+  "chapter_iname": "GENESIS_06_1",
+  "chapter_name": "Chapter 6 \"Wrath Signifies Justice\" (Part One)"
+ },
+ "10-1": {
+  "title": "\"Even If My Heart Aches in Envy\" (Part Two) - EX 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_NICA01",
+    "name": "Azure Spirit Princess' Veil Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_05_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 10,
+  "chapter_iname": "GENESIS_05_2",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+ },
+ "10-2": {
+  "stage": 2,
+  "locked": true,
+  "error": "locked: Clear \"Even If My Heart Aches in Envy\" (Part Two) - EX 1 to unlock.",
+  "chapter": 10,
+  "chapter_iname": "GENESIS_05_2",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+ },
+ "10-3": {
+  "stage": 3,
+  "locked": true,
+  "error": "locked: Clear \"Even If My Heart Aches in Envy\" (Part Two) - EX 2 to unlock.",
+  "chapter": 10,
+  "chapter_iname": "GENESIS_05_2",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+ },
+ "10-4": {
+  "stage": 4,
+  "locked": true,
+  "error": "locked: Clear \"Even If My Heart Aches in Envy\" (Part Two) - EX 3 to unlock.",
+  "chapter": 10,
+  "chapter_iname": "GENESIS_05_2",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+ },
+ "10-5": {
+  "stage": 5,
+  "locked": true,
+  "error": "locked: Clear \"Even If My Heart Aches in Envy\" (Part Two) - EX 4 to unlock.",
+  "chapter": 10,
+  "chapter_iname": "GENESIS_05_2",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part Two)"
+ },
+ "9-1": {
+  "title": "\"Even If My Heart Aches in Envy\" (Part One) - EX 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_DAPH01",
+    "name": "White-Silver Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_05_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 9,
+  "chapter_iname": "GENESIS_05_1",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+ },
+ "9-2": {
+  "title": "\"Even If My Heart Aches in Envy\" (Part One) - EX 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_DAPH01",
+    "name": "White-Silver Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_05_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 9,
+  "chapter_iname": "GENESIS_05_1",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+ },
+ "9-3": {
+  "title": "\"Even If My Heart Aches in Envy\" (Part One) - EX 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_DAPH01",
+    "name": "White-Silver Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_05_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 9,
+  "chapter_iname": "GENESIS_05_1",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+ },
+ "9-4": {
+  "title": "\"Even If My Heart Aches in Envy\" (Part One) - EX 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_DAPH01",
+    "name": "White-Silver Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_GE_TICKET_05_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 9,
+  "chapter_iname": "GENESIS_05_1",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+ },
+ "9-5": {
+  "title": "\"Even If My Heart Aches in Envy\" (Part One) - EX 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_DAPH01",
+    "name": "White-Silver Battledress Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_05_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 9,
+  "chapter_iname": "GENESIS_05_1",
+  "chapter_name": "Chapter 5 \"Even If My Heart Aches in Envy\" (Part One)"
+ },
+ "8-1": {
+  "title": "Swallow that Gluttony (Part Two) - Extra 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_JRIA01_DARK",
+    "name": "Brand of Gluttony Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 8,
+  "chapter_iname": "GENESIS_04_2",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+ },
+ "8-2": {
+  "title": "Swallow that Gluttony (Part Two) - Extra 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_JRIA01_DARK",
+    "name": "Brand of Gluttony Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 8,
+  "chapter_iname": "GENESIS_04_2",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+ },
+ "8-3": {
+  "title": "Swallow that Gluttony (Part Two) - Extra 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_JRIA01_DARK",
+    "name": "Brand of Gluttony Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 8,
+  "chapter_iname": "GENESIS_04_2",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+ },
+ "8-4": {
+  "title": "Swallow that Gluttony (Part Two) - Extra 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_JRIA01_DARK",
+    "name": "Brand of Gluttony Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 8,
+  "chapter_iname": "GENESIS_04_2",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+ },
+ "8-5": {
+  "title": "Swallow that Gluttony (Part Two) - Extra 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_JRIA01_DARK",
+    "name": "Brand of Gluttony Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_2",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 8,
+  "chapter_iname": "GENESIS_04_2",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part Two)"
+ },
+ "7-1": {
+  "title": "\"Swallow that Gluttony\" (Part One) - Extra 1",
+  "stage": 1,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_EULA01",
+    "name": "Zuka Crown Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 7,
+  "chapter_iname": "GENESIS_04_1",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+ },
+ "7-2": {
+  "title": "\"Swallow that Gluttony\" (Part One) - Extra 2",
+  "stage": 2,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_EULA01",
+    "name": "Zuka Crown Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 7,
+  "chapter_iname": "GENESIS_04_1",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+ },
+ "7-3": {
+  "title": "\"Swallow that Gluttony\" (Part One) - Extra 3",
+  "stage": 3,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_EULA01",
+    "name": "Zuka Crown Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 7,
+  "chapter_iname": "GENESIS_04_1",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+ },
+ "7-4": {
+  "title": "\"Swallow that Gluttony\" (Part One) - Extra 4",
+  "stage": 4,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_EULA01",
+    "name": "Zuka Crown Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   }
+  ],
+  "chapter": 7,
+  "chapter_iname": "GENESIS_04_1",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+ },
+ "7-5": {
+  "title": "\"Swallow that Gluttony\" (Part One) - Extra 5",
+  "stage": 5,
+  "loot": [
+   {
+    "iname": "IT_EQ_DIAGRAMPIECE_EULA01",
+    "name": "Zuka Crown Diagram Piece",
+    "type": "ItemPiecePiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_FIRE",
+    "name": "Fire Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WATER",
+    "name": "Water Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_THUNDER",
+    "name": "Thunder Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_WIND",
+    "name": "Wind Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_LIGHT",
+    "name": "Light Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_PI_COMMON_DARK",
+    "name": "Dark Soul Shard",
+    "type": "UnitPiece"
+   },
+   {
+    "iname": "IT_EQ_MAG_BRANCH",
+    "name": "Branch",
+    "type": "Equip"
+   },
+   {
+    "iname": "IT_GE_TICKET_04_1",
+    "name": "[3-Title] Boss Challenge Ticket",
+    "type": "Ticket"
+   }
+  ],
+  "chapter": 7,
+  "chapter_iname": "GENESIS_04_1",
+  "chapter_name": "Chapter 4 \"Swallow that Gluttony\" (Part One)"
+ }
+}
