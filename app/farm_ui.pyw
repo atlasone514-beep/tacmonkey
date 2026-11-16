@@ -261,7 +261,7 @@ class App:
 
     # ---------- layout: sidebar + pages ----------
     PAGES = (  # key, icon (Segoe Fluent Icons / MDL2 Assets glyph), label
-        ("story", "", "Story"),
+        ("story", "", "Scripts"),
         ("genesis", "", "Genesis"),
         ("ex", "", "Ex"),
         ("leaves", "", "Leaves"),
@@ -406,7 +406,7 @@ class App:
     def build_controls(self, parent):
         controls = tk.Frame(parent, bg=BG)
         controls.pack(side="bottom", fill="x", padx=12, pady=(8, 0))
-        self.start_btn = self.button(controls, "Start story farm", GREEN, self.start_any)
+        self.start_btn = self.button(controls, "Start script", GREEN, self.start_any)
         self.pause_btn = self.button(controls, "Pause", YELLOW, self.pause_any)
         self.stop_btn = self.button(controls, "Stop", RED, self.stop_any)
         self.start_btn.grid(row=0, column=0, sticky="ew")
@@ -460,7 +460,7 @@ class App:
 
     # ---------- pages ----------
     def build_story(self, page):
-        opts = self.page_card(page, "Story farm")
+        opts = self.page_card(page, "Scripts")
         self.script = tk.StringVar(value=farm.DEFAULT_SCRIPT)
         row = tk.Frame(opts, bg=PANEL)
         row.pack(fill="x")
@@ -928,7 +928,7 @@ class App:
             text = "Start Genesis farm" if mode == "hard" else "Start Ex farm"
             can = not busy and bool(self.genesis_selected(mode))
         else:
-            text, can = "Start story farm", not busy
+            text, can = "Start script", not busy
         self.start_btn.config(text=text)
         self.enable(self.start_btn, can)
         self.enable(self.pause_btn, busy)
