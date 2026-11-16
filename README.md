@@ -101,8 +101,16 @@ Needs the mod. Start from the home screen or anywhere in Genesis.
   chapter (ch7) on. Tick chapters; the number is how many of their 5 Extra stages to farm. Each
   has 1 attempt a day (1 skip ticket). Extra stages you haven't cleared by hand are locked and
   skipped.
+- **Solo stages only:** leaves out a unit's stages that it shares with another unit, unless
+  every unit on that stage is ticked. Units with only shared stages (marked `*`) keep them.
+- **Pause** waits for the stage it's on to finish. You can play meanwhile: on **Resume** (or
+  F8) the farm finds its way back to the chapter. F9 stops it.
+- On Stop, the log shows the shards got so far; while it runs, the status line keeps a total.
 
-When AP runs out, both refill it with 7 Alchemy Drops.
+**Leaves (AP refill):** when AP runs out, the Genesis and Ex farms and the AP refill action
+refill it with Alchemy Drops. The **Leaves** row in the main window sets how many per refill
+(7 by default), the most to use per session, and a number of owned drops to stop below. Leave
+the last two blank for no limit. When a limit is reached, the farm stops instead of refilling.
 
 ## Build the mod
 
