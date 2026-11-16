@@ -36,8 +36,10 @@ from tkinter import filedialog, messagebox, ttk
 
 if getattr(sys, "frozen", False):
     PAYLOAD = Path(sys._MEIPASS) / "payload"
+    ICON = Path(sys._MEIPASS) / "icon.png"
 else:  # running from source: use the payload that release/build.py prepared
     PAYLOAD = Path(__file__).resolve().parents[1] / "build" / "payload"
+    ICON = Path(__file__).resolve().parents[1] / "app" / "icon.png"
 
 GAME_EXE = "TagaReconstruction.exe"
 APP_EXE = "TACMonkey.exe"
@@ -295,9 +297,13 @@ class Setup:
         self.wait_pid = opts.wait_pid      # the app's process: wait for it to close
         word = "Update" if self.update else "Setup"
         root.title(f"TACMonkey {word} {M['version']}")
-        root.geometry("640x660")
-        root.minsize(560, 600)
         pad = {"padx": 14}
+        # Install / Uninstall row first, pinned to the bottom: when space is short the log in the
+        # middle shrinks instead of the buttons being pushed out of the window
+        buttons = ttk.Frame(root)
+        buttons.pack(side="bottom", fill="x", pady=12, **pad)
+        self.scale = max(1.0, root.winfo_fpixels("1i") / 96)  # Windows display scaling
+        wrap = int(600 * self.scale)
 
         ttk.Label(root, text=f"TACMonkey {M['version']}", font=("Segoe UI", 15, "bold")).pack(
             anchor="w", pady=(12, 0), **pad)
@@ -306,7 +312,7 @@ class Setup:
                  if self.update else
                  "Installs the farm app and the in-game mod that presses buttons without your "
                  "mouse. Close the game before installing.")
-        ttk.Label(root, text=intro, wraplength=600).pack(anchor="w", pady=(2, 10), **pad)
+        ttk.Label(root, text=intro, wraplength=wrap).pack(anchor="w", pady=(2, 10), **pad)
 
         app_dir = Path(opts.app_dir) if opts.app_dir else \
             Path(os.environ.get("LOCALAPPDATA", Path.home())) / "Programs" / "TACMonkey"
@@ -354,8 +360,6 @@ class Setup:
         self.bar.pack(fill="x", pady=(12, 4), **pad)
         self.text = tk.Text(root, height=9, wrap="word", state="disabled", font=("Segoe UI", 9))
         self.text.pack(fill="both", expand=True, **pad)
-        buttons = ttk.Frame(root)
-        buttons.pack(fill="x", pady=12, **pad)
         self.install_btn = ttk.Button(buttons, text="Update" if self.update else "Install",
                                       command=self.install)
         self.install_btn.pack(side="right")
@@ -367,7 +371,17 @@ class Setup:
         elif self.update:  # no mod set up here before: an update only touches the app
             self.do_mod.set(False)
         self.refresh()
+        self.fit()
         root.after(100, self.poll)
+
+    def fit(self):
+        """Size the window to what it holds (at any display scaling), capped at the screen."""
+        root = self.root
+        root.update_idletasks()
+        w = max(int(640 * self.scale), root.winfo_reqwidth())
+        h = min(root.winfo_reqheight(), root.winfo_screenheight() - int(80 * self.scale))
+        root.geometry(f"{w}x{h}")
+        root.minsize(min(w, int(560 * self.scale)), h)
 
     def folder_row(self, label, var, pick):
         ttk.Label(self.root, text=label).pack(anchor="w", padx=14, pady=(6, 0))
@@ -582,6 +596,10 @@ def main():
     parser.add_argument("--wait-pid", type=int)
     opts, _ = parser.parse_known_args()
     root = tk.Tk()
+    try:
+        root.iconphoto(True, tk.PhotoImage(file=str(ICON)))
+    except tk.TclError:
+        pass
     if M is None:
         root.withdraw()
         messagebox.showerror("TACMonkey Setup", f"Setup files missing ({PAYLOAD}). Build the setup "

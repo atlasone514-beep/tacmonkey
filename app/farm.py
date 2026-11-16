@@ -75,7 +75,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-VERSION = "1.3.1"   # TACMonkey release (the setup and the window show it)
+VERSION = "1.3.2"   # TACMonkey release (the setup and the window show it)
 MOD_VERSION = "1.2.1"  # TAC Auto Tap version shipped with this release (release/build.py checks it)
 WINDOW_TITLE = "The Alchemist Code"
 # APP_DIR holds your buttons, scripts and settings; RES_DIR the files shipped with the program.
@@ -746,9 +746,11 @@ def every_script_groups(templates):
 # picks them in Customize like any button. They're checked before the images on every scan.
 ACTION_HOME = "Built-in"
 AP_REFILL = f"{ACTION_HOME}/ap_refill"
-ACTIONS = {AP_REFILL: ("AP refill - 7 Alchemy Drops",
-                       "When the Replenish AP window is open: picks Alchemy Drops, sets 7 pcs "
-                       "(fewer if the game caps it), OK, OK. Needs the mod.")}
+ACTIONS = {AP_REFILL: ("AP refill - Alchemy Drops",
+                       "When the Replenish AP window is open: picks Alchemy Drops, sets the "
+                       "amount from the main window's AP refill row (7 unless changed; fewer if "
+                       "the game caps it), OK, OK. Stops the farm when a leaf limit is reached. "
+                       "Needs the mod.")}
 ACTION_CHECK = 1.0  # seconds between checks for an action's screen
 
 
@@ -796,7 +798,7 @@ def describe_library(script=None):
     counters = counter_names(script)
     spots = load_spots(script)
     steps = step_map(script)
-    out = [{"id": aid, "name": name, "home": ACTION_HOME, "img": action_badge("AP refill\n7 Alch. Drops"),
+    out = [{"id": aid, "name": name, "home": ACTION_HOME, "img": action_badge("AP refill\nAlch. Drops"),
             "ref": None, "used": aid in used, "counter": False, "marker": False, "spot": None,
             "action": True, "every": False, "about": about} for aid, (name, about) in ACTIONS.items()]
     for button_id, name, home, tpl, ref in sorted(library(), key=lambda b: (b[1], b[2])):
@@ -1158,7 +1160,7 @@ def check(script=None):
               **group_templates(templates, priority_order(script), step_map(script))}
     back = act_finished(frame, groups, split_markers(templates))
     if AP_REFILL in used_actions(script) and ap_window_open():
-        action = "Replenish AP is open -> would refill AP with 7 Alchemy Drops"
+        action = "Replenish AP is open -> would refill AP with Alchemy Drops"
     elif back:
         action = f"Act finished -> would click: {back[0]} at ({back[2]},{back[3]}) in the window"
     else:
@@ -1183,8 +1185,9 @@ def test(script=None):
 
 
 def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_switch=True,
-        skip_merc=None, script=None):
+        skip_merc=None, script=None, leaves=None):
     """Farm until stopped and return why it stopped.
+    leaves: the AP refill action's leaf settings (genesis_farm.leaf_settings).
 
     The window (farm_ui.pyw) passes threading.Events for stop/pause/skip_merc, its own log
     function and on_status(state, runs, last_click). F8 (pause/resume) and F9 (stop) work either
@@ -1230,9 +1233,13 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
     refill = None  # the AP refill action, if this script uses it
     if AP_REFILL in used_actions(script):
         import genesis_farm  # its refill routine (imported here: it imports this file)
-        refill = genesis_farm.GenesisFarm(log=log, stop=stop)
-        log(f"AP refill is on: when Replenish AP opens, it uses {genesis_farm.AP_PCS} "
-            f"{genesis_farm.AP_ITEM}." + ("" if status else " (Needs the mod - it isn't running.)"))
+        leaves = leaves or genesis_farm.leaf_settings()
+        refill = genesis_farm.GenesisFarm(log=log, stop=stop, leaves=leaves)
+        limits = "".join([f", at most {leaves['most']} this session" if leaves["most"] else "",
+                          f", stops below {leaves['floor']} owned" if leaves["floor"] else ""])
+        log(f"AP refill is on: when Replenish AP opens, it uses {leaves['per']} "
+            f"{genesis_farm.AP_ITEM}{limits}." +
+            ("" if status else " (Needs the mod - it isn't running.)"))
     last_ap_check = last_peddler_check = 0.0
     log("F8 = pause/resume, F9 = stop (from any window). Keep the game open and uncovered.")
     flow = FlowRecorder(script)  # learns the arrows the customizer draws
@@ -1292,6 +1299,10 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
                 try:
                     refill.replenish_ap()
                 except genesis_farm.Stop:
+                    break
+                except genesis_farm.LeafLimit as e:
+                    reason = str(e)
+                    say(reason)
                     break
                 except RuntimeError as e:
                     reason = f"AP refill failed: {e}"

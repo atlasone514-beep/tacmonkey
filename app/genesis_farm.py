@@ -7,7 +7,8 @@ Needs the TAC Auto Tap mod (v1.2+) running in the game - everything is pressed a
 it, so the mouse is never used. For every stage that drops a chosen unit:
     stage -> OK (team screen) -> "N times" skip button -> Use Skip Tickets (3x) -> OK
     -> rewards -> OK -> Back to the map
-When AP runs out: Replenish AP -> Alchemy Drops -> set 7 pcs -> OK -> OK, then carry on.
+When AP runs out: Replenish AP -> Alchemy Drops -> set N pcs (7 unless set) -> OK -> OK, then
+carry on - unless a leaf limit says stop (at most N per session / stop below N owned).
 Stages with no attempts left today are skipped. The unit -> stage map comes from
 genesis_shards.json (built from the loot of all 95 Genesis Hard stages); the Extra stages'
 from genesis_extra.json (tools/genesis_drops.py --extra, then tools/genesis_extra_report.py).
@@ -28,7 +29,7 @@ SHARDS_FILE = farm.RES_DIR / "genesis_shards.json"
 EXTRA_FILE = farm.RES_DIR / "genesis_extra.json"
 ALL_EXTRA = "ALL"            # the Ex farm's "every Extra stage" pick (a key in genesis_extra.json)
 AP_ITEM = "Alchemy Drops"   # exact row name; not "Alchemy Droplets" / event drops
-AP_PCS = 7                  # always use this many per refill
+AP_PCS = 7                  # Alchemy Drops per refill unless the leaf settings say otherwise
 SKIPS = 3                   # skips per stage (the daily Hard attempts)
 
 # window fractions (same at any window size)
@@ -54,12 +55,57 @@ class Stop(Exception):
     pass
 
 
-def plan(data, units, counts=None):
+class LeafLimit(Exception):
+    """A leaf (Alchemy Drops) limit was reached: stop instead of refilling."""
+
+
+def leaf_settings(per=None, most=None, floor=None):
+    """{"per": drops per refill, "most": at most this many per session (None = no limit),
+    "floor": stop when fewer than this many are owned (None = off)}. Bad values are dropped."""
+    def num(v, low):
+        try:
+            v = int(v)
+        except (TypeError, ValueError):
+            return None
+        return v if v >= low else None
+    return {"per": num(per, 1) or AP_PCS, "most": num(most, 1), "floor": num(floor, 1)}
+
+
+def shared_owners(data):
+    """{stage: set of units that drop from it} for the Hard data."""
+    owners = {}
+    for unit, d in data.items():
+        for st in d["stages"]:
+            owners.setdefault(st["stage"], set()).add(unit)
+    return owners
+
+
+def unit_stages(data, unit, picks=(), solo=False, owners=None):
+    """A unit's stages in order. solo: leave out stages it shares with another unit, unless
+    every unit on that stage is picked; a unit with only shared stages keeps them all."""
+    lst = data[unit]["stages"]
+    if not solo:
+        return lst
+    owners = owners if owners is not None else shared_owners(data)
+    if shared_only(data, unit, owners):
+        return lst
+    picked = set(picks) | {unit}
+    return [st for st in lst if owners.get(st["stage"], {unit}) <= picked]
+
+
+def shared_only(data, unit, owners=None):
+    owners = owners if owners is not None else shared_owners(data)
+    return all(len(owners[st["stage"]]) > 1 for st in data[unit]["stages"])
+
+
+def plan(data, units, counts=None, solo=False):
     """The stages to farm, newest chapter first: each unit's stages in the data's order, only
-    its first counts[unit] of them when a count is set. Stages shared by units are done once."""
+    its first counts[unit] of them when a count is set. Stages shared by units are done once.
+    solo: leave out shared stages (see unit_stages)."""
     stages = {}
+    owners = shared_owners(data) if solo else None
     for u in units:
-        lst = data[u]["stages"]
+        lst = unit_stages(data, u, units, solo, owners)
         n = (counts or {}).get(u)
         if isinstance(n, int) and 0 < n < len(lst):
             lst = lst[:n]
@@ -69,12 +115,17 @@ def plan(data, units, counts=None):
 
 
 class GenesisFarm:
-    def __init__(self, log=print, stop=None, mode="hard"):
+    def __init__(self, log=print, stop=None, mode="hard", pause=None, status=None, leaves=None):
         self.log = log
         self.stop = stop or threading.Event()
+        self.pause = pause or threading.Event()   # set = pause before the next stage
+        self.status = status or (lambda text: None)
         self.mode = mode
         self.pic, self.title_re, self.label = MODES[mode]
         self.shards = {}   # unit -> shards got this session
+        self.leaves = leaves or leaf_settings()
+        self.leaves_used = 0
+        self.leaves_left = None   # Alchemy Drops owned, as last read
 
     # ---------- talking to the mod ----------
     def send(self, cmd, timeout=8.0):
@@ -282,15 +333,43 @@ class GenesisFarm:
                 return v
         return self.slider_value()
 
+    def leaf_summary(self):
+        left = f", {self.leaves_left} left" if self.leaves_left is not None else ""
+        return f"{self.leaves_used} {AP_ITEM} used this session{left}"
+
+    def close_ap_window(self):
+        """Leave the Replenish AP window without refilling (cancel / close, whatever shows)."""
+        for _ in range(3):
+            els = [e for e in self.elements() if e["top"] and e["on"]]
+            btn = next((e for e in els if ("UseApHealItem" in e["path"] or "HealAP" in e["path"])
+                        and e["path"].rsplit("/", 1)[-1] in ("cancel", "btn_cancel", "btn_close",
+                                                             "close")), None)
+            if not btn:
+                return
+            self.press(btn)
+            self.sleep(1.0)
+
+    def leaf_stop(self, why):
+        self.close_ap_window()
+        raise LeafLimit(f"{why} - stopping instead of refilling AP ({self.leaf_summary()})")
+
     def replenish_ap(self):
-        """Replenish AP window is open: Alchemy Drops x7 -> OK -> OK."""
+        """Replenish AP window is open: Alchemy Drops x N -> OK -> OK (N = leaves per refill),
+        unless a leaf limit is reached: then LeafLimit."""
+        per, most, floor = self.leaves["per"], self.leaves["most"], self.leaves["floor"]
+        want = per
+        if most is not None:
+            if self.leaves_used >= most:
+                self.leaf_stop(f"Leaf limit: {most} per session reached")
+            want = min(per, most - self.leaves_used)
         els = self.elements()
         # the amount step may already be open (e.g. pressed by hand): carry on if it's for
-        # Alchemy Drops, else cancel it and pick Alchemy Drops from the list
+        # Alchemy Drops (and no "stop below" check needs the list), else cancel it and pick
+        # Alchemy Drops from the list
         amount_open = False
         ticket = next((e for e in els if e["path"].endswith("UseApHealItem/layout/inline/ticket")), None)
         if ticket and ticket["top"]:
-            if AP_ITEM in self.texts(self.inspect((ticket["x"] - 0.09, ticket["y"]))):
+            if floor is None and AP_ITEM in self.texts(self.inspect((ticket["x"] - 0.09, ticket["y"]))):
                 amount_open = True
             else:
                 cancel = self.find(path_end="UseApHealItem/layout/cancel")
@@ -305,14 +384,22 @@ class GenesisFarm:
                        None)
             if not row:
                 raise RuntimeError(f"Replenish AP is open but '{AP_ITEM}' isn't there (out of them?)")
+            parts = [p.strip() for p in row["text"].replace("\xa0", " ").split("|")]
+            i = parts.index(AP_ITEM)
+            if i > 0 and parts[i - 1].isdigit():   # owned count sits right before the name
+                self.leaves_left = int(parts[i - 1])
+            if floor is not None and self.leaves_left is not None and self.leaves_left < floor:
+                self.leaf_stop(f"Leaf limit: fewer than {floor} {AP_ITEM} left")
             self.press(row)
             if not self.wait_for(lambda: self.find(text="OK") or self.find(text="ＯＫ"), 6):
                 raise RuntimeError("Alchemy Drops confirm didn't open")
         self.sleep(0.6)
-        got = self.set_slider(AP_PCS)
+        got = self.set_slider(want)
         if got is None:
             raise RuntimeError("couldn't read the Alchemy Drops amount")
-        if got != AP_PCS:   # the game caps it so AP can't pass its maximum
+        if got > want:   # the slider wouldn't go lower: don't use more than allowed
+            self.leaf_stop(f"Couldn't set {AP_ITEM} to {want}")
+        if got != want:   # the game caps it so AP can't pass its maximum
             self.log(f"  (the game allows only {got} {AP_ITEM} right now - using {got})")
         ok = self.find(text="OK") or self.find(text="ＯＫ")
         self.press(ok)
@@ -320,7 +407,10 @@ class GenesisFarm:
         self.sleep(0.8)
         if done:
             self.press(self.find(text="OK") or self.find(text="ＯＫ"))   # "AP successfully replenished"
-        self.log(f"  AP refilled with {got} {AP_ITEM}")
+        self.leaves_used += got
+        if self.leaves_left is not None:
+            self.leaves_left -= got
+        self.log(f"  AP refilled with {got} {AP_ITEM} ({self.leaf_summary()})")
         self.sleep(1.5)
 
     def screen_state(self):
@@ -443,6 +533,7 @@ class GenesisFarm:
             self.log(f"  {key}: done - {txt}")
             for u, n in got.items():
                 self.shards[u] = self.shards.get(u, 0) + n
+            self.status(f"{key} done - {self.shard_summary()}")
         self.tap(TEAM_BACK)   # goes back to the stage popup
         for _ in range(10):
             self.sleep(1.2)
@@ -455,33 +546,59 @@ class GenesisFarm:
             raise RuntimeError(f"{key}: didn't get back to the map")
         self.sleep(0.8)
 
-    def run(self, units, counts=None):
+    def shard_summary(self):
+        what = "Shards" if self.mode == "hard" else "Shards and pieces"
+        got = ", ".join(f"{u} x{n}" for u, n in self.shards.items()) or "none"
+        return f"{what} this run: {got}"
+
+    def wait_if_paused(self):
+        """Pause point (between stages). True if it paused - the caller then finds its way back,
+        since the game may have been used meanwhile."""
+        if not self.pause.is_set():
+            return False
+        self.log("  Paused - press Resume (or F8) to carry on")
+        self.status("Paused")
+        while self.pause.is_set():
+            self.sleep(0.3)
+        self.log("  Resumed")
+        self.status("Running")
+        return True
+
+    def run(self, units, counts=None, solo=False):
         """units: unit names (Hard) or chapters like "ch15" / ALL_EXTRA (Extra).
-        counts: {unit: how many of its stages to farm} (missing = all of them)."""
+        counts: {unit: how many of its stages to farm} (missing = all of them).
+        solo: Hard only - leave out stages shared with units that aren't picked."""
         data = load_data(self.mode)
         unknown = [u for u in units if u not in data]
         if unknown:
             raise RuntimeError(f"unknown picks: {unknown}")
-        order = plan(data, units, counts)
+        order = plan(data, units, counts, solo and self.mode == "hard")
         name = "Genesis farm" if self.mode == "hard" else "Ex Genesis farm"
-        self.log(f"{name}: {', '.join(units)} -> {len(order)} {self.label} stages: "
+        self.log(f"{name}: {', '.join(units)} -> {len(order)} {self.label} stages"
+                 f"{' (solo stages only)' if solo and self.mode == 'hard' else ''}: "
                  f"{', '.join(s['stage'] for s in order)}")
         try:
             chapter = None
             for st in order:
+                if self.wait_if_paused():
+                    chapter = None   # reopen the chapter: the game may have moved meanwhile
                 if st["chapter"] != chapter:
                     chapter = st["chapter"]
                     self.log(f"ch{chapter} {st['chapter_name']}")
                     self.open_chapter(st["chapter_iname"])
                 self.farm_stage(st)
             self.go_genesis()
-            summary = ", ".join(f"{u} x{n}" for u, n in self.shards.items()) or "none"
-            what = "Shards" if self.mode == "hard" else "Shards and pieces"
-            self.log(f"{name} finished. {what} this run: {summary}")
+            self.log(f"{name} finished. {self.shard_summary()}")
             return "Finished."
         except Stop:
-            self.log(f"{name} stopped.")
+            self.log(f"{name} stopped. {self.shard_summary()}")
             return "Stopped."
+        except LeafLimit as e:
+            self.log(f"{e}. {self.shard_summary()}")
+            return str(e)
+        except Exception:
+            self.log(f"{name} ended early. {self.shard_summary()}")
+            raise
 
 
 def load_data(mode="hard"):
