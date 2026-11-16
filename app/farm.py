@@ -75,7 +75,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-VERSION = "1.3.2"   # TACMonkey release (the setup and the window show it)
+VERSION = "1.4.0"   # TACMonkey release (the setup and the window show it)
 MOD_VERSION = "1.2.1"  # TAC Auto Tap version shipped with this release (release/build.py checks it)
 WINDOW_TITLE = "The Alchemist Code"
 # APP_DIR holds your buttons, scripts and settings; RES_DIR the files shipped with the program.
@@ -118,6 +118,7 @@ STUCK_REPEAT = 4  # same button tapped this many times in a row -> log it and sa
 # Buttons that normally take extra taps: the results screen plays its EXP/item motions first and
 # ignores End Quest / Try Again! until they finish.
 STUCK_REPEAT_FOR = {"09": 10}
+RESULTS_REPEAT = 10
 STUCK_DIR = APP_DIR / "stuck"
 VK_F8, VK_F9 = 0x77, 0x78
 
@@ -329,6 +330,58 @@ def group_key(name, steps=None):
     return m.group(1) if m else name
 
 
+# What a step does besides "tap it when seen". Old numbered buttons get these by number (01 =
+# topmost + new quest, 10 = topmost, 08 = empty spot); any step can have them set in Customize.
+STEP_OPTIONS = {
+    "top": "Tap the highest one (the newest quest or act is at the top)",
+    "spot": "Tap an empty spot first (screens that close on a tap anywhere)",
+    "quest": "It's the new-quest button (tells when an act is finished)",
+}
+OLD_OPTIONS = {"01": {"top", "quest"}, "10": {"top"}, "08": {"spot"}}
+EMPTY_SPOT = (0.5, 0.93)   # where "tap an empty spot" taps: below the Quest Missions panel
+# The usual order of a story run, for steps without a priority list: a step whose name starts
+# with one of these words sorts at that place. Numbered steps keep their number order.
+STARTER_ORDER = (("quest", "new quest"), ("skip",), ("hire",), ("wind",), ("merc",),
+                 ("confirm",), ("go",), ("auto",), ("talk",), ("missions",),
+                 ("end quest", "endquest", "try again", "tryagain"), ("act", "next act"))
+
+
+def step_rank(key):
+    if key.isdigit():
+        return (0, int(key), "")
+    low = key.lower()
+    for i, words in enumerate(STARTER_ORDER):
+        if any(low == w or low.startswith(w + " ") or low.startswith(w + "_") for w in words):
+            return (1, i, low)
+    return (2, 0, low)
+
+
+def step_sort(keys):
+    """Steps in their default priority order (see STARTER_ORDER)."""
+    return sorted(keys, key=step_rank)
+
+
+def step_options(script=None):
+    """{step: set of STEP_OPTIONS keys}: what the script set in Customize, plus the old
+    numbered defaults for steps it never set."""
+    raw = script_settings(script).get("options", {})
+    out = {k: {o for o in v if o in STEP_OPTIONS} for k, v in raw.items()
+           if isinstance(k, str) and isinstance(v, list)} if isinstance(raw, dict) else {}
+    for key, opts in OLD_OPTIONS.items():
+        out.setdefault(key, set(opts))
+    return out
+
+
+def set_step_option(script, key, option, on):
+    settings = script_settings(script)
+    raw = settings.get("options") if isinstance(settings.get("options"), dict) else {}
+    opts = step_options(script).get(key, set())
+    opts = opts | {option} if on else opts - {option}
+    raw[key] = sorted(opts)
+    settings["options"] = dict(sorted(raw.items()))
+    _write_settings(script, settings)
+
+
 def step_map(script=None):
     """{image name: step} the script assigns by hand (variants grouped in Customize)."""
     steps = script_settings(script).get("steps", {})
@@ -360,7 +413,7 @@ def script_steps(script=None):
     sort order - the starting point that priority_order reorders."""
     steps = step_map(script)
     names = [i.split("/", 1)[1] for i in used_ids(script) if i not in ACTIONS]
-    return sorted({group_key(n, steps) for n in names if not n.startswith("x_")})
+    return step_sort({group_key(n, steps) for n in names if not n.startswith("x_")})
 
 
 def load_refs(folder=BUTTON_DIR):
@@ -522,6 +575,8 @@ def export_script(script, path):
     manifest = {"format": SHARE_FORMAT, "app_version": VERSION, "name": script,
                 "images": images, "actions": actions, "flow": flow,
                 "order": priority_order(script), "steps": out_steps,
+                "options": {k: sorted(v) for k, v in step_options(script).items()
+                            if any(group_key(n, out_steps) == k for n in images)},
                 "spots": {k: list(v) for k, v in load_spots(script).items()}}
     with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as z:
         z.writestr("manifest.json", json.dumps(manifest, indent=2))
@@ -625,10 +680,143 @@ def import_script(path, name=None):
         if isinstance(raw_order, list) else []
     if order:
         settings["order"] = order
+    raw_opts = manifest.get("options")
+    opts = {k: sorted({o for o in v if o in STEP_OPTIONS})
+            for k, v in (raw_opts.items() if isinstance(raw_opts, dict) else [])
+            if isinstance(k, str) and k in steps and isinstance(v, list)}
+    if opts:
+        settings["options"] = dict(sorted(opts.items()))
     _write_settings(script, settings)
     if manifest.get("app_version") and manifest["app_version"] != VERSION:
         notes.append(f"made with TACMonkey {manifest['app_version']} (you have {VERSION})")
     return script, len(decoded), notes
+
+
+TIDY_WORDS = {"endquest": "end quest", "tryagain": "try again"}
+
+
+def tidy_name(name):
+    """06_go -> go, 01_quest_new_4 -> quest new 4, 09_endquest -> end quest (others unchanged)."""
+    base = NUMBERED.sub("", name)
+    if base == name:
+        return name
+    out = re.sub(r"\s+", " ", base.replace("_", " ")).strip()
+    for a, b in TIDY_WORDS.items():
+        out = re.sub(rf"\b{a}\b", b, out, flags=re.I)
+    return out or name
+
+
+def numbered_images():
+    """Pool ids of button images that still have an old number prefix (x_ markers aren't)."""
+    return [bid for bid, name, _, _, _ in library() if NUMBERED.match(name)]
+
+
+def tidy_buttons():
+    """Rename every numbered button image (06_go -> go) in buttons/ and every script, and
+    rewrite what points at them, so each script runs exactly as before: picks, run counter,
+    variant grouping, priority (the old number order is written out as the script's list),
+    step options (01 / 10 / 08), tap spots, learned arrows, every-script buttons.
+    A zip of buttons/ and scripts/ is saved first. Returns (images renamed, backup path)."""
+    import zipfile
+    homes = [h for h in list_scripts() if script_dir(h).is_dir()]
+    plan = {}   # home -> {old name: new name}
+    for home in homes:
+        names = [f.stem for f in script_dir(home).glob("*.png")]
+        taken = {n.lower() for n in names if not NUMBERED.match(n)}
+        renames = {}
+        for old in sorted(n for n in names if NUMBERED.match(n)):
+            new = base = tidy_name(old)
+            n = 2
+            while new.lower() in taken:
+                new, n = f"{base} {n}", n + 1
+            taken.add(new.lower())
+            renames[old] = new
+        if renames:
+            plan[home] = renames
+    if not plan:
+        return 0, None
+    backup = APP_DIR / f"buttons-backup-{time.strftime('%Y%m%d-%H%M%S')}.zip"
+    with zipfile.ZipFile(backup, "w", zipfile.ZIP_DEFLATED) as z:
+        for top in (BUTTON_DIR, SCRIPTS_DIR):
+            if top.is_dir():
+                for f in sorted(top.rglob("*")):
+                    if f.is_file() and "_old" not in f.relative_to(top).parts:
+                        z.write(f, f.relative_to(APP_DIR).as_posix())
+
+    def new_id(bid):
+        home, _, name = bid.partition("/")
+        return f"{home}/{plan.get(home, {}).get(name, name)}" if home in plan else bid
+
+    key_maps = {}
+    for script in homes:
+        settings = script_settings(script)
+        used = used_ids(script)
+        old_steps = step_map(script)
+        name_map = {}
+        for bid in used:
+            if bid not in ACTIONS:
+                home, _, name = bid.partition("/")
+                name_map[name] = plan.get(home, {}).get(name, name)
+        groups = {}
+        for bid in sorted(used):
+            name = bid.split("/", 1)[1]
+            if bid not in ACTIONS and not name.startswith("x_"):
+                groups.setdefault(group_key(name, old_steps), []).append(name)
+        key_map = {k: name_map[sorted(v)[0]] for k, v in groups.items() if k.isdigit()}
+        key_maps[script] = key_map
+        if not used and not (script_dir(script) / SCRIPT_FILE).exists():
+            continue
+        new_steps = {}
+        for key, names in groups.items():
+            nk = key_map.get(key, key)
+            for n in names:
+                if group_key(name_map[n]) != nk:
+                    new_steps[name_map[n]] = nk
+        old_order = rank_steps(step_sort(groups), priority_order(script))
+        opts = {key_map.get(k, k): sorted(v) for k, v in step_options(script).items()
+                if k in groups and (v or k in (settings.get("options") or {}))}
+        settings["use"] = sorted(new_id(i) for i in used)
+        settings.pop("off", None)
+        settings["count"] = sorted(name_map.get(n, n) for n in counter_names(script))
+        if new_steps:
+            settings["steps"] = dict(sorted(new_steps.items()))
+        else:
+            settings.pop("steps", None)
+        if old_order:
+            settings["order"] = [key_map.get(k, k) for k in old_order]
+        if opts:
+            settings["options"] = dict(sorted(opts.items()))
+        _write_settings(script, settings)
+        flow_file = script_dir(script) / FLOW_FILE
+        if flow_file.exists():
+            pairs, pressed = load_flow(script)
+            flow_file.write_text(json.dumps({
+                "pairs": {f"{name_map.get(a, a)}>{name_map.get(b, b)}": n
+                          for (a, b), n in pairs.items()},
+                "pressed": {name_map.get(k, k): n for k, n in pressed.items()}}, indent=2))
+    for home in homes:   # tap spots (keyed by step) and capture widths (keyed by image)
+        folder = script_dir(home)
+        spots_file = folder / SPOTS_FILE
+        if spots_file.exists():
+            spots = json.loads(spots_file.read_text())
+            km = key_maps.get(home, {})
+            spots_file.write_text(json.dumps({km.get(k, k): v for k, v in spots.items()},
+                                             indent=2))
+        if home in plan:
+            refs = load_refs(folder)
+            (folder / REF_FILE.name).write_text(json.dumps(
+                {plan[home].get(k, k): v for k, v in refs.items()}, indent=2))
+    every = every_script_ids()
+    if every:
+        EVERY_FILE.write_text(json.dumps(sorted(new_id(i) for i in every), indent=2),
+                              encoding="utf-8")
+    count = 0
+    for home, renames in plan.items():
+        folder = script_dir(home)
+        for old, new in renames.items():
+            (folder / f"{old}.png").rename(folder / f"{new}.png")
+            count += 1
+    return count, backup
 
 
 def library():
@@ -885,7 +1073,7 @@ def flow_model(script=None):
         if name in key_of:
             gpressed[key_of[name]] = gpressed.get(key_of[name], 0) + n
     own = priority_order(script)
-    priority = rank_steps(list(groups), own)
+    priority = rank_steps(step_sort(groups), own)
     return {"groups": groups, "order": flow_order(priority, gpairs, gpressed),
             "priority": priority, "custom_priority": bool(own),
             "pairs": gpairs, "pressed": gpressed, "learned": bool(gpairs),
@@ -1098,7 +1286,7 @@ def group_templates(templates, order=None, steps=None):
     for name, tpl, ref in templates:
         if not name.startswith("x_"):
             groups.setdefault(group_key(name, steps), []).append((name, tpl, ref))
-    return {k: groups[k] for k in rank_steps(sorted(groups), order)}
+    return {k: groups[k] for k in rank_steps(step_sort(groups), order)}
 
 
 def rank_steps(keys, order=None):
@@ -1117,9 +1305,9 @@ def priority_order(script=None):
 
 
 def set_priority_order(script, keys):
-    """Save the step priority for this script; the plain number order is stored as no list."""
+    """Save the step priority for this script; the default order is stored as no list."""
     settings = script_settings(script)
-    if list(keys) == sorted(keys) or not keys:
+    if list(keys) == step_sort(keys) or not keys:
         settings.pop("order", None)
     else:
         settings["order"] = list(keys)
@@ -1130,11 +1318,11 @@ def split_markers(templates):
     return {name: (tpl, ref) for name, tpl, ref in templates if name.startswith("x_")}
 
 
-def act_finished(frame, groups, markers):
+def act_finished(frame, groups, markers, quest_steps=(QUEST_BUTTON,)):
     """Return the back-button hit if this is a quest map with no new quest left, else None."""
     if DONE_MARKER not in markers or BACK_MARKER not in markers:
         return None
-    if QUEST_BUTTON in groups and find_button(frame, groups[QUEST_BUTTON], True):
+    if any(k in groups and find_button(frame, groups[k], True) for k in quest_steps):
         return None
     if match(frame, *markers[DONE_MARKER])[0] < THRESHOLD:
         return None
@@ -1158,7 +1346,10 @@ def check(script=None):
     scores = [(name, match(frame, tpl, ref)[0]) for name, tpl, ref in templates + every]
     groups = {**every_script_groups(every),
               **group_templates(templates, priority_order(script), step_map(script))}
-    back = act_finished(frame, groups, split_markers(templates))
+    opts = step_options(script)
+    top = {k for k, o in opts.items() if "top" in o}
+    back = act_finished(frame, groups, split_markers(templates),
+                        [k for k, o in opts.items() if "quest" in o])
     if AP_REFILL in used_actions(script) and ap_window_open():
         action = "Replenish AP is open -> would refill AP with Alchemy Drops"
     elif back:
@@ -1166,7 +1357,7 @@ def check(script=None):
     else:
         spots = load_spots(script)
         for button, variants in groups.items():
-            hit = find_button(frame, variants, button in TOPMOST_BUTTONS)
+            hit = find_button(frame, variants, button in top)
             if hit:
                 x, y, note = tap_point(button, hit, (region[2], region[3]), spots)
                 action = f"Would click: {hit[0]} at ({x},{y}) in the window{note}"
@@ -1212,14 +1403,20 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
     spots = load_spots(script)
     counters = counter_names(script, templates)
     log(f"Run counter: {', '.join(sorted(counters)) or 'none - runs are not counted'}")
+    opts = step_options(script)
+    top_steps = {k for k, o in opts.items() if "top" in o}
+    spot_steps = {k for k, o in opts.items() if "spot" in o}
+    quest_steps = [k for k, o in opts.items() if "quest" in o and k in groups]
+    results_steps = {k for k, v in groups.items() if any(n in counters for n, _, _ in v)}
     if spots:
         log("Fixed tap spots: " + ", ".join(f"{b} at {x:.0%} across, {y:.0%} down"
                                             for b, (x, y) in sorted(spots.items())))
     if not act_switch:
         markers = {}  # act_finished() never fires without the markers
         log("Act switching is off.")
-    elif DONE_MARKER not in markers or BACK_MARKER not in markers or "10" not in groups:
-        log("Note: act switching is off (needs x_quest_done, x_back and 10_act images).")
+    elif DONE_MARKER not in markers or BACK_MARKER not in markers or not quest_steps:
+        log("Note: act switching is off (needs the x_quest_done and x_back markers and a step "
+            "ticked as the new-quest button).")
     if skip_merc.is_set():
         log("Skipping the mercenary (the Hire slot is never tapped).")
     status = mod_status() if USE_MOD else None
@@ -1313,7 +1510,7 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
                 show("Running")
                 continue
 
-        back = act_finished(frame, groups, markers)
+        back = act_finished(frame, groups, markers, quest_steps)
         if back and time.time() - last_click.get(BACK_MARKER, 0) >= CLICK_COOLDOWN:
             if went_back:
                 reason = ("The newest act is finished too - pick the next episode/chapter "
@@ -1337,13 +1534,13 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
                 variants = [v for v in variants if not is_hire(v[0])]
                 if not variants:
                     continue
-            hit = find_button(frame, variants, button in TOPMOST_BUTTONS)
+            hit = find_button(frame, variants, button in top_steps)
             if hit:
                 name, score, cx, cy = hit
                 streak = repeats + 1 if button == repeat_button else 1
                 cx, cy, where = tap_point(button, hit, (region[2], region[3]), spots)
-                if button in TAP_ANYWHERE and streak % 2 == 1:  # 1st, 3rd... tap: empty area
-                    fx, fy = TAP_ANYWHERE[button]
+                if button in spot_steps and streak % 2 == 1:  # 1st, 3rd... tap: empty area
+                    fx, fy = TAP_ANYWHERE.get(button, EMPTY_SPOT)
                     cx, cy = int(region[2] * fx), int(region[3] * fy)
                     where = " - tapping the empty area instead"
                 if not tap(hwnd, region[0] + cx, region[1] + cy):
@@ -1356,7 +1553,10 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
                 repeat_button, repeats = button, streak
                 say(f"click {name} ({score:.2f}){f' x{streak}' if streak > 1 else ''}{where}"
                     f" [{last_tap}]")
-                if streak == STUCK_REPEAT_FOR.get(button, STUCK_REPEAT):
+                # the results screen (a run counter's step) takes extra taps: it plays its
+                # EXP / item motions first
+                if streak == STUCK_REPEAT_FOR.get(button, RESULTS_REPEAT if button in
+                                                  results_steps else STUCK_REPEAT):
                     STUCK_DIR.mkdir(exist_ok=True)
                     shot = STUCK_DIR / f"{time.strftime('%Y%m%d-%H%M%S')}_{name}.png"
                     cv2.imwrite(str(shot), frame)
@@ -1367,7 +1567,7 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
                     flow.press(name)
                 last_click[button] = last_action = time.time()
                 warned = False
-                if button == QUEST_BUTTON:
+                if button in quest_steps:
                     went_back = False
                 if name in counters and streak == 1 and not button.startswith(EVERY_PREFIX):
                     # (repeat taps are still the same screen)

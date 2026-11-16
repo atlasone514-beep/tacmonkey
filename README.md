@@ -69,13 +69,20 @@ To change a step, click its card. From there you can:
 Below the flow is every other captured button: click one to add it.
 
 **Button names are free.** `go.png`, `try again.png` and so on all work. The priority and the
-variant grouping are saved in the script, not in file names. Old names like `06_go` still work:
-their number is used as the default step and order until you change it. A new button goes to
-the bottom of the priority list. Names starting with `x_` are markers, which are only looked
-at and never tapped.
+variant grouping are saved in the script, not in file names. A new button goes to the bottom of
+the priority list; without a list of its own, a script's steps follow the usual run order
+(quest, skip, hire, go, auto, end quest, act). Names starting with `x_` are markers, which are
+only looked at and never tapped (`x_quest_done` and `x_back` drive act switching).
 
-Some old story-farm behaviour still depends on fixed numbers: `01` topmost quest, `08` tap
-anywhere, `09` default run counter, `10` act, and the `x_quest_done` / `x_back` markers.
+**Step options:** a step's card in Customize has three ticks: *Tap the highest one* (the newest
+quest or act is at the top), *Tap an empty spot first* (screens that close on a tap anywhere)
+and *It's the new-quest button* (tells when an act is finished). Which image counts a run is
+ticked on the image itself.
+
+**Old numbered names** (`06_go`, `09_endquest`) still work: `01` gets topmost + new quest, `08`
+the empty spot, `10` topmost, and `09` is the default run counter. TACMonkey offers once to
+**tidy** them into plain names (`go`, `end quest`); the Buttons page has the same button. Every
+script keeps running as before, and a backup zip of `buttons/` and `scripts/` is saved first.
 
 **Peddler Shop:** when the mod is running, the farm and the Genesis farm press **View Later**
 on the Peddler Shop popup by themselves.
