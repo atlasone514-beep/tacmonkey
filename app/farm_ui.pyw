@@ -13,6 +13,7 @@ import tkinter as tk
 import webbrowser
 from pathlib import Path
 from tkinter import filedialog, messagebox, simpledialog
+from tkinter import font as tkfont
 
 try:
     import farm
@@ -59,8 +60,8 @@ class App:
 
         root.title(f"TACMonkey {farm.VERSION}")
         root.configure(bg=BG)
-        root.minsize(480, 760)
-        root.geometry("500x980")
+        root.minsize(720, 660)
+        root.geometry("820x800")
         self.build()
         self.load_settings()
         self.set_state("Idle", "Open the game on its quest map, then press Start.")
@@ -121,7 +122,7 @@ class App:
         self.update_text.config(text=f"TACMonkey {info['version']} is available")
         self.enable(self.update_btn, True)
         if not self.update_bar.winfo_ismapped():
-            self.update_bar.pack(fill="x", before=self.status_card)
+            self.update_bar.pack(fill="x", before=self.body)
         self.log(f"Update available: TACMonkey {info['version']}.", "info")
 
     def hide_update(self):
@@ -258,64 +259,224 @@ class App:
                               disabledforeground=MUTED, font=(FONT, 10), anchor="w",
                               highlightthickness=0, bd=0)
 
+    # ---------- layout: sidebar + pages ----------
+    PAGES = (  # key, icon (Segoe Fluent Icons / MDL2 Assets glyph), label
+        ("story", "", "Story"),
+        ("genesis", "", "Genesis"),
+        ("ex", "", "Ex"),
+        ("leaves", "", "Leaves"),
+        ("buttons", "", "Buttons"),
+        ("settings", "", "Settings"),
+    )
+    PAGE_MODE = {"genesis": "hard", "ex": "extra"}   # pages that run the Genesis farm
+    NAV_SEL, NAV_HOVER = "#2b3a55", "#2a2c34"
+
     def build(self):
         root = self.root
         self.build_update_bar()
-        tk.Frame(root, bg=BG, height=12).pack()
+        families = set(tkfont.families(root))
+        self.icon_font = next((f for f in ("Segoe Fluent Icons", "Segoe MDL2 Assets")
+                               if f in families), None)
+        self.page = "story"
+        body = tk.Frame(root, bg=BG)
+        body.pack(fill="both", expand=True)
+        self.body = body
+        self.build_sidebar(body)
 
-        # status
-        status = self.card(root)
+        main = tk.Frame(body, bg=BG)
+        main.pack(side="left", fill="both", expand=True)
+        self.build_status(main)
+        # bottom part first, so the page in the middle is what shrinks
+        self.label(main, "F8 pause / resume  ·  F9 stop  —  these work from any window",
+                   size=8, color=MUTED).pack(side="bottom", pady=(4, 8))
+        self.build_log(main)
+        self.build_controls(main)
+
+        self.page_box = tk.Frame(main, bg=BG)
+        self.page_box.pack(fill="both", expand=True)
+        self.pages = {}
+        for key, _, _ in self.PAGES:
+            self.pages[key] = tk.Frame(self.page_box, bg=BG)
+        self.build_story(self.pages["story"])
+        self.build_genesis()
+        self.build_leaves(self.pages["leaves"])
+        self.build_buttons_page(self.pages["buttons"])
+        self.build_settings(self.pages["settings"])
+        self.show_page("story")
+
+    def build_sidebar(self, parent):
+        side = tk.Frame(parent, bg=PANEL, width=170)
+        side.pack(side="left", fill="y")
+        side.pack_propagate(False)
+        head = tk.Frame(side, bg=PANEL)
+        head.pack(fill="x", padx=14, pady=(16, 14))
+        self.logo = None
+        try:
+            img = tk.PhotoImage(file=str(farm.RES_DIR / "icon.png"))
+            self.logo = img.subsample(max(1, img.width() // 26))
+            tk.Label(head, image=self.logo, bg=PANEL).pack(side="left", padx=(0, 8))
+        except tk.TclError:
+            pass
+        self.label(head, "TACMonkey", size=11, bold=True).pack(side="left")
+        self.nav = {}
+        for key, glyph, text in self.PAGES:
+            if key == "settings":
+                tk.Frame(side, bg=PANEL).pack(fill="both", expand=True)
+            self.nav_item(side, key, glyph, text)
+        self.version_label = self.label(side, f"v{farm.VERSION}", size=8, color=MUTED, anchor="w")
+        self.version_label.pack(fill="x", padx=18, pady=(4, 12))
+
+    def nav_item(self, parent, key, glyph, text):
+        row = tk.Frame(parent, bg=PANEL, cursor="hand2", padx=10, pady=7)
+        row.pack(fill="x", padx=8, pady=1)
+        icon = tk.Label(row, text=glyph if self.icon_font else "•", bg=PANEL, fg=MUTED,
+                        font=(self.icon_font or FONT, 12), width=2, cursor="hand2")
+        icon.pack(side="left")
+        name = tk.Label(row, text=text, bg=PANEL, fg=FG, font=(FONT, 10), anchor="w",
+                        cursor="hand2")
+        name.pack(side="left", padx=(6, 0))
+        badge = tk.Label(row, text="", bg=FIELD, fg=MUTED, font=(FONT, 8, "bold"), padx=6,
+                         cursor="hand2")
+        for w in (row, icon, name, badge):
+            w.bind("<Button-1>", lambda _e, k=key: self.show_page(k))
+            w.bind("<Enter>", lambda _e, k=key: self.nav_paint(k))
+            w.bind("<Leave>", lambda _e, k=key: self.root.after(10, self.nav_paint, k))
+        self.nav[key] = {"row": row, "icon": icon, "name": name, "badge": badge}
+
+    def nav_paint(self, key):
+        n = self.nav[key]
+        under = self.root.winfo_containing(*self.root.winfo_pointerxy())
+        hover = under is not None and (under is n["row"] or under.master is n["row"])
+        on = key == self.page
+        bg = self.NAV_SEL if on else self.NAV_HOVER if hover else PANEL
+        for part in ("row", "icon", "name"):
+            n[part].config(bg=bg)
+        n["icon"].config(fg=BLUE if on else MUTED)
+        n["name"].config(font=(FONT, 10, "bold" if on else "normal"))
+
+    def set_badge(self, key, text):
+        badge = self.nav[key]["badge"]
+        text = str(text) if text not in (None, "", 0) else ""
+        badge.config(text=text)
+        if text and not badge.winfo_manager():
+            badge.pack(side="right")
+        elif not text and badge.winfo_manager():
+            badge.pack_forget()
+
+    def show_page(self, key):
+        if key not in self.pages:
+            key = "story"
+        for frame in self.pages.values():
+            frame.pack_forget()
+        self.pages[key].pack(fill="both", expand=True)
+        self.page = key
+        if key in self.PAGE_MODE and not self.genesis_running():
+            self.genesis_mode = self.PAGE_MODE[key]
+        if key == "buttons":
+            self.refresh_buttons_page()
+        for k in self.nav:
+            self.nav_paint(k)
+        self.update_buttons()
+
+    def build_status(self, parent):
+        status = tk.Frame(parent, bg=PANEL, padx=16, pady=10)
+        status.pack(fill="x", padx=12, pady=(12, 0))
         self.status_card = status
-        top = tk.Frame(status, bg=PANEL)
+        left = tk.Frame(status, bg=PANEL)
+        left.pack(side="left", fill="x", expand=True)
+        top = tk.Frame(left, bg=PANEL)
         top.pack(fill="x")
         self.dot = tk.Canvas(top, width=14, height=14, bg=PANEL, highlightthickness=0)
         self.dot_id = self.dot.create_oval(2, 2, 13, 13, fill=GREY, outline="")
         self.dot.pack(side="left", padx=(0, 8))
         self.status_label = self.label(top, size=13, bold=True, anchor="w")
         self.status_label.pack(side="left", fill="x", expand=True)
-        self.detail_label = self.label(status, size=9, color=MUTED, anchor="w", justify="left",
-                                       wraplength=420)
-        self.detail_label.pack(fill="x", pady=(4, 10))
-        stats = tk.Frame(status, bg=PANEL)
-        stats.pack(fill="x")
+        self.detail_label = self.label(left, size=9, color=MUTED, anchor="w", justify="left",
+                                       wraplength=300)
+        self.detail_label.pack(fill="x", pady=(2, 0))
         self.stat_values = {}
-        for i, name in enumerate(("Runs", "Time", "Runs / hour")):
-            box = tk.Frame(stats, bg=PANEL)
-            box.grid(row=0, column=i, sticky="w")
-            stats.columnconfigure(i, weight=1)
+        for name in ("Runs / hour", "Time", "Runs"):   # packed right to left
+            box = tk.Frame(status, bg=PANEL)
+            box.pack(side="right", padx=(16, 0))
             self.label(box, name.upper(), size=8, color=MUTED, anchor="w").pack(anchor="w")
-            value = self.label(box, "0" if name == "Runs" else "-", size=18, bold=True)
+            value = self.label(box, "0" if name == "Runs" else "-", size=15, bold=True)
             value.pack(anchor="w")
             self.stat_values[name] = value
 
-        # controls
-        controls = tk.Frame(root, bg=BG)
-        controls.pack(fill="x", padx=12, pady=10)
-        self.start_btn = self.button(controls, "Start", GREEN, self.start)
-        self.pause_btn = self.button(controls, "Pause", YELLOW, self.toggle_pause)
-        self.stop_btn = self.button(controls, "Stop", RED, self.stop)
-        for i, b in enumerate((self.start_btn, self.pause_btn, self.stop_btn)):
-            b.grid(row=0, column=i, sticky="ew", padx=(0 if i == 0 else 6, 0))
-            controls.columnconfigure(i, weight=1)
+    def build_controls(self, parent):
+        controls = tk.Frame(parent, bg=BG)
+        controls.pack(side="bottom", fill="x", padx=12, pady=(8, 0))
+        self.start_btn = self.button(controls, "Start story farm", GREEN, self.start_any)
+        self.pause_btn = self.button(controls, "Pause", YELLOW, self.pause_any)
+        self.stop_btn = self.button(controls, "Stop", RED, self.stop_any)
+        self.start_btn.grid(row=0, column=0, sticky="ew")
+        self.pause_btn.grid(row=0, column=1, sticky="ew", padx=(6, 0))
+        self.stop_btn.grid(row=0, column=2, sticky="ew", padx=(6, 0))
+        controls.columnconfigure(0, weight=2, uniform="ctl")   # widths stay put when the
+        controls.columnconfigure(1, weight=1, uniform="ctl")   # Start label changes
+        controls.columnconfigure(2, weight=1, uniform="ctl")
 
-        # options
-        opts = self.card(root)
+    def build_log(self, parent):
+        wrap = tk.Frame(parent, bg=BG)
+        wrap.pack(side="bottom", fill="x")
+        head = tk.Frame(wrap, bg=BG)
+        head.pack(fill="x", padx=14, pady=(10, 4))
+        self.label(head, "LOG", size=8, color=MUTED).pack(side="left")
+        clear = self.label(head, "clear", size=8, color=MUTED, cursor="hand2")
+        clear.pack(side="right")
+        clear.bind("<Button-1>", lambda _: self.log_box.delete("1.0", "end"))
+        box = tk.Frame(wrap, bg=DARK)
+        box.pack(fill="x", padx=12)
+        scroll = tk.Scrollbar(box)
+        scroll.pack(side="right", fill="y")
+        self.log_box = tk.Text(box, bg=DARK, fg=FG, relief="flat", bd=0, wrap="word",
+                               font=("Consolas", 9), padx=10, pady=8, height=8,
+                               yscrollcommand=scroll.set, insertbackground=FG)
+        self.log_box.pack(side="left", fill="both", expand=True)
+        scroll.config(command=self.log_box.yview)
+        for tag, color in (("good", GREEN), ("muted", MUTED), ("warn", ORANGE), ("bad", RED),
+                           ("info", BLUE)):
+            self.log_box.tag_config(tag, foreground=color)
+
+    def page_card(self, page, title, **pack):
+        card = self.card(page, pady=(10, 0), **pack)
+        self.label(card, title.upper(), size=8, color=MUTED).pack(anchor="w", pady=(0, 6))
+        return card
+
+    def section(self, parent, text):
+        self.label(parent, text.upper(), size=8, color=MUTED).pack(anchor="w", pady=(10, 2))
+
+    def wip_team_row(self, parent):
+        """The team switch (to-do point 7) is a work in progress: shown, but not usable yet."""
+        row = tk.Frame(parent, bg=PANEL)
+        row.pack(fill="x", pady=(8, 0))
+        self.label(row, "Team", color=MUTED).pack(side="left")
+        tk.Entry(row, width=12, state="disabled", disabledbackground=FIELD, relief="flat",
+                 font=(FONT, 10)).pack(side="left", padx=6)
+        tk.Label(row, text="WIP", bg=YELLOW, fg=DARK, font=(FONT, 7, "bold"), padx=5).pack(
+            side="left")
+        self.label(row, "switch to a team by name - not built yet", size=8, color=MUTED).pack(
+            side="left", padx=6)
+
+    # ---------- pages ----------
+    def build_story(self, page):
+        opts = self.page_card(page, "Story farm")
         self.script = tk.StringVar(value=farm.DEFAULT_SCRIPT)
         row = tk.Frame(opts, bg=PANEL)
-        row.pack(fill="x", pady=(0, 10))
+        row.pack(fill="x")
         self.label(row, "Script").pack(side="left")
         self.script_menu = tk.OptionMenu(row, self.script, farm.DEFAULT_SCRIPT)
         self.script_menu.config(bg=FIELD, fg=FG, activebackground=GREY, activeforeground=FG,
                                 relief="flat", bd=0, highlightthickness=0, font=(FONT, 10),
-                                width=13, anchor="w", disabledforeground=MUTED)
+                                width=16, anchor="w", disabledforeground=MUTED)
         self.script_menu["menu"].config(bg=FIELD, fg=FG, activebackground=BLUE,
                                         activeforeground=DARK, font=(FONT, 10), bd=0)
         self.script_menu.pack(side="left", padx=6)
         self.customizer = None
+        self.grab_btn = self.small_button(row, "Customize", self.customize)
         self.new_btn = self.small_button(row, "New", self.new_script)
         self.import_btn = self.small_button(row, "Import", lambda: self.import_script(self.root))
         self.folder_btn = self.small_button(row, "Folder", self.open_folder)
-        self.grab_btn = self.small_button(row, "Customize", self.customize)
         for b in (self.grab_btn, self.new_btn, self.import_btn, self.folder_btn):
             b.pack(side="left", padx=(0, 4))
         self.refresh_scripts()
@@ -323,96 +484,148 @@ class App:
         self.threshold = tk.StringVar(value=f"{farm.THRESHOLD:.2f}")
         self.act_switch = tk.BooleanVar(value=True)
         self.on_top = tk.BooleanVar(value=False)
+        self.skip_merc = tk.BooleanVar(value=False)
+        self.section(opts, "Stop when")
         row = tk.Frame(opts, bg=PANEL)
         row.pack(fill="x")
-        self.label(row, "Stop after").pack(side="left")
+        self.label(row, "Runs").pack(side="left")
         self.max_spin = self.spinbox(row, self.max_runs, from_=0, to=9999, increment=1)
         self.max_spin.pack(side="left", padx=6)
-        self.label(row, "runs  (0 = never)", color=MUTED).pack(side="left")
-        row = tk.Frame(opts, bg=PANEL)
-        row.pack(fill="x", pady=(8, 0))
-        self.label(row, "Match threshold").pack(side="left")
-        self.thr_spin = self.spinbox(row, self.threshold, from_=0.70, to=0.99, increment=0.01,
-                                     format="%.2f")
-        self.thr_spin.pack(side="left", padx=6)
-        self.label(row, "lower it if a button is missed", color=MUTED).pack(side="left")
-        # AP refill (Alchemy Drops): used by the Genesis / Ex farms and the AP refill action
-        self.leaf_per, self.leaf_most, self.leaf_floor = (tk.StringVar(value="7"),
-                                                          tk.StringVar(), tk.StringVar())
-        row = tk.Frame(opts, bg=PANEL)
-        row.pack(fill="x", pady=(8, 0))
-        self.label(row, "Leaves").pack(side="left")
-        self.leaf_spins = []
-        for i, (var, lo, text) in enumerate(((self.leaf_per, 1, "per refill"),
-                                             (self.leaf_most, 0, "max / session"),
-                                             (self.leaf_floor, 0, "stop below"))):
-            sp = self.spinbox(row, var, from_=lo, to=9999, increment=1, width=4)
-            sp.pack(side="left", padx=(6 if i == 0 else 10, 3))
-            self.label(row, text, size=9, color=MUTED).pack(side="left")
-            self.leaf_spins.append(sp)
+        self.label(row, "0 = never", color=MUTED).pack(side="left")
+        self.section(opts, "While running")
         self.act_check = self.check(opts, "Go to the next act when one is finished",
                                     self.act_switch)
-        self.act_check.pack(fill="x", pady=(8, 0))
-        self.skip_merc = tk.BooleanVar(value=False)
+        self.act_check.pack(fill="x")
         self.check(opts, "Skip the mercenary (go without hiring) - works mid-run",
                    self.skip_merc, self.toggle_merc).pack(fill="x")
-        self.check(opts, "Keep this window on top", self.on_top,
-                   lambda: self.root.attributes("-topmost", self.on_top.get())).pack(fill="x")
-        self.check_updates = tk.BooleanVar(value=True)
+        self.wip_team_row(opts)
         row = tk.Frame(opts, bg=PANEL)
-        row.pack(fill="x")
-        self.check(row, "Check for updates when TACMonkey starts", self.check_updates,
-                   self.save_settings).pack(side="left")
-        self.small_button(row, "Check now", self.check_for_updates).pack(side="right")
-        row = tk.Frame(opts, bg=PANEL)
-        row.pack(fill="x", pady=(10, 0))
+        row.pack(fill="x", pady=(12, 0))
         self.check_btn = self.button(row, "Check screen", BLUE, self.check_screen)
         self.check_btn.pack(side="left")
         self.label(row, "  scores each button image on the game now", size=9,
                    color=MUTED).pack(side="left")
 
-        self.build_genesis(root)
+    def build_leaves(self, page):
+        card = self.page_card(page, "Leaves - Alchemy Drops for AP refills")
+        self.label(card, "Used by the Genesis and Ex farms and the AP refill action. Leave a "
+                         "limit blank for none. A limit stops the farm instead of refilling.",
+                   size=9, color=MUTED, wraplength=520, justify="left").pack(anchor="w")
+        self.leaf_per, self.leaf_most, self.leaf_floor = (tk.StringVar(value="7"),
+                                                          tk.StringVar(), tk.StringVar())
+        self.leaf_spins = []
+        for var, lo, text, hint in ((self.leaf_per, 1, "Per refill", "Alchemy Drops"),
+                                    (self.leaf_most, 0, "Max / session", "blank = no limit"),
+                                    (self.leaf_floor, 0, "Stop below", "owned")):
+            row = tk.Frame(card, bg=PANEL)
+            row.pack(fill="x", pady=(8, 0))
+            self.label(row, text, width=13, anchor="w").pack(side="left")
+            sp = self.spinbox(row, var, from_=lo, to=9999, increment=1, width=5)
+            sp.pack(side="left", padx=(0, 8))
+            self.label(row, hint, size=9, color=MUTED).pack(side="left")
+            self.leaf_spins.append(sp)
+        self.leaf_most.set("")   # a spinbox fills a blank variable with its lowest value
+        self.leaf_floor.set("")
+        self.leaf_per.trace_add("write", lambda *_: self.set_badge("leaves", self.leaf_per.get()))
+        self.root.after_idle(lambda: self.set_badge("leaves", self.leaf_per.get()))
+        self.section(card, "This session")
+        self.leaf_session = self.label(card, "No refills yet.", size=10, anchor="w")
+        self.leaf_session.pack(anchor="w")
 
-        # log
-        head = tk.Frame(root, bg=BG)
-        head.pack(fill="x", padx=14, pady=(12, 4))
-        self.label(head, "LOG", size=8, color=MUTED).pack(side="left")
-        clear = self.label(head, "clear", size=8, color=MUTED, cursor="hand2")
-        clear.pack(side="right")
-        clear.bind("<Button-1>", lambda _: self.log_box.delete("1.0", "end"))
-        box = tk.Frame(root, bg=DARK)
-        box.pack(fill="both", expand=True, padx=12)
-        scroll = tk.Scrollbar(box)
-        scroll.pack(side="right", fill="y")
-        self.log_box = tk.Text(box, bg=DARK, fg=FG, relief="flat", bd=0, wrap="word",
-                               font=("Consolas", 9), padx=10, pady=8, height=10,
-                               yscrollcommand=scroll.set, insertbackground=FG)
-        self.log_box.pack(side="left", fill="both", expand=True)
-        scroll.config(command=self.log_box.yview)
-        for tag, color in (("good", GREEN), ("muted", MUTED), ("warn", ORANGE), ("bad", RED),
-                           ("info", BLUE)):
-            self.log_box.tag_config(tag, foreground=color)
-        self.label(root, "F8 pause / resume  ·  F9 stop  —  these work from any window",
-                   size=8, color=MUTED).pack(pady=8)
+    def build_buttons_page(self, page):
+        card = self.page_card(page, "Buttons")
+        self.buttons_summary = self.label(card, "", size=10, anchor="w")
+        self.buttons_summary.pack(anchor="w")
+        row = tk.Frame(card, bg=PANEL)
+        row.pack(fill="x", pady=(8, 0))
+        for text, command in (("Customize script", self.customize),
+                              ("Import buttons", lambda: self.import_from(self.root)),
+                              ("Import script", lambda: self.import_script(self.root)),
+                              ("Open folder", self.open_folder)):
+            self.small_button(row, text, command).pack(side="left", padx=(0, 4))
+        self.section(card, "Pressed in every script")
+        self.every_label = self.label(card, "", size=9, color=FG, anchor="w", justify="left",
+                                      wraplength=520)
+        self.every_label.pack(anchor="w")
+        self.section(card, "Popups")
+        self.label(card, "Peddler Shop -> View Later: automatic while the mod is running.",
+                   size=9, anchor="w").pack(anchor="w")
+
+    def refresh_buttons_page(self):
+        try:
+            lib = farm.library()
+            every = sorted(i.split("/", 1)[-1] for i in farm.every_script_ids())
+        except Exception:
+            lib, every = [], []
+        scripts = farm.list_scripts()
+        self.buttons_summary.config(text=f"{len(lib)} button images · {len(scripts)} "
+                                         f"script{'' if len(scripts) == 1 else 's'} "
+                                         f"(this one: {self.script.get()})")
+        self.every_label.config(text=", ".join(every) if every else
+                                "None. Click a button's card in Customize and tick "
+                                "'Press in every script'.")
+        self.set_badge("buttons", len(lib))
+
+    def build_settings(self, page):
+        card = self.page_card(page, "Settings")
+        row = tk.Frame(card, bg=PANEL)
+        row.pack(fill="x")
+        self.label(row, "Match threshold").pack(side="left")
+        self.thr_spin = self.spinbox(row, self.threshold, from_=0.70, to=0.99, increment=0.01,
+                                     format="%.2f")
+        self.thr_spin.pack(side="left", padx=6)
+        self.label(row, "lower it if a button is missed", color=MUTED).pack(side="left")
+        self.check(card, "Keep this window on top", self.on_top,
+                   lambda: self.root.attributes("-topmost", self.on_top.get())).pack(
+            fill="x", pady=(8, 0))
+        self.check_updates = tk.BooleanVar(value=True)
+        row = tk.Frame(card, bg=PANEL)
+        row.pack(fill="x")
+        self.check(row, "Check for updates when TACMonkey starts", self.check_updates,
+                   self.save_settings).pack(side="left")
+        self.small_button(row, "Check now", self.check_for_updates).pack(side="right")
+        self.section(card, "About")
+        self.label(card, f"TACMonkey {farm.VERSION} · mod TAC Auto Tap {farm.MOD_VERSION}",
+                   size=9, color=MUTED, anchor="w").pack(anchor="w")
+
+    # ---------- shared Start / Pause / Stop ----------
+    def start_any(self):
+        if self.page in self.PAGE_MODE:
+            self.genesis_go(self.PAGE_MODE[self.page])
+        else:
+            self.start()
+
+    def pause_any(self):
+        if self.running():
+            self.toggle_pause()
+        elif self.genesis_running():
+            self.genesis_toggle_pause()
+
+    def stop_any(self):
+        if self.running():
+            self.stop()
+        elif self.genesis_running():
+            self.genesis_halt()
 
     # ---------- Genesis unit farm / Ex Genesis farm ----------
-    GENESIS_MODES = {  # mode -> (tab text, data file, what a pick is)
-        "hard": ("Units (Hard)", "genesis_shards.json", "units"),
-        "extra": ("Ex chapters (Extra)", "genesis_extra.json", "chapters"),
+    GENESIS_MODES = {  # mode -> (page, data file, what a pick is)
+        "hard": ("genesis", "genesis_shards.json", "units"),
+        "extra": ("ex", "genesis_extra.json", "chapters"),
     }
 
-    def build_genesis(self, root):
-        """Hard: pick units, skip-ticket the Genesis Hard stages that drop their shards.
-        Extra: pick chapters, skip-ticket their Extra stages. The number box next to a pick is
-        how many of its stages to farm."""
+    def build_genesis(self):
+        """Hard: pick units, skip-ticket the Genesis Hard stages that drop their shards; the
+        number box next to a unit is how many of its stages to farm. Extra: pick chapters and
+        skip-ticket all their Extra stages."""
         self.genesis_worker = None
         self.genesis_stop = threading.Event()
         self.genesis_pause = threading.Event()
         self.genesis_keys_prev = (False, False)   # F8, F9 last poll
         self.genesis_solo = tk.BooleanVar(value=False)
         self.genesis_mode = "hard"
+        self.genesis_name = "Genesis farm"
         self.genesis_data, self.genesis_vars, self.genesis_counts = {}, {}, {}
-        self.genesis_spins = {}
+        self.genesis_spins, self.genesis_info = {}, {}
         for mode, (_, file, _) in self.GENESIS_MODES.items():
             try:
                 data = json.loads(farm.RES_DIR.joinpath(file).read_text(encoding="utf-8"))
@@ -424,84 +637,57 @@ class App:
             self.genesis_data[mode] = data
             self.genesis_vars[mode], self.genesis_counts[mode] = {}, {}
             self.genesis_spins[mode] = {}
-        card = self.card(root, pady=(10, 0))
-        head = tk.Frame(card, bg=PANEL)
-        head.pack(fill="x")
-        self.label(head, "GENESIS FARM", size=8, color=MUTED).pack(side="left")
-        self.genesis_tabs = {}
-        for mode, (text, _, _) in self.GENESIS_MODES.items():
-            tab = tk.Label(head, text=text, bg=FIELD, fg=FG, font=(FONT, 9, "bold"), padx=10,
-                           pady=2, cursor="hand2")
-            tab.pack(side="left", padx=(10 if mode == "hard" else 4, 0))
-            tab.bind("<Button-1>", lambda _e, m=mode: self.genesis_set_mode(m))
-            self.genesis_tabs[mode] = tab
-        self.genesis_frames = {}
-        for mode in self.GENESIS_MODES:
-            frame = tk.Frame(card, bg=PANEL)
-            self.genesis_frames[mode] = frame
-            self.genesis_grid(frame, mode)
-        self.genesis_body_anchor = tk.Frame(card, bg=PANEL)   # frames are packed before this
-        self.genesis_body_anchor.pack(fill="x")
-        row = tk.Frame(card, bg=PANEL)
-        row.pack(fill="x", pady=(4, 0))
-        self.genesis_start = self.button(row, "Start Genesis farm", GREEN, self.genesis_go)
-        self.genesis_start.pack(side="left")
-        self.genesis_pause_btn = self.button(row, "Pause", YELLOW, self.genesis_toggle_pause)
-        self.genesis_pause_btn.pack(side="left", padx=(6, 0))
-        self.genesis_stop_btn = self.button(row, "Stop", RED, self.genesis_halt)
-        self.genesis_stop_btn.pack(side="left", padx=6)
-        self.genesis_info = self.label(row, "", size=9, color=MUTED)
-        self.genesis_info.pack(side="left", padx=4)
-        self.genesis_set_mode("hard")
+        self.genesis_grid(self.page_card(self.pages["genesis"], "Genesis farm - units (Hard)"))
+        self.ex_list(self.page_card(self.pages["ex"], "Ex Genesis farm - chapters (Extra)"))
 
     @staticmethod
-    def chapter_label(key, name):
-        """'ch15 Pride Illuminates the Wo... (1)' from a chapter's full name."""
-        m = re.search(r'"([^"]+)"', name) or re.search(r":\s*(.+?)\s*\(", name)
-        title = (m.group(1) if m else name).strip()
-        title = title if len(title) <= 19 else title[:18].rstrip() + "…"
-        part = re.search(r"\((?:Part\s*)?(One|Two|Three|1|2|3)\)", name)
-        num = {"One": "1", "Two": "2", "Three": "3"}.get(part.group(1), part.group(1)) if part else ""
-        return f"{key} {title}" + (f" ({num})" if num else "")
+    def chapter_title(name):
+        """'Chapter 8, Part 2: Pride Illuminates the World' from the game's chapter name."""
+        head = re.match(r"\s*(Final Chapter|Chapter\s*\d+)", name)
+        title = re.search(r'"([^"]+)"', name)
+        part = re.search(r"\((?:Part\s*)?(One|Two|Three|\d)\)", name)
+        num = {"One": "1", "Two": "2", "Three": "3"}.get(part.group(1), part.group(1)) if part else None
+        h = head.group(1) if head else ""
+        t = title.group(1) if title else re.sub(r"\(.*?\)", "", name[len(h):]).strip(' :"')
+        return (f"{h}, Part {num}: {t}" if num else f"{h}: {t}") if h else name
 
-    def genesis_grid(self, frame, mode):
-        data = self.genesis_data[mode]
-        tip = ("Tick units. The number beside one is how many of its stages to farm."
-               if mode == "hard" else
-               "Tick chapters. The number is how many of their Extra stages to farm "
-               "(clear them by hand once first).")
-        self.label(frame, tip, size=8, color=MUTED, wraplength=440, justify="left").pack(
-            anchor="w", pady=(6, 0))
-        if mode == "hard":
-            import genesis_farm
-            self.genesis_owners = genesis_farm.shared_owners(data)
-            self.genesis_star = {}
-            self.check(frame, "Solo stages only (skip stages shared with another unit)",
-                       self.genesis_solo, self.genesis_changed).pack(anchor="w", pady=(4, 0))
+    def chapter_units(self, chapter):
+        """The units whose shards drop in a chapter's Hard stages."""
+        return sorted({u for u, d in self.genesis_data["hard"].items()
+                       for st in d["stages"] if st["chapter"] == chapter}, key=str.lower)
+
+    def genesis_grid(self, frame):
+        mode, data = "hard", self.genesis_data["hard"]
+        import genesis_farm
+        self.genesis_owners = genesis_farm.shared_owners(data)
+        self.genesis_star = {}
+        self.label(frame, "Tick units. The number beside one is how many of its stages to farm, "
+                          "newest chapter first. Each stage is skipped with 3 skip tickets.",
+                   size=9, color=MUTED, wraplength=520, justify="left").pack(anchor="w")
+        self.check(frame, "Solo stages only (skip stages shared with another unit)",
+                   self.genesis_solo, self.genesis_changed).pack(anchor="w", pady=(6, 0))
         grid = tk.Frame(frame, bg=PANEL)
-        grid.pack(fill="x", pady=(4, 4))
-        cols = 3 if mode == "hard" else 2
-        keys = sorted(data, key=str.lower) if mode == "hard" else list(data)
+        grid.pack(fill="x", pady=(6, 4))
+        cols = 3
+        keys = sorted(data, key=str.lower)
         for i, key in enumerate(keys):
             n = len(data[key]["stages"])
-            text = (key if mode == "hard" else
-                    self.chapter_label(key, data[key].get("name", "")))
             var = tk.BooleanVar(value=False)
             count = tk.IntVar(value=n)
             cell = tk.Frame(grid, bg=PANEL)
-            cell.grid(row=i // cols, column=i % cols, sticky="w", padx=(0, 6))
+            cell.grid(row=i // cols, column=i % cols, sticky="w", padx=(0, 6), pady=1)
             spin = tk.Spinbox(cell, from_=1, to=n, width=2, textvariable=count, wrap=False,
                               command=self.genesis_changed, bg=FIELD, fg=FG, buttonbackground=FIELD,
                               insertbackground=FG, relief="flat", font=(FONT, 9), justify="center",
                               highlightthickness=0)
             spin.bind("<KeyRelease>", lambda _e: self.genesis_changed())
             spin.bind("<FocusOut>", lambda _e: self.genesis_changed())
-            cb = tk.Checkbutton(cell, text=text, variable=var, command=self.genesis_changed,
+            cb = tk.Checkbutton(cell, text=key, variable=var, command=self.genesis_changed,
                                 bg=PANEL, fg=FG, activebackground=PANEL, activeforeground=FG,
-                                selectcolor=FIELD, highlightthickness=0, bd=0, font=(FONT, 9),
+                                selectcolor=FIELD, highlightthickness=0, bd=0, font=(FONT, 10),
                                 anchor="w")
             cb.pack(side="left")
-            if mode == "hard" and self.genesis_shared_only(key):
+            if self.genesis_shared_only(key):
                 self.genesis_star[key] = cb   # gets a * while Solo stages only is ticked
             self.genesis_vars[mode][key] = var
             self.genesis_counts[mode][key] = count
@@ -509,36 +695,54 @@ class App:
         for c in range(cols):
             grid.columnconfigure(c, weight=1)
         if not keys:
-            self.label(grid, f"{self.GENESIS_MODES[mode][1]} not found", color=RED).grid(
-                row=0, column=0)
-        elif mode == "hard":
-            self.genesis_star_note = self.label(
-                frame, "* has only shared stages, so it keeps them", size=8, color=MUTED)
-        elif mode == "extra":
-            link = tk.Label(frame, text="All", bg=PANEL, fg=BLUE, cursor="hand2",
-                            font=(FONT, 8, "underline"))
-            link.pack(anchor="w")
-            link.bind("<Button-1>", lambda _e: self.genesis_tick_all())
+            self.label(grid, "genesis_shards.json not found", color=RED).grid(row=0, column=0)
+        self.genesis_star_note = self.label(frame, "* has only shared stages, so it keeps them",
+                                            size=8, color=MUTED)
+        self.genesis_star_anchor = tk.Frame(frame, bg=PANEL)   # the note is packed before this
+        self.genesis_star_anchor.pack(fill="x")
+        self.wip_team_row(frame)
+        self.genesis_info["hard"] = self.label(frame, "", size=9, color=MUTED, anchor="w")
+        self.genesis_info["hard"].pack(anchor="w", pady=(10, 0))
 
-    def genesis_tick_all(self):
+    def ex_list(self, frame):
+        mode, data = "extra", self.genesis_data["extra"]
+        self.label(frame, "Tick chapters to skip all their Extra stages. Each has 1 attempt a day "
+                          "(1 skip ticket); clear a stage by hand once before it can be skipped. "
+                          "On the right: the units farmed in that chapter's Hard stages.",
+                   size=9, color=MUTED, wraplength=520, justify="left").pack(anchor="w")
+        grid = tk.Frame(frame, bg=PANEL)
+        grid.pack(fill="x", pady=(8, 4))
+        for i, key in enumerate(data):
+            var = tk.BooleanVar(value=False)
+            tk.Checkbutton(grid, text=self.chapter_title(data[key].get("name", key)),
+                           variable=var, command=self.genesis_changed, bg=PANEL, fg=FG,
+                           activebackground=PANEL, activeforeground=FG, selectcolor=FIELD,
+                           highlightthickness=0, bd=0, font=(FONT, 10), anchor="w").grid(
+                row=i, column=0, sticky="w", pady=1)
+            units = self.chapter_units(int(key[2:]))
+            self.label(grid, ", ".join(units), size=9, color=MUTED, anchor="w").grid(
+                row=i, column=1, sticky="w", padx=(16, 0))
+            self.genesis_vars[mode][key] = var
+        grid.columnconfigure(1, weight=1)
+        if not data:
+            self.label(grid, "genesis_extra.json not found", color=RED).grid(row=0, column=0)
+        row = tk.Frame(frame, bg=PANEL)
+        row.pack(fill="x", pady=(8, 0))
+        self.small_button(row, "Tick all", lambda: self.genesis_tick_all("extra")).pack(side="left")
+        self.genesis_info["extra"] = self.label(row, "", size=9, color=MUTED)
+        self.genesis_info["extra"].pack(side="left", padx=10)
+
+    def genesis_tick_all(self, mode):
         """Tick every pick, or untick them all if they're all ticked already."""
-        vars_ = self.genesis_vars[self.genesis_mode].values()
+        vars_ = self.genesis_vars[mode].values()
         on = not all(v.get() for v in vars_)
         for var in vars_:
             var.set(on)
         self.genesis_changed()
 
     def genesis_set_mode(self, mode):
-        if self.genesis_running():
-            return
-        self.genesis_mode = mode
-        for m, frame in self.genesis_frames.items():
-            frame.pack_forget()
-        self.genesis_frames[mode].pack(fill="x", before=self.genesis_body_anchor)
-        for m, tab in self.genesis_tabs.items():
-            tab.config(bg=BLUE if m == mode else FIELD, fg=DARK if m == mode else FG)
-        self.genesis_start.config(text="Start Genesis farm" if mode == "hard" else "Start Ex farm")
-        self.genesis_changed()
+        """Kept for old settings: show the page of that mode."""
+        self.show_page(self.GENESIS_MODES[mode][0])
 
     def genesis_selected(self, mode=None):
         return [k for k, v in self.genesis_vars[mode or self.genesis_mode].items() if v.get()]
@@ -563,7 +767,7 @@ class App:
     def genesis_count_map(self, mode=None):
         """{pick: stages to farm} for every pick (a blank or bad box counts as all of them).
         A box at its most counts as all of the pick's stages, so a count saved while Solo
-        stages only is ticked still means "all" when it isn't."""
+        stages only is ticked still means "all" when it isn't. Ex chapters: always all."""
         mode = mode or self.genesis_mode
         out = {}
         for k, var in self.genesis_counts[mode].items():
@@ -583,9 +787,9 @@ class App:
                                                        self.genesis_solo_on(mode))]
 
     def genesis_changed(self):
-        if not hasattr(self, "genesis_info"):
+        if not getattr(self, "genesis_info", None) or len(self.genesis_info) < 2:
             return
-        mode = self.genesis_mode
+        mode = "hard"
         for key, spin in self.genesis_spins[mode].items():   # number boxes only while ticked
             on = self.genesis_vars[mode][key].get()
             total = self.genesis_stage_total(mode, key) if on else None
@@ -603,32 +807,34 @@ class App:
             elif not on and spin.winfo_manager():
                 spin.pack_forget()
         solo = self.genesis_solo.get()
-        for key, cb in getattr(self, "genesis_star", {}).items():
+        for key, cb in self.genesis_star.items():
             cb.config(text=key + (" *" if solo else ""))
-        note = getattr(self, "genesis_star_note", None)
-        if note is not None:
-            if solo and not note.winfo_manager():
-                note.pack(anchor="w")
-            elif not solo and note.winfo_manager():
-                note.pack_forget()
-        picks = self.genesis_selected()
-        stages = self.genesis_stages(picks)
-        per = 3 if mode == "hard" else 1
-        self.genesis_info.config(text=f"{len(stages)} stages · {len(stages) * per} skips"
-                                 if picks else "")
+        note = self.genesis_star_note
+        if solo and not note.winfo_manager():
+            note.pack(anchor="w", before=self.genesis_star_anchor)
+        elif not solo and note.winfo_manager():
+            note.pack_forget()
+        for mode, per, page in (("hard", 3, "genesis"), ("extra", 1, "ex")):
+            picks = self.genesis_selected(mode)
+            stages = self.genesis_stages(picks, mode)
+            self.genesis_info[mode].config(text=f"{len(stages)} stages · {len(stages) * per} "
+                                                f"skips" if picks else "Nothing ticked yet")
+            self.set_badge(page, len(picks))
         self.update_buttons()
 
     def genesis_running(self):
-        return self.genesis_worker is not None and self.genesis_worker.is_alive()
+        worker = getattr(self, "genesis_worker", None)
+        return worker is not None and worker.is_alive()
 
-    def genesis_go(self):
-        mode = self.genesis_mode
-        picks = self.genesis_selected()
+    def genesis_go(self, mode=None):
+        mode = mode or self.genesis_mode
+        picks = self.genesis_selected(mode)
         if not picks or self.running() or self.genesis_running():
             return
+        self.genesis_mode = mode
         self.save_settings()
-        stages = self.genesis_stages(picks)
-        counts = self.genesis_count_map()
+        stages = self.genesis_stages(picks, mode)
+        counts = self.genesis_count_map(mode)
         name = "Genesis farm" if mode == "hard" else "Ex Genesis farm"
         self.genesis_stop, self.genesis_pause = threading.Event(), threading.Event()
         leaves, solo = self.leaf_settings(), self.genesis_solo_on(mode)
@@ -689,6 +895,10 @@ class App:
                    or "stuck" in low
                    else "good" if "runs completed" in low or "reached" in low
                    else "info" if "act finished" in low else None)
+        m = re.search(r"\((\d+) Alchemy Drops used this session(?:, (\d+) left)?\)", text)
+        if m and hasattr(self, "leaf_session"):
+            self.leaf_session.config(text=f"{m.group(1)} used" +
+                                     (f" · {m.group(2)} left" if m.group(2) else ""))
         self.log_box.insert("end", text + "\n", tag or ())
         if int(self.log_box.index("end-1c").split(".")[0]) > 2000:
             self.log_box.delete("1.0", "500.0")
@@ -709,27 +919,32 @@ class App:
                       cursor="hand2" if on else "arrow")
 
     def update_buttons(self):
-        run = self.running()
-        grun = hasattr(self, "genesis_vars") and self.genesis_running()
-        self.enable(self.start_btn, not run and not grun)
-        self.enable(self.pause_btn, run)
-        self.enable(self.stop_btn, run)
+        if not hasattr(self, "pages"):
+            return
+        run, grun = self.running(), self.genesis_running()
+        busy = run or grun
+        mode = self.PAGE_MODE.get(self.page)
+        if mode:
+            text = "Start Genesis farm" if mode == "hard" else "Start Ex farm"
+            can = not busy and bool(self.genesis_selected(mode))
+        else:
+            text, can = "Start story farm", not busy
+        self.start_btn.config(text=text)
+        self.enable(self.start_btn, can)
+        self.enable(self.pause_btn, busy)
+        self.enable(self.stop_btn, busy)
+        paused = (run and self.state == "Paused") or (grun and self.genesis_pause.is_set())
+        self.pause_btn.config(text="Resume" if paused else "Pause")
         for w in (self.max_spin, self.thr_spin, self.act_check, self.script_menu):
             w.config(state="disabled" if run else "normal")
         self.enable(self.new_btn, not run)
         self.enable(self.import_btn, not run)  # importing switches to the new script
-        self.pause_btn.config(text="Resume" if self.state == "Paused" else "Pause")
-        if hasattr(self, "genesis_vars"):
-            self.enable(self.genesis_start, not run and not grun and bool(self.genesis_selected()))
-            self.enable(self.genesis_pause_btn, grun)
-            self.enable(self.genesis_stop_btn, grun)
-            self.genesis_pause_btn.config(text="Resume" if grun and self.genesis_pause.is_set()
-                                          else "Pause")
-        for sp in getattr(self, "leaf_spins", ()):   # leaf limits are read at Start
-            sp.config(state="disabled" if run or grun else "normal")
+        for sp in self.leaf_spins:   # leaf limits are read at Start
+            sp.config(state="disabled" if busy else "normal")
 
     def show_stats(self):
         self.stat_values["Runs"].config(text=str(self.runs))
+        self.set_badge("story", self.runs)
         secs = int(self.run_time)
         self.stat_values["Time"].config(text=f"{secs // 3600}:{secs // 60 % 60:02d}:{secs % 60:02d}")
         per_hour = self.runs * 3600 / self.run_time if self.run_time >= 60 and self.runs else None
@@ -922,8 +1137,8 @@ class App:
         self.leaf_per.set(str(s.get("leaf_per") or 7))
         self.leaf_most.set(str(s.get("leaf_most") or ""))
         self.leaf_floor.set(str(s.get("leaf_floor") or ""))
-        if s.get("genesis_mode") in self.GENESIS_MODES:
-            self.genesis_set_mode(s["genesis_mode"])
+        page = s.get("page") or {"extra": "ex", "hard": "genesis"}.get(s.get("genesis_mode"))
+        self.show_page(page if page in self.pages else "story")
         self.genesis_changed()
 
     def save_settings(self):
@@ -937,7 +1152,7 @@ class App:
                                             "genesis_units": self.genesis_selected("hard"),
                                             "genesis_counts": self.genesis_count_map("hard"),
                                             "ex_units": self.genesis_selected("extra"),
-                                            "ex_counts": self.genesis_count_map("extra"),
+                                            "page": self.page,
                                             "genesis_mode": self.genesis_mode,
                                             "genesis_solo": self.genesis_solo.get(),
                                             **{f"leaf_{k}": v for k, v in
