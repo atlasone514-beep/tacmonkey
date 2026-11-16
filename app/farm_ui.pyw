@@ -24,10 +24,12 @@ except Exception as e:  # e.g. opencv missing - pythonw has no console to show i
     raise SystemExit(1)
 import updater
 
-BG, PANEL, FIELD = "#17181c", "#22242b", "#2d3039"
-FG, MUTED, DARK = "#e8e8ea", "#8b8d98", "#121316"
-GREEN, YELLOW, ORANGE, RED, GREY, BLUE = ("#3ecf8e", "#f2c14e", "#f08c4a", "#ef5f5f",
-                                          "#6b6e7a", "#5b9cf5")
+# Claude's dark theme: neutral near-black greys, blue accent, saturated green for Start
+BG, PANEL, FIELD = "#1c1c1c", "#242424", "#2f2f2f"
+FG, MUTED, DARK = "#ececec", "#9b9b9b", "#151515"
+GREEN, YELLOW, ORANGE, RED, GREY, BLUE = ("#12a312", "#e8b33c", "#e8833f", "#e5534b",
+                                          "#5c5c5c", "#5aa2f0")
+ACCENT_TEXT = "#8cc2ff"   # blue text on the selected page's tint
 FONT = "Segoe UI"
 SETTINGS = farm.APP_DIR / "ui_settings.json"  # remembers script and checkboxes
 BAD_CHARS = set('\\/:*?"<>|')
@@ -57,6 +59,7 @@ class App:
         self.update_info = None    # the newer release found by the update check
         self.update_busy = False   # downloading it
         self.editor_view = "flow"  # Customize opens as "flow" (flowchart) or "list" (priority)
+        self.tidy_asked = False    # the one-time "rename numbered buttons?" offer was shown
 
         root.title(f"TACMonkey {farm.VERSION}")
         root.configure(bg=BG)
@@ -70,6 +73,7 @@ class App:
         root.after(100, self.poll)
         root.after(1000, self.tick)
         root.after(400, self.first_run)
+        root.after(1200, self.offer_tidy)
         if self.check_updates.get():
             root.after(1500, lambda: self.check_for_updates(manual=False))
         threading.Thread(target=self.check_mod, daemon=True).start()
@@ -206,6 +210,49 @@ class App:
                 "in Customize. You can import later from Customize too.", parent=self.root):
             self.import_from(self.root)
 
+    def offer_tidy(self):
+        """Old numbered button names (06_go): offer once to rename them to plain names."""
+        if not self.tidy_asked and farm.numbered_images():
+            self.tidy_names(first=True)
+
+    def tidy_names(self, first=False):
+        ids = farm.numbered_images()
+        if not ids:
+            if not first:
+                messagebox.showinfo("Tidy button names", "No numbered button names left.",
+                                    parent=self.root)
+            return
+        if self.running() or self.genesis_running():
+            messagebox.showinfo("Tidy button names", "Stop the farm first.", parent=self.root)
+            return
+        ok = messagebox.askyesno(
+            "Tidy button names", f"{len(ids)} button images still have old number names (like "
+            "06_go or 09_endquest).\n\nRename them to plain names (go, end quest, ...)?\n\n"
+            "Every script keeps running exactly as before: its priority order and run counter "
+            "are kept, and what the numbers 01, 08 and 10 did becomes ticks on the step's card "
+            "in Customize.\n\nA backup zip of your buttons and scripts is saved first."
+            + ("\n\nYou can also do this later from the Buttons page." if first else ""),
+            parent=self.root)
+        if first:
+            self.tidy_asked = True
+            self.save_settings()
+        if not ok:
+            return
+        try:
+            count, backup = farm.tidy_buttons()
+        except Exception as e:
+            self.log(f"Tidy button names failed: {e!r}", "bad")
+            messagebox.showerror("Tidy button names", f"Something went wrong:\n{e}\n\nYour "
+                                 "backup zip (if one was made) is in the TACMonkey folder.",
+                                 parent=self.root)
+            return
+        self.log(f"Renamed {count} button images to plain names (backup: "
+                 f"{backup.name if backup else '-'})", "good")
+        self.refresh_scripts()
+        if self.customizer and self.customizer.win.winfo_exists():
+            self.customizer.refresh()
+        self.refresh_buttons_page()
+
     def import_from(self, parent):
         """Ask for a folder and copy its buttons and scripts in. True if anything came in."""
         folder = filedialog.askdirectory(parent=parent, title="Folder with your buttons / scripts")
@@ -269,7 +316,7 @@ class App:
         ("settings", "", "Settings"),
     )
     PAGE_MODE = {"genesis": "hard", "ex": "extra"}   # pages that run the Genesis farm
-    NAV_SEL, NAV_HOVER = "#2b3a55", "#2a2c34"
+    NAV_SEL, NAV_HOVER = "#1d3857", "#2c2c2c"
 
     def build(self):
         root = self.root
@@ -351,8 +398,9 @@ class App:
         bg = self.NAV_SEL if on else self.NAV_HOVER if hover else PANEL
         for part in ("row", "icon", "name"):
             n[part].config(bg=bg)
-        n["icon"].config(fg=BLUE if on else MUTED)
-        n["name"].config(font=(FONT, 10, "bold" if on else "normal"))
+        n["icon"].config(fg=ACCENT_TEXT if on else MUTED)
+        n["name"].config(font=(FONT, 10, "bold" if on else "normal"),
+                         fg=ACCENT_TEXT if on else FG)
 
     def set_badge(self, key, text):
         badge = self.nav[key]["badge"]
@@ -407,8 +455,10 @@ class App:
         controls = tk.Frame(parent, bg=BG)
         controls.pack(side="bottom", fill="x", padx=12, pady=(8, 0))
         self.start_btn = self.button(controls, "Start script", GREEN, self.start_any)
-        self.pause_btn = self.button(controls, "Pause", YELLOW, self.pause_any)
-        self.stop_btn = self.button(controls, "Stop", RED, self.stop_any)
+        self.pause_btn = self.button(controls, "Pause", FIELD, self.pause_any)
+        self.stop_btn = self.button(controls, "Stop", FIELD, self.stop_any)
+        for b in (self.pause_btn, self.stop_btn):   # quiet grey buttons, like Claude's
+            b.config(fg=FG, activeforeground=FG, activebackground=GREY, disabledforeground=GREY)
         self.start_btn.grid(row=0, column=0, sticky="ew")
         self.pause_btn.grid(row=0, column=1, sticky="ew", padx=(6, 0))
         self.stop_btn.grid(row=0, column=2, sticky="ew", padx=(6, 0))
@@ -543,6 +593,12 @@ class App:
                               ("Import script", lambda: self.import_script(self.root)),
                               ("Open folder", self.open_folder)):
             self.small_button(row, text, command).pack(side="left", padx=(0, 4))
+        self.tidy_row = tk.Frame(card, bg=PANEL)
+        self.tidy_label = self.label(self.tidy_row, "", size=9, color=ORANGE)
+        self.tidy_label.pack(side="left")
+        self.small_button(self.tidy_row, "Tidy names", self.tidy_names).pack(side="left", padx=8)
+        self.tidy_anchor = tk.Frame(card, bg=PANEL)   # the tidy row is packed before this
+        self.tidy_anchor.pack(fill="x")
         self.section(card, "Pressed in every script")
         self.every_label = self.label(card, "", size=9, color=FG, anchor="w", justify="left",
                                       wraplength=520)
@@ -565,6 +621,12 @@ class App:
                                 "None. Click a button's card in Customize and tick "
                                 "'Press in every script'.")
         self.set_badge("buttons", len(lib))
+        numbered = sum(1 for _, name, _, _, _ in lib if farm.NUMBERED.match(name))
+        self.tidy_label.config(text=f"{numbered} images still have number names (like 06_go)")
+        if numbered and not self.tidy_row.winfo_manager():
+            self.tidy_row.pack(fill="x", pady=(8, 0), before=self.tidy_anchor)
+        elif not numbered and self.tidy_row.winfo_manager():
+            self.tidy_row.pack_forget()
 
     def build_settings(self, page):
         card = self.page_card(page, "Settings")
@@ -1122,6 +1184,7 @@ class App:
         self.act_switch.set(s.get("act_switch", True))
         self.skip_merc.set(s.get("skip_merc", False))
         self.import_asked = s.get("import_asked", False)
+        self.tidy_asked = s.get("tidy_asked", False)
         self.check_updates.set(s.get("check_updates", True))
         self.editor_view = s.get("editor_view", "flow")
         self.toggle_merc()
@@ -1147,6 +1210,7 @@ class App:
                                             "act_switch": self.act_switch.get(),
                                             "skip_merc": self.skip_merc.get(),
                                             "import_asked": self.import_asked,
+                                            "tidy_asked": self.tidy_asked,
                                             "check_updates": self.check_updates.get(),
                                             "editor_view": self.editor_view,
                                             "genesis_units": self.genesis_selected("hard"),
@@ -1734,7 +1798,18 @@ class Customizer:
                     f"{self.step_title(b, m['groups'][b]) if b in m['groups'] else b} "
                     f"{n * 100 // total}%" for n, b in nxt[:4]))
             app.label(d, "\n".join(info), size=9, color=MUTED, wraplength=270,
-                      justify="left").pack(anchor="w", pady=(2, 8))
+                      justify="left").pack(anchor="w", pady=(2, 6))
+            opts = farm.step_options(self.script).get(key, set())
+            box = tk.Frame(d, bg=PANEL)
+            box.pack(fill="x", pady=(0, 8))
+            for opt, text in farm.STEP_OPTIONS.items():
+                var = tk.BooleanVar(value=opt in opts)
+                tk.Checkbutton(box, text=text, variable=var, bg=PANEL,
+                               fg=BLUE if opt in opts else FG, activebackground=PANEL,
+                               activeforeground=FG, selectcolor=FIELD, highlightthickness=0,
+                               bd=0, font=(FONT, 9), wraplength=250, justify="left",
+                               command=lambda o=opt, v=var: self.set_option(key, o, v.get())).pack(
+                    anchor="w")
         if sel[0] == "step":
             app.small_button(d, "Add a variant (capture)", lambda: self.add_variant(sel[1])).pack(
                 side="bottom", fill="x", pady=(6, 0))
@@ -1890,6 +1965,13 @@ class Customizer:
         self.app.log(f"{b['name']} is {'now pressed in every script' if on else 'no longer pressed in every script'}"
                      + ("" if on else f" (add it to a script from the list to use it there)"), "info")
         self.selected = ("entry", b["id"]) if on else None
+        self.refresh()
+
+    def set_option(self, key, option, on):
+        farm.set_step_option(self.script, key, option, on)
+        what = farm.STEP_OPTIONS[option].split(" (")[0].lower()
+        self.app.log(f"{self.script}: step {self.step_title(key, self.model['groups'][key])} - "
+                     f"{what}: {'on' if on else 'off'}", "info")
         self.refresh()
 
     def count(self, b, on):
