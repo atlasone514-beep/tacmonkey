@@ -60,7 +60,7 @@ class App:
         root.title(f"TACMonkey {farm.VERSION}")
         root.configure(bg=BG)
         root.minsize(480, 760)
-        root.geometry("500x940")
+        root.geometry("500x980")
         self.build()
         self.load_settings()
         self.set_state("Idle", "Open the game on its quest map, then press Start.")
@@ -246,8 +246,8 @@ class App:
         return tk.Label(parent, text=text, bg=parent["bg"], fg=color,
                         font=(FONT, size, "bold" if bold else "normal"), **kw)
 
-    def spinbox(self, parent, var, **kw):
-        return tk.Spinbox(parent, textvariable=var, width=6, bg=FIELD, fg=FG, relief="flat",
+    def spinbox(self, parent, var, width=6, **kw):
+        return tk.Spinbox(parent, textvariable=var, width=width, bg=FIELD, fg=FG, relief="flat",
                           buttonbackground=FIELD, insertbackground=FG, justify="center",
                           disabledbackground=PANEL, disabledforeground=MUTED,
                           font=(FONT, 10), **kw)
@@ -336,6 +336,20 @@ class App:
                                      format="%.2f")
         self.thr_spin.pack(side="left", padx=6)
         self.label(row, "lower it if a button is missed", color=MUTED).pack(side="left")
+        # AP refill (Alchemy Drops): used by the Genesis / Ex farms and the AP refill action
+        self.leaf_per, self.leaf_most, self.leaf_floor = (tk.StringVar(value="7"),
+                                                          tk.StringVar(), tk.StringVar())
+        row = tk.Frame(opts, bg=PANEL)
+        row.pack(fill="x", pady=(8, 0))
+        self.label(row, "Leaves").pack(side="left")
+        self.leaf_spins = []
+        for i, (var, lo, text) in enumerate(((self.leaf_per, 1, "per refill"),
+                                             (self.leaf_most, 0, "max / session"),
+                                             (self.leaf_floor, 0, "stop below"))):
+            sp = self.spinbox(row, var, from_=lo, to=9999, increment=1, width=4)
+            sp.pack(side="left", padx=(6 if i == 0 else 10, 3))
+            self.label(row, text, size=9, color=MUTED).pack(side="left")
+            self.leaf_spins.append(sp)
         self.act_check = self.check(opts, "Go to the next act when one is finished",
                                     self.act_switch)
         self.act_check.pack(fill="x", pady=(8, 0))
@@ -393,6 +407,9 @@ class App:
         how many of its stages to farm."""
         self.genesis_worker = None
         self.genesis_stop = threading.Event()
+        self.genesis_pause = threading.Event()
+        self.genesis_keys_prev = (False, False)   # F8, F9 last poll
+        self.genesis_solo = tk.BooleanVar(value=False)
         self.genesis_mode = "hard"
         self.genesis_data, self.genesis_vars, self.genesis_counts = {}, {}, {}
         self.genesis_spins = {}
@@ -429,6 +446,8 @@ class App:
         row.pack(fill="x", pady=(4, 0))
         self.genesis_start = self.button(row, "Start Genesis farm", GREEN, self.genesis_go)
         self.genesis_start.pack(side="left")
+        self.genesis_pause_btn = self.button(row, "Pause", YELLOW, self.genesis_toggle_pause)
+        self.genesis_pause_btn.pack(side="left", padx=(6, 0))
         self.genesis_stop_btn = self.button(row, "Stop", RED, self.genesis_halt)
         self.genesis_stop_btn.pack(side="left", padx=6)
         self.genesis_info = self.label(row, "", size=9, color=MUTED)
@@ -453,6 +472,12 @@ class App:
                "(clear them by hand once first).")
         self.label(frame, tip, size=8, color=MUTED, wraplength=440, justify="left").pack(
             anchor="w", pady=(6, 0))
+        if mode == "hard":
+            import genesis_farm
+            self.genesis_owners = genesis_farm.shared_owners(data)
+            self.genesis_star = {}
+            self.check(frame, "Solo stages only (skip stages shared with another unit)",
+                       self.genesis_solo, self.genesis_changed).pack(anchor="w", pady=(4, 0))
         grid = tk.Frame(frame, bg=PANEL)
         grid.pack(fill="x", pady=(4, 4))
         cols = 3 if mode == "hard" else 2
@@ -471,10 +496,13 @@ class App:
                               highlightthickness=0)
             spin.bind("<KeyRelease>", lambda _e: self.genesis_changed())
             spin.bind("<FocusOut>", lambda _e: self.genesis_changed())
-            tk.Checkbutton(cell, text=text, variable=var, command=self.genesis_changed,
-                           bg=PANEL, fg=FG, activebackground=PANEL, activeforeground=FG,
-                           selectcolor=FIELD, highlightthickness=0, bd=0, font=(FONT, 9),
-                           anchor="w").pack(side="left")
+            cb = tk.Checkbutton(cell, text=text, variable=var, command=self.genesis_changed,
+                                bg=PANEL, fg=FG, activebackground=PANEL, activeforeground=FG,
+                                selectcolor=FIELD, highlightthickness=0, bd=0, font=(FONT, 9),
+                                anchor="w")
+            cb.pack(side="left")
+            if mode == "hard" and self.genesis_shared_only(key):
+                self.genesis_star[key] = cb   # gets a * while Solo stages only is ticked
             self.genesis_vars[mode][key] = var
             self.genesis_counts[mode][key] = count
             self.genesis_spins[mode][key] = spin   # shown only while ticked
@@ -483,6 +511,9 @@ class App:
         if not keys:
             self.label(grid, f"{self.GENESIS_MODES[mode][1]} not found", color=RED).grid(
                 row=0, column=0)
+        elif mode == "hard":
+            self.genesis_star_note = self.label(
+                frame, "* has only shared stages, so it keeps them", size=8, color=MUTED)
         elif mode == "extra":
             link = tk.Label(frame, text="All", bg=PANEL, fg=BLUE, cursor="hand2",
                             font=(FONT, 8, "underline"))
@@ -512,14 +543,34 @@ class App:
     def genesis_selected(self, mode=None):
         return [k for k, v in self.genesis_vars[mode or self.genesis_mode].items() if v.get()]
 
+    def genesis_shared_only(self, unit):
+        """A unit whose every Hard stage is shared (it keeps them with Solo stages only)."""
+        return all(len(self.genesis_owners[st["stage"]]) > 1
+                   for st in self.genesis_data["hard"][unit]["stages"])
+
+    def genesis_solo_on(self, mode=None):
+        return (mode or self.genesis_mode) == "hard" and self.genesis_solo.get()
+
+    def genesis_stage_total(self, mode, key):
+        """How many stages a pick has (with Solo stages only: without the shared ones)."""
+        if not self.genesis_solo_on(mode):
+            return len(self.genesis_data[mode][key]["stages"])
+        import genesis_farm
+        return len(genesis_farm.unit_stages(self.genesis_data[mode], key,
+                                            self.genesis_selected(mode), True,
+                                            self.genesis_owners))
+
     def genesis_count_map(self, mode=None):
-        """{pick: stages to farm} for every pick (a blank or bad box counts as all of them)."""
+        """{pick: stages to farm} for every pick (a blank or bad box counts as all of them).
+        A box at its most counts as all of the pick's stages, so a count saved while Solo
+        stages only is ticked still means "all" when it isn't."""
         mode = mode or self.genesis_mode
         out = {}
         for k, var in self.genesis_counts[mode].items():
             n = len(self.genesis_data[mode][k]["stages"])
             try:
-                out[k] = min(max(int(var.get()), 1), n)
+                v = max(int(var.get()), 1)
+                out[k] = n if v >= int(self.genesis_spins[mode][k].cget("to")) else min(v, n)
             except (tk.TclError, ValueError):
                 out[k] = n
         return out
@@ -528,7 +579,8 @@ class App:
         import genesis_farm
         mode = mode or self.genesis_mode
         return [s["stage"] for s in genesis_farm.plan(self.genesis_data[mode], picks,
-                                                       self.genesis_count_map(mode))]
+                                                       self.genesis_count_map(mode),
+                                                       self.genesis_solo_on(mode))]
 
     def genesis_changed(self):
         if not hasattr(self, "genesis_info"):
@@ -536,10 +588,29 @@ class App:
         mode = self.genesis_mode
         for key, spin in self.genesis_spins[mode].items():   # number boxes only while ticked
             on = self.genesis_vars[mode][key].get()
+            total = self.genesis_stage_total(mode, key) if on else None
+            if on and int(spin.cget("to")) != total:   # Solo stages only changes the most
+                var = self.genesis_counts[mode][key]
+                try:
+                    was = int(var.get())
+                except (tk.TclError, ValueError):
+                    was = total
+                full = was >= int(spin.cget("to"))
+                spin.config(to=total)
+                var.set(total if full else min(was, total))
             if on and not spin.winfo_ismapped():
                 spin.pack(side="left", padx=(2, 0))
             elif not on and spin.winfo_manager():
                 spin.pack_forget()
+        solo = self.genesis_solo.get()
+        for key, cb in getattr(self, "genesis_star", {}).items():
+            cb.config(text=key + (" *" if solo else ""))
+        note = getattr(self, "genesis_star_note", None)
+        if note is not None:
+            if solo and not note.winfo_manager():
+                note.pack(anchor="w")
+            elif not solo and note.winfo_manager():
+                note.pack_forget()
         picks = self.genesis_selected()
         stages = self.genesis_stages(picks)
         per = 3 if mode == "hard" else 1
@@ -559,15 +630,19 @@ class App:
         stages = self.genesis_stages(picks)
         counts = self.genesis_count_map()
         name = "Genesis farm" if mode == "hard" else "Ex Genesis farm"
-        self.genesis_stop = threading.Event()
+        self.genesis_stop, self.genesis_pause = threading.Event(), threading.Event()
+        leaves, solo = self.leaf_settings(), self.genesis_solo_on(mode)
+        self.genesis_name = name
         self.set_state(name, f"{', '.join(picks)} -> {len(stages)} stages")
         self.log(f"--- {name}: {', '.join(picks)} ---", "muted")
 
         def job():
             try:
                 import genesis_farm
-                reason = genesis_farm.GenesisFarm(log=lambda m: self.q.put(("log", m)),
-                                                  stop=self.genesis_stop, mode=mode).run(picks, counts)
+                reason = genesis_farm.GenesisFarm(
+                    log=lambda m: self.q.put(("log", m)), stop=self.genesis_stop, mode=mode,
+                    pause=self.genesis_pause, leaves=leaves,
+                    status=lambda t: self.q.put(("gstatus", t))).run(picks, counts, solo)
             except Exception as e:
                 reason = f"{name} error: {e}"
                 self.q.put(("log", reason, "bad"))
@@ -579,8 +654,32 @@ class App:
 
     def genesis_halt(self):
         if self.genesis_running():
+            self.genesis_pause.clear()
             self.genesis_stop.set()
             self.set_state("Stopping...")
+
+    def genesis_toggle_pause(self):
+        if not self.genesis_running():
+            return
+        if self.genesis_pause.is_set():
+            self.genesis_pause.clear()
+            self.log(f"{time.strftime('%H:%M:%S')} RESUME")
+        else:
+            self.genesis_pause.set()
+            self.log(f"{time.strftime('%H:%M:%S')} PAUSE - the farm stops after the stage it's on",
+                     "warn")
+            self.set_state("Pausing...", "Finishing the stage it's on, then it waits")
+        self.update_buttons()
+
+    def leaf_settings(self):
+        """The AP refill row as genesis_farm.leaf_settings (blank / 0 = no limit)."""
+        import genesis_farm
+        out = genesis_farm.leaf_settings(self.leaf_per.get(), self.leaf_most.get(),
+                                         self.leaf_floor.get())
+        self.leaf_per.set(str(out["per"]))
+        self.leaf_most.set(str(out["most"] or ""))
+        self.leaf_floor.set(str(out["floor"] or ""))
+        return out
 
     # ---------- helpers ----------
     def log(self, text, tag=None):
@@ -622,7 +721,12 @@ class App:
         self.pause_btn.config(text="Resume" if self.state == "Paused" else "Pause")
         if hasattr(self, "genesis_vars"):
             self.enable(self.genesis_start, not run and not grun and bool(self.genesis_selected()))
+            self.enable(self.genesis_pause_btn, grun)
             self.enable(self.genesis_stop_btn, grun)
+            self.genesis_pause_btn.config(text="Resume" if grun and self.genesis_pause.is_set()
+                                          else "Pause")
+        for sp in getattr(self, "leaf_spins", ()):   # leaf limits are read at Start
+            sp.config(state="disabled" if run or grun else "normal")
 
     def show_stats(self):
         self.stat_values["Runs"].config(text=str(self.runs))
@@ -654,17 +758,17 @@ class App:
                  f"threshold {farm.THRESHOLD:.2f} ---", "muted")
         self.worker = threading.Thread(target=self.work, daemon=True,
                                        args=(max_runs or None, self.act_switch.get(),
-                                             self.script.get()))
+                                             self.script.get(), self.leaf_settings()))
         self.worker.start()
         self.update_buttons()
 
-    def work(self, max_runs, act_switch, script):
+    def work(self, max_runs, act_switch, script, leaves=None):
         try:
             reason = farm.run(max_runs, log=lambda m: self.q.put(("log", m)),
                               stop=self.stop_event, pause=self.pause_event,
                               on_status=lambda s, r, l: self.q.put(("status", s, r, l)),
                               act_switch=act_switch, skip_merc=self.skip_merc_event,
-                              script=script)
+                              script=script, leaves=leaves)
         except SystemExit as e:
             reason = str(e)
             self.q.put(("log", reason, "bad"))
@@ -814,6 +918,10 @@ class App:
                 if k in self.genesis_counts[mode] and isinstance(n, int):
                     self.genesis_counts[mode][k].set(
                         min(max(n, 1), len(self.genesis_data[mode][k]["stages"])))
+        self.genesis_solo.set(bool(s.get("genesis_solo", False)))
+        self.leaf_per.set(str(s.get("leaf_per") or 7))
+        self.leaf_most.set(str(s.get("leaf_most") or ""))
+        self.leaf_floor.set(str(s.get("leaf_floor") or ""))
         if s.get("genesis_mode") in self.GENESIS_MODES:
             self.genesis_set_mode(s["genesis_mode"])
         self.genesis_changed()
@@ -830,7 +938,10 @@ class App:
                                             "genesis_counts": self.genesis_count_map("hard"),
                                             "ex_units": self.genesis_selected("extra"),
                                             "ex_counts": self.genesis_count_map("extra"),
-                                            "genesis_mode": self.genesis_mode}, indent=2))
+                                            "genesis_mode": self.genesis_mode,
+                                            "genesis_solo": self.genesis_solo.get(),
+                                            **{f"leaf_{k}": v for k, v in
+                                               self.leaf_settings().items()}}, indent=2))
         except OSError:
             pass
 
@@ -902,10 +1013,28 @@ class App:
                 self.update_ready(msg[1])
             elif kind == "update_failed":
                 self.update_failed(msg[1])
+            elif kind == "gstatus":
+                if not self.genesis_running():
+                    pass
+                elif msg[1] == "Paused":
+                    self.set_state("Paused", "Genesis farm paused - press Resume or F8")
+                elif msg[1] == "Running":
+                    self.set_state(self.genesis_name, "Resumed")
+                else:
+                    self.detail_label.config(text=msg[1])
+                self.update_buttons()
             elif kind == "gdone":
                 self.genesis_worker = None
+                self.genesis_pause.clear()
                 self.set_state("Stopped", msg[1])
                 self.update_buttons()
+        if self.genesis_running():   # F8 pause / resume and F9 stop work for the Genesis farm too
+            keys = (farm.key_down(farm.VK_F8), farm.key_down(farm.VK_F9))
+            if keys[0] and not self.genesis_keys_prev[0]:
+                self.genesis_toggle_pause()
+            if keys[1] and not self.genesis_keys_prev[1]:
+                self.genesis_halt()
+            self.genesis_keys_prev = keys
         self.root.after(100, self.poll)
 
     def tick(self):
@@ -914,8 +1043,6 @@ class App:
             self.run_time += now - self.tick_from
             self.show_stats()
         self.tick_from = now
-        if self.genesis_running() and farm.key_down(farm.VK_F9):   # F9 stops the Genesis farm too
-            self.genesis_halt()
         self.root.after(1000, self.tick)
 
     def close(self):
@@ -1701,5 +1828,9 @@ class Customizer:
 
 if __name__ == "__main__":
     root = tk.Tk()
+    try:   # the TACMonkey icon, for this window and every window it opens
+        root.iconphoto(True, tk.PhotoImage(file=str(farm.RES_DIR / "icon.png")))
+    except tk.TclError:
+        pass
     App(root)
     root.mainloop()

@@ -110,9 +110,17 @@ def main():
         sys.exit(f"{patched} isn't the patched generator (run tools/patcher first)")
     shutil.copy2(patched, PAYLOAD)
 
-    # 3. the app, as one folder (TACMonkey.exe + _internal), zipped
+    # 3. the app, as one folder (TACMonkey.exe + _internal), zipped. The icon: app/icon.png
+    # as a multi-size .ico for the exes (shortcuts take theirs), the png for the windows
+    from PIL import Image
+    png = REPO / "app" / "icon.png"
+    ico = BUILD / "TACMonkey.ico"
+    BUILD.mkdir(exist_ok=True)
+    Image.open(png).convert("RGBA").resize((256, 256), Image.LANCZOS).save(
+        ico, sizes=[(n, n) for n in (16, 20, 24, 32, 40, 48, 64, 128, 256)])
     pyi = [sys.executable, "-m", "PyInstaller", "--noconfirm", "--clean", "--log-level", "WARN",
-           "--workpath", BUILD / "work", "--specpath", BUILD]
+           "--workpath", BUILD / "work", "--specpath", BUILD, "--icon", ico,
+           "--add-data", f"{png};."]
     run(pyi + ["--windowed", "--name", "TACMonkey", "--distpath", BUILD / "app",
                "--add-data", f"{REPO / 'app' / 'genesis_shards.json'};.",
                "--add-data", f"{REPO / 'app' / 'genesis_extra.json'};.",
