@@ -75,7 +75,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-VERSION = "1.5.1"   # TACMonkey release (the setup and the window show it)
+VERSION = "1.5.2"   # TACMonkey release (the setup and the window show it)
 MOD_VERSION = "1.2.1"  # TAC Auto Tap version shipped with this release (release/build.py checks it)
 WINDOW_TITLE = "The Alchemist Code"
 # APP_DIR holds your buttons, scripts and settings; RES_DIR the files shipped with the program.
@@ -573,6 +573,33 @@ def drop_texts(chunk):
     return [t.replace("\xa0", " ").strip() for t in re.findall(r"text:([^,\]]*)", chunk)]
 
 
+def listed_drop(fx, fy):
+    """(dropped, owned) of the results-screen drop at (fx, fy), from the mod's "list": a normal
+    quest's results list each drop as e.g. "* | 89 | (Owned: 10498)" at .../itemlist_new/
+    viewport/content/Node_0/dropitem, with its position (no item name). None if there's none."""
+    reply = mod_send("list", timeout=5.0)
+    try:
+        els = json.loads(reply) if reply else []
+    except ValueError:
+        return None
+    best = None
+    for e in els:
+        if not (isinstance(e, dict) and e.get("path", "").endswith("dropitem")
+                and "itemlist" in e.get("path", "") and OWNED_RE.search(e.get("text", ""))):
+            continue
+        dx, dy = abs(e["x"] - fx), abs(e["y"] - fy)
+        if dx > e.get("w", 0.08) * 0.75 or dy > e.get("h", 0.13):   # not this icon's entry
+            continue
+        if best is None or dx + dy < best[0]:
+            best = (dx + dy, e)
+    if not best:
+        return None
+    parts = [t.strip() for t in best[1]["text"].replace("\xa0", " ").split("|")]
+    i = next(i for i, t in enumerate(parts) if OWNED_RE.search(t))
+    got = re.fullmatch(r"[x×X]?\s*(\d+)", parts[i - 1]) if i > 0 else None
+    return int(got.group(1)) if got else None, int(OWNED_RE.search(parts[i]).group(1))
+
+
 def read_drop(fx, fy, want=None):
     """Through the mod, the reward under (fx, fy) (fractions of the window): (item name, how many
     dropped, how many owned) - each None if it can't be read.
@@ -580,7 +607,14 @@ def read_drop(fx, fy, want=None):
     want: the goal item's name once known. Some drops look nearly alike (the gear Diagram
     scrolls differ only in the small figure), so the picture can match the wrong one: the
     entry is then picked from the reward list by name, wherever the picture matched. Returns
-    None if the list was read and that item isn't in it."""
+    None if the list was read and that item isn't in it.
+
+    A normal quest's results screen has a skip button over everything, so pointing at the icon
+    reaches that button; there the count and owned come from the mod's list instead (by
+    position, without the name)."""
+    listed = listed_drop(fx, fy)
+    if listed:
+        return want, listed[0], listed[1]
     reply = mod_send(f"inspect {fx:.4f} {fy:.4f}", timeout=5.0) or ""
     m = re.search(r"\bname=([^,<>{}=]+?),type=", reply)
     name = want or (m.group(1).strip() if m else None)
