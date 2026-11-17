@@ -75,7 +75,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-VERSION = "1.5.0"   # TACMonkey release (the setup and the window show it)
+VERSION = "1.5.1"   # TACMonkey release (the setup and the window show it)
 MOD_VERSION = "1.2.1"  # TAC Auto Tap version shipped with this release (release/build.py checks it)
 WINDOW_TITLE = "The Alchemist Code"
 # APP_DIR holds your buttons, scripts and settings; RES_DIR the files shipped with the program.
@@ -503,6 +503,17 @@ def load_goal(script=None):
             "ref": ref if isinstance(ref, int) and 100 <= ref <= 10000 else None,
             "name": name if isinstance(name, str) and name else None,
             "img": img}
+
+
+GOAL_TOP = 0.65   # share of the goal picture that is matched (from the top)
+
+
+def goal_template(goal):
+    """The part of the goal picture to look for: its top. The results screen draws the drop
+    count ("x85") over the bottom of the icon, and it changes every run - with it, a captured
+    icon scored 0.79 on the results screen; its top 65% scores 0.97."""
+    img = goal["img"]
+    return img[:max(8, int(img.shape[0] * GOAL_TOP))]
 
 
 def set_goal(script, **changes):
@@ -1524,6 +1535,9 @@ def check(script=None):
         sys.exit("Captured a black frame - make sure the game is open and not minimized.")
     every = every_script_templates(script)
     scores = [(name, *score_and_colour(frame, tpl, ref)) for name, tpl, ref in templates + every]
+    goal = load_goal(script)
+    if goal and goal["img"] is not None:
+        scores.append(("item goal", *score_and_colour(frame, goal_template(goal), goal["ref"])))
     groups = {**every_script_groups(every),
               **group_templates(templates, priority_order(script), step_map(script))}
     opts = step_options(script)
@@ -1619,7 +1633,7 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
     goal = load_goal(script)
     goal_tpl, goal_name, goal_last, goal_drops = None, None, 0.0, 0
     if goal and goal["img"] is not None and goal["count"]:
-        goal_tpl, goal_name = [("goal item", goal["img"], goal["ref"])], goal["name"]
+        goal_tpl, goal_name = [("goal item", goal_template(goal), goal["ref"])], goal["name"]
         log(f"Item goal: stop at {goal['count']} {goal_name or '(the goal item)'}" +
             (" owned." if status else " drops - the mod isn't running, so it counts drops "
              "instead of reading Owned."))
