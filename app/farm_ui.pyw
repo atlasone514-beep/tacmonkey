@@ -1163,8 +1163,7 @@ class App:
             _, buf = farm.cv2.imencode(".png", small)
             self.goal_photo = tk.PhotoImage(data=base64.b64encode(buf.tobytes()))
             self.goal_thumb.config(image=self.goal_photo, text="", width=0, height=0)
-        self.goal_name.config(text=(goal["name"] or "(name read on the first drop)")
-                              if img is not None else "")
+        self.goal_name.config(text=(goal["name"] or "") if img is not None else "")
 
     def goal_count_changed(self):
         if self.goal_loading:

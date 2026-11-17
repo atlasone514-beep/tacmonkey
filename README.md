@@ -52,10 +52,12 @@ Without the mod, the farm uses touch taps (the game window must stay uncovered).
 **Item goal:** under *Stop when*, "Item: I have [N] of [picture]" stops the script once you own
 N of an item. Capture the item's icon on a results screen (just the picture, not the `x12`),
 or load it from a file. On each results screen the farm finds the icon and, through the mod,
-reads the item's name and its "(Owned: N)", then stops there before tapping on. Once the name
-is known, the item is picked from the drop list by name, so look-alike icons (the gear Diagram
-scrolls) aren't mixed up. Without the mod it counts the runs the item dropped in instead. It
-only sees the drops showing on screen. The goal is saved with the script and travels in a
+reads how many dropped and the item's "(Owned: N)", then stops there before tapping on. The
+farm matches the top of the picture, since the drop count is drawn over the icon's bottom.
+Where a screen also names its drops (the Genesis rewards), the item is picked by name, so
+look-alike icons (the gear Diagram scrolls) aren't mixed up; a normal quest's results don't
+name them, so pick an icon that doesn't look like another drop. Without the mod it counts the
+runs the item dropped in instead. It only sees the drops showing on screen. The goal is saved with the script and travels in a
 shared `.tacscript`.
 
 **Check screen** shows each image's score. "Shape matches, but colours are off" means the
