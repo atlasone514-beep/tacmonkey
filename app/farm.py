@@ -75,7 +75,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-VERSION = "1.4.0"   # TACMonkey release (the setup and the window show it)
+VERSION = "1.5.0"   # TACMonkey release (the setup and the window show it)
 MOD_VERSION = "1.2.1"  # TAC Auto Tap version shipped with this release (release/build.py checks it)
 WINDOW_TITLE = "The Alchemist Code"
 # APP_DIR holds your buttons, scripts and settings; RES_DIR the files shipped with the program.
@@ -120,6 +120,20 @@ STUCK_REPEAT = 4  # same button tapped this many times in a row -> log it and sa
 STUCK_REPEAT_FOR = {"09": 10}
 RESULTS_REPEAT = 10
 STUCK_DIR = APP_DIR / "stuck"
+ERROR_LOG = APP_DIR / "errors.log"   # full details of unexpected errors (newest last)
+
+
+def log_error(where):
+    """Append the current exception's full traceback to errors.log; returns the file's name.
+    Call it inside an except block."""
+    import traceback
+    try:
+        with ERROR_LOG.open("a", encoding="utf-8") as f:
+            f.write(f"--- {time.strftime('%Y-%m-%d %H:%M:%S')} {where} (TACMonkey {VERSION}) ---\n")
+            f.write(traceback.format_exc() + "\n")
+        return ERROR_LOG.name
+    except OSError:
+        return None
 VK_F8, VK_F9 = 0x77, 0x78
 
 user32, gdi32 = ctypes.windll.user32, ctypes.windll.gdi32
@@ -464,6 +478,122 @@ def remove_image(script, name):
     (folder / REF_FILE.name).write_text(json.dumps(refs, indent=2))
 
 
+# ---------- item goal: stop when you own N of an item ----------
+GOAL_DIR = "_goal"        # in a script's folder: the goal item's picture (not a button)
+GOAL_GAP = 5.0            # icon unseen this long = the results screen was left (next sighting
+                          # is the next run's)
+OWNED_RE = re.compile(r"\(Owned:?\s*(\d+)\)")
+
+
+def goal_image_path(script=None):
+    return script_dir(script) / GOAL_DIR / "item.png"
+
+
+def load_goal(script=None):
+    """The script's item goal: {"count": N (0 = off), "ref": capture width, "name": the item's
+    name once read from the game, "img": the picture or None}, or None if it has none."""
+    g = script_settings(script).get("goal")
+    g = g if isinstance(g, dict) else {}
+    f = goal_image_path(script)
+    img = cv2.imread(str(f)) if f.exists() else None
+    if img is None and not g:
+        return None
+    count, ref, name = g.get("count"), g.get("ref"), g.get("name")
+    return {"count": count if isinstance(count, int) and count > 0 else 0,
+            "ref": ref if isinstance(ref, int) and 100 <= ref <= 10000 else None,
+            "name": name if isinstance(name, str) and name else None,
+            "img": img}
+
+
+def set_goal(script, **changes):
+    """Change the script's goal settings (count / ref / name); a value of None removes it."""
+    settings = script_settings(script)
+    g = settings.get("goal") if isinstance(settings.get("goal"), dict) else {}
+    for k, v in changes.items():
+        if v is None:
+            g.pop(k, None)
+        else:
+            g[k] = v
+    if g:
+        settings["goal"] = g
+    else:
+        settings.pop("goal", None)
+    _write_settings(script, settings)
+
+
+def set_goal_image(script, img, ref_width):
+    """Save the goal item's picture (cut from the game at window width ref_width)."""
+    f = goal_image_path(script)
+    f.parent.mkdir(parents=True, exist_ok=True)
+    if img.ndim == 3 and img.shape[2] == 4:
+        img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
+    cv2.imwrite(str(f), img)
+    set_goal(script, ref=int(ref_width), name=None)   # a new item: its name is read again
+    return f
+
+
+def clear_goal(script):
+    """Remove the item goal (its picture goes to the script's _old folder, not erased)."""
+    f = goal_image_path(script)
+    if f.exists():
+        old = script_dir(script) / "_old"
+        old.mkdir(exist_ok=True)
+        f.replace(old / f"goal item {time.strftime('%Y%m%d-%H%M%S')}.png")
+    set_goal(script, count=None, ref=None, name=None)
+
+
+def grab_goal(script=None):
+    """Drag a box round the item's icon on a fresh capture of the game; saves it as the goal."""
+    hwnd, region = find_window()
+    if not region:
+        sys.exit(f"Window '{WINDOW_TITLE}' not found or minimized.")
+    frame = capture(hwnd, region)
+    if frame is None:
+        sys.exit("Captured a black frame - make sure the game is open and not minimized.")
+    x, y, w, h = cv2.selectROI("Drag a box around the item's icon (just the picture), ENTER to "
+                               "save, C to cancel", frame, showCrosshair=False)
+    cv2.destroyAllWindows()
+    if w == 0 or h == 0:
+        sys.exit("Cancelled.")
+    return set_goal_image(script, frame[y:y + h, x:x + w], frame.shape[1])
+
+
+def drop_texts(chunk):
+    return [t.replace("\xa0", " ").strip() for t in re.findall(r"text:([^,\]]*)", chunk)]
+
+
+def read_drop(fx, fy, want=None):
+    """Through the mod, the reward under (fx, fy) (fractions of the window): (item name, how many
+    dropped, how many owned) - each None if it can't be read.
+
+    want: the goal item's name once known. Some drops look nearly alike (the gear Diagram
+    scrolls differ only in the small figure), so the picture can match the wrong one: the
+    entry is then picked from the reward list by name, wherever the picture matched. Returns
+    None if the list was read and that item isn't in it."""
+    reply = mod_send(f"inspect {fx:.4f} {fy:.4f}", timeout=5.0) or ""
+    m = re.search(r"\bname=([^,<>{}=]+?),type=", reply)
+    name = want or (m.group(1).strip() if m else None)
+    items = mod_send(f"items {fx:.4f} {fy:.4f}", timeout=8.0) or ""
+    chunks = items.split(" ||| ")[1:] if items.startswith("ok") else []
+    if name:
+        named = [c for c in chunks if f"name={name},type=" in c]
+        if want and not named and any(",type=" in c for c in chunks):
+            return None   # the list names its items, and this one isn't among them
+        chunks = named
+    if len(chunks) != 1:   # no list, or can't tell which entry: the icon's own description
+        chunks = [reply] if OWNED_RE.search(reply) else []
+    if not chunks:
+        return name, None, None
+    t = drop_texts(chunks[0])
+    i = next((i for i, x in enumerate(t) if OWNED_RE.search(x)), None)
+    if i is None:
+        return name, None, None
+    owned = int(OWNED_RE.search(t[i]).group(1))
+    # the dropped count sits just before "(Owned" and reads "12", "x12" or "×12"
+    got = re.fullmatch(r"[x×X]?\s*(\d+)", t[i - 1]) if i > 0 else None
+    return name, int(got.group(1)) if got else None, owned
+
+
 def script_settings(script=None):
     f = script_dir(script) / SCRIPT_FILE
     try:
@@ -578,10 +708,15 @@ def export_script(script, path):
                 "options": {k: sorted(v) for k, v in step_options(script).items()
                             if any(group_key(n, out_steps) == k for n in images)},
                 "spots": {k: list(v) for k, v in load_spots(script).items()}}
+    goal = load_goal(script)
+    if goal and goal["img"] is not None:
+        manifest["goal"] = {"count": goal["count"], "ref": goal["ref"], "name": goal["name"]}
     with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as z:
         z.writestr("manifest.json", json.dumps(manifest, indent=2))
         for name, data in files.items():
             z.writestr(f"images/{name}.png", data)
+        if "goal" in manifest:
+            z.write(goal_image_path(script), "goal/item.png")
     return len(files), renamed, missing
 
 
@@ -641,6 +776,21 @@ def import_script(path, name=None):
                 continue
             if isinstance(key, str) and SHARE_NAME.match(key) and 0 <= x <= 1 and 0 <= y <= 1:
                 spots[key] = [x, y]
+        goal = None   # the item goal: its picture and settings, checked like the buttons
+        raw_goal = manifest.get("goal")
+        if isinstance(raw_goal, dict):
+            try:
+                info = z.getinfo("goal/item.png")
+                if info.file_size <= SHARE_MAX_IMAGE_BYTES:
+                    img = cv2.imdecode(np.frombuffer(z.read(info), np.uint8), cv2.IMREAD_COLOR)
+                    if img is not None:
+                        count, ref, gname = (raw_goal.get("count"), raw_goal.get("ref"),
+                                             raw_goal.get("name"))
+                        goal = (img, count if isinstance(count, int) and 0 < count < 10**9 else 0,
+                                ref if isinstance(ref, int) and 100 <= ref <= 10000 else None,
+                                gname[:80] if isinstance(gname, str) else None)
+            except KeyError:
+                notes.append("The item goal's picture is missing from the file - skipped")
         flow = {}
         raw_flow = manifest.get("flow") or {}
         for key, n in (raw_flow.items() if isinstance(raw_flow, dict) else []):
@@ -687,6 +837,10 @@ def import_script(path, name=None):
     if opts:
         settings["options"] = dict(sorted(opts.items()))
     _write_settings(script, settings)
+    if goal:
+        img, count, ref, gname = goal
+        set_goal_image(script, img, ref or 0)   # (no width: removed again just below)
+        set_goal(script, count=count or None, ref=ref, name=gname or None)
     if manifest.get("app_version") and manifest["app_version"] != VERSION:
         notes.append(f"made with TACMonkey {manifest['app_version']} (you have {VERSION})")
     return script, len(decoded), notes
@@ -940,6 +1094,7 @@ ACTIONS = {AP_REFILL: ("AP refill - Alchemy Drops",
                        "the game caps it), OK, OK. Stops the farm when a leaf limit is reached. "
                        "Needs the mod.")}
 ACTION_CHECK = 1.0  # seconds between checks for an action's screen
+REFILL_TRIES = 3    # AP refills in a row that may fail before the run ends
 
 
 def action_badge(text):
@@ -1157,9 +1312,33 @@ def color_ok(frame, tpl, x, y):
     The match score mostly ignores colour, so e.g. the Fire tab icon scores 0.82-0.87 on a
     selected (bright) tab or behind a dimmed popup. Real matches differ by ~11/255 at most.
     """
+    return color_diff(frame, tpl, x, y) <= COLOR_TOL
+
+
+def color_diff(frame, tpl, x, y):
+    """Mean colour difference (0-255) between the image and the screen at top-left (x, y).
+
+    Both are blurred a little first. An image grabbed at another window size is resized to
+    match, which softens its edges; compared pixel by pixel, those soft edges counted as wrong
+    colours (an enlarged "Try Again!" read ~13 against the limit of 14 and was sometimes
+    skipped). Blurring compares the colours themselves; a dimmed or brighter screen still differs.
+    """
     h, w = tpl.shape[:2]
-    patch = frame[y:y + h, x:x + w].astype(np.int16)
-    return float(np.abs(patch - tpl.astype(np.int16)).mean()) <= COLOR_TOL
+    patch = frame[y:y + h, x:x + w]
+    if patch.shape[:2] != (h, w):
+        return 255.0
+    a = cv2.GaussianBlur(patch, (5, 5), 0).astype(np.int16)
+    b = cv2.GaussianBlur(tpl, (5, 5), 0).astype(np.int16)
+    return float(np.abs(a - b).mean())
+
+
+def score_and_colour(frame, tpl, ref_width):
+    """(shape score, colour difference) of the best match - what Check screen shows."""
+    t, spots = _search(frame, tpl, ref_width)
+    if not spots:
+        return 0.0, None
+    score, x, y = spots[0]
+    return score, color_diff(frame, t, x, y)
 
 
 # Fast search: look on a half-size copy of the screen first (about 4x less work), then
@@ -1333,7 +1512,8 @@ def act_finished(frame, groups, markers, quest_steps=(QUEST_BUTTON,)):
 def check(script=None):
     """Score every button image of a script on the current screen.
 
-    Returns ((width, height), [(name, score), ...], what-it-would-click text).
+    Returns ((width, height), [(name, score, colour difference), ...], what-it-would-click
+    text).
     """
     templates = load_templates(script)
     hwnd, region = find_window()
@@ -1343,7 +1523,7 @@ def check(script=None):
     if frame is None:
         sys.exit("Captured a black frame - make sure the game is open and not minimized.")
     every = every_script_templates(script)
-    scores = [(name, match(frame, tpl, ref)[0]) for name, tpl, ref in templates + every]
+    scores = [(name, *score_and_colour(frame, tpl, ref)) for name, tpl, ref in templates + every]
     groups = {**every_script_groups(every),
               **group_templates(templates, priority_order(script), step_map(script))}
     opts = step_options(script)
@@ -1367,11 +1547,20 @@ def check(script=None):
     return (region[2], region[3]), scores, action
 
 
+def check_note(score, diff):
+    """'<- seen', or why a good shape match still isn't tapped."""
+    if score < THRESHOLD:
+        return ""
+    if diff is not None and diff > COLOR_TOL:
+        return f"<- shape matches, but colours are off ({diff:.0f} > {COLOR_TOL}) - not tapped"
+    return "<- seen"
+
+
 def test(script=None):
     (w, h), scores, action = check(script)
     print(f"Window {w}x{h}. Threshold {THRESHOLD}. Scores on the current screen:")
-    for name, score in scores:
-        print(f"  {name:<16} {score:.2f}")
+    for name, score, diff in scores:
+        print(f"  {name:<16} {score:.2f}  {check_note(score, diff)}")
     print(action)
 
 
@@ -1427,6 +1616,13 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
             log("WARNING: " + mod_mismatch(status))
     else:
         log("TAC Auto Tap mod not running - using touch taps.")
+    goal = load_goal(script)
+    goal_tpl, goal_name, goal_last, goal_drops = None, None, 0.0, 0
+    if goal and goal["img"] is not None and goal["count"]:
+        goal_tpl, goal_name = [("goal item", goal["img"], goal["ref"])], goal["name"]
+        log(f"Item goal: stop at {goal['count']} {goal_name or '(the goal item)'}" +
+            (" owned." if status else " drops - the mod isn't running, so it counts drops "
+             "instead of reading Owned."))
     refill = None  # the AP refill action, if this script uses it
     if AP_REFILL in used_actions(script):
         import genesis_farm  # its refill routine (imported here: it imports this file)
@@ -1438,6 +1634,7 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
             f"{genesis_farm.AP_ITEM}{limits}." +
             ("" if status else " (Needs the mod - it isn't running.)"))
     last_ap_check = last_peddler_check = 0.0
+    refill_fails = 0   # AP refills in a row that didn't finish
     log("F8 = pause/resume, F9 = stop (from any window). Keep the game open and uncovered.")
     flow = FlowRecorder(script)  # learns the arrows the customizer draws
     last_click, runs, f8_prev = {}, 0, False
@@ -1501,14 +1698,59 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
                     reason = str(e)
                     say(reason)
                     break
-                except RuntimeError as e:
-                    reason = f"AP refill failed: {e}"
-                    break
+                except Exception as e:
+                    # a missed button mid-refill: leave the refill window be and try again on the
+                    # next check, rather than ending the whole run
+                    refill_fails += 1
+                    if not isinstance(e, RuntimeError):
+                        log_error("AP refill")
+                    if refill_fails >= REFILL_TRIES:
+                        reason = f"AP refill failed {refill_fails} times in a row: {e}"
+                        break
+                    say(f"AP refill didn't finish ({e}) - trying again")
+                    last_ap_check = time.time() - ACTION_CHECK + 2.0
+                    time.sleep(1.0)
+                    continue
+                refill_fails = 0
                 last = ACTIONS[AP_REFILL][0]
                 last_action = last_ap_check = time.time()
                 repeat_button, warned = None, False
                 show("Running")
                 continue
+
+        if goal_tpl:   # results screen with the goal item: read it before tapping on
+            ghit = find_button(frame, goal_tpl, False)
+            if ghit:
+                fresh = time.time() - goal_last > GOAL_GAP
+                goal_last = time.time()
+                if fresh:
+                    res = (read_drop(ghit[2] / region[2], ghit[3] / region[3], goal_name)
+                           if status else (None, None, None))
+                    if res is None:   # the picture matched a look-alike: not the goal item
+                        name = got = owned = None
+                    else:
+                        name, got, owned = res
+                    if name and name != goal_name:
+                        goal_name = name
+                        set_goal(script, name=name)
+                    label = goal_name or "goal item"
+                    xn = f" x{got}" if got else ""
+                    if res is None:
+                        say(f"Item goal: no {label} in this run's drops")
+                        done = False
+                    elif owned is not None:
+                        say(f"Item goal: {label}{xn} (owned {owned} / {goal['count']})")
+                        done = owned >= goal["count"]
+                    else:
+                        goal_drops += 1
+                        say(f"Item goal: {label} dropped{xn} ({goal_drops} / {goal['count']} "
+                            "drops)")
+                        done = goal_drops >= goal["count"]
+                    if done:
+                        reason = (f"Reached {goal['count']} {label}" +
+                                  (f" (owned {owned})" if owned is not None else " drops") +
+                                  " - stopped on the results screen.")
+                        break
 
         back = act_finished(frame, groups, markers, quest_steps)
         if back and time.time() - last_click.get(BACK_MARKER, 0) >= CLICK_COOLDOWN:

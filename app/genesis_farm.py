@@ -114,8 +114,12 @@ def plan(data, units, counts=None, solo=False):
     return sorted(stages.values(), key=lambda s: (-s["chapter"], s["hard"]))
 
 
+ELEMENTS = ("Fire", "Water", "Thunder", "Wind", "Light", "Dark")   # Ex drops "Fire Soul Shard" ...
+
+
 class GenesisFarm:
-    def __init__(self, log=print, stop=None, mode="hard", pause=None, status=None, leaves=None):
+    def __init__(self, log=print, stop=None, mode="hard", pause=None, status=None, leaves=None,
+                 on_shards=None):
         self.log = log
         self.stop = stop or threading.Event()
         self.pause = pause or threading.Event()   # set = pause before the next stage
@@ -123,6 +127,7 @@ class GenesisFarm:
         self.mode = mode
         self.pic, self.title_re, self.label = MODES[mode]
         self.shards = {}   # unit -> shards got this session
+        self.on_shards = on_shards or (lambda shards: None)   # called with self.shards
         self.leaves = leaves or leaf_settings()
         self.leaves_used = 0
         self.leaves_left = None   # Alchemy Drops owned, as last read
@@ -179,8 +184,15 @@ class GenesisFarm:
             return e
         return None
 
-    def press(self, e):
+    def press(self, e, what="button"):
+        if not e:
+            raise RuntimeError(f"{what} wasn't on screen to tap")
         return self.tap((e["x"], e["y"]))
+
+    def find_ok(self, wait=0.0):
+        """The OK button of the open dialog (either width of "OK"), waiting up to `wait` s."""
+        look = lambda: self.find(text="OK") or self.find(text="\uff2f\uff2b")
+        return self.wait_for(look, wait) if wait else look()
 
     # ---------- where are we ----------
     def on_chapter_list(self):
@@ -390,8 +402,8 @@ class GenesisFarm:
                 self.leaves_left = int(parts[i - 1])
             if floor is not None and self.leaves_left is not None and self.leaves_left < floor:
                 self.leaf_stop(f"Leaf limit: fewer than {floor} {AP_ITEM} left")
-            self.press(row)
-            if not self.wait_for(lambda: self.find(text="OK") or self.find(text="ＯＫ"), 6):
+            self.press(row, AP_ITEM)
+            if not self.find_ok(6):
                 raise RuntimeError("Alchemy Drops confirm didn't open")
         self.sleep(0.6)
         got = self.set_slider(want)
@@ -401,12 +413,13 @@ class GenesisFarm:
             self.leaf_stop(f"Couldn't set {AP_ITEM} to {want}")
         if got != want:   # the game caps it so AP can't pass its maximum
             self.log(f"  (the game allows only {got} {AP_ITEM} right now - using {got})")
-        ok = self.find(text="OK") or self.find(text="ＯＫ")
-        self.press(ok)
-        done = self.wait_for(lambda: self.find(text="OK") or self.find(text="ＯＫ"), 8)
+        # the OK can take a moment to show (or be briefly covered): wait for it, don't look once
+        self.press(self.find_ok(5), "The Alchemy Drops amount step's OK")
+        done = self.find_ok(8)
         self.sleep(0.8)
-        if done:
-            self.press(self.find(text="OK") or self.find(text="ＯＫ"))   # "AP successfully replenished"
+        ok = self.find_ok() if done else None   # "AP successfully replenished" - may close by itself
+        if ok:
+            self.press(ok)
         self.leaves_used += got
         if self.leaves_left is not None:
             self.leaves_left -= got
@@ -434,6 +447,7 @@ class GenesisFarm:
         (shards got, whether it skipped)."""
         got = {}
         did_skip = False
+        refill_fails = 0
         for _ in range(30):
             state, els = self.screen_state()
             if state == "team":
@@ -459,7 +473,15 @@ class GenesisFarm:
             elif state == "peddler":
                 self.dismiss_peddler(els)
             elif state == "apwindow":
-                self.replenish_ap()
+                try:
+                    self.replenish_ap()
+                    refill_fails = 0
+                except RuntimeError as e:   # a missed button mid-refill: look again
+                    refill_fails += 1
+                    if refill_fails >= 3:
+                        raise
+                    self.log(f"  AP refill didn't finish ({e}) - trying again")
+                    self.sleep(1.5)
             elif state == "result":
                 okb = next((e for e in els if e["path"].endswith("btn_ok")), None)
                 if okb:
@@ -533,6 +555,7 @@ class GenesisFarm:
             self.log(f"  {key}: done - {txt}")
             for u, n in got.items():
                 self.shards[u] = self.shards.get(u, 0) + n
+            self.on_shards(dict(self.shards))
             self.status(f"{key} done - {self.shard_summary()}")
         self.tap(TEAM_BACK)   # goes back to the stage popup
         for _ in range(10):
@@ -546,10 +569,17 @@ class GenesisFarm:
             raise RuntimeError(f"{key}: didn't get back to the map")
         self.sleep(0.8)
 
+    def elemental(self):
+        """{element: shards} got this session (Ex drops the six elemental Soul Shards)."""
+        return {el: self.shards[f"{el} Soul Shard"] for el in ELEMENTS
+                if self.shards.get(f"{el} Soul Shard")}
+
     def shard_summary(self):
-        what = "Shards" if self.mode == "hard" else "Shards and pieces"
+        if self.mode == "extra":   # just the elemental shards: the Diagram Pieces made it long
+            got = ", ".join(f"{el} x{n}" for el, n in self.elemental().items()) or "none"
+            return f"Elemental shards this run: {got}"
         got = ", ".join(f"{u} x{n}" for u, n in self.shards.items()) or "none"
-        return f"{what} this run: {got}"
+        return f"Shards this run: {got}"
 
     def wait_if_paused(self):
         """Pause point (between stages). True if it paused - the caller then finds its way back,

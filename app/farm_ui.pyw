@@ -30,6 +30,8 @@ FG, MUTED, DARK = "#ececec", "#9b9b9b", "#151515"
 GREEN, YELLOW, ORANGE, RED, GREY, BLUE = ("#12a312", "#e8b33c", "#e8833f", "#e5534b",
                                           "#5c5c5c", "#5aa2f0")
 ACCENT_TEXT = "#8cc2ff"   # blue text on the selected page's tint
+ELEMENT_COLORS = {"Fire": "#e5534b", "Water": "#5aa2f0", "Thunder": "#e8b33c",
+                  "Wind": "#3fb950", "Light": "#f0e6c0", "Dark": "#b48ce6"}
 FONT = "Segoe UI"
 SETTINGS = farm.APP_DIR / "ui_settings.json"  # remembers script and checkboxes
 BAD_CHARS = set('\\/:*?"<>|')
@@ -67,6 +69,7 @@ class App:
         root.geometry("820x800")
         self.build()
         self.load_settings()
+        self.refresh_goal()
         self.set_state("Idle", "Open the game on its quest map, then press Start.")
         self.update_buttons()
         root.protocol("WM_DELETE_WINDOW", self.close)
@@ -538,10 +541,37 @@ class App:
         self.section(opts, "Stop when")
         row = tk.Frame(opts, bg=PANEL)
         row.pack(fill="x")
-        self.label(row, "Runs").pack(side="left")
+        self.label(row, "Runs", width=5, anchor="w").pack(side="left")
         self.max_spin = self.spinbox(row, self.max_runs, from_=0, to=9999, increment=1)
         self.max_spin.pack(side="left", padx=6)
         self.label(row, "0 = never", color=MUTED).pack(side="left")
+        # item goal: "Item  I have [2000] of [icon] Mechanical Wing Piece  Capture  From file  Clear"
+        row = tk.Frame(opts, bg=PANEL)
+        row.pack(fill="x", pady=(6, 0))
+        self.label(row, "Item", width=5, anchor="w").pack(side="left")
+        self.label(row, "I have").pack(side="left")
+        self.goal_count = tk.StringVar(value="")
+        self.goal_spin = self.spinbox(row, self.goal_count, from_=0, to=999999, increment=10,
+                                      width=7)
+        self.goal_spin.pack(side="left", padx=6)
+        self.goal_count.set("")
+        self.label(row, "of").pack(side="left")
+        self.goal_thumb = tk.Label(row, bg=DARK, width=6, height=1, text="none", fg=MUTED,
+                                   font=(FONT, 8))
+        self.goal_thumb.pack(side="left", padx=6)
+        self.goal_name = self.label(row, "", size=9, color=MUTED)
+        self.goal_name.pack(side="left")
+        self.goal_buttons = [self.small_button(row, "Clear", self.goal_clear),
+                             self.small_button(row, "From file", self.goal_from_file),
+                             self.small_button(row, "Capture", self.goal_capture)]
+        for b in self.goal_buttons:
+            b.pack(side="right", padx=(4, 0))
+        self.goal_count.trace_add("write", lambda *_: self.goal_count_changed())
+        self.goal_loading = False
+        self.label(opts, "Item: on each results screen the farm finds the item's icon and reads "
+                         "its \"(Owned: N)\", then stops there once you have that many. "
+                         "Saved with the script. Blank or 0 = no item goal.", size=9,
+                   color=MUTED, wraplength=520, justify="left").pack(anchor="w", pady=(4, 0))
         self.section(opts, "While running")
         self.act_check = self.check(opts, "Go to the next act when one is finished",
                                     self.act_switch)
@@ -793,6 +823,20 @@ class App:
         self.small_button(row, "Tick all", lambda: self.genesis_tick_all("extra")).pack(side="left")
         self.genesis_info["extra"] = self.label(row, "", size=9, color=MUTED)
         self.genesis_info["extra"].pack(side="left", padx=10)
+        # this run's elemental Soul Shards, counted up as each stage finishes
+        tally = tk.Frame(frame, bg=PANEL)
+        tally.pack(fill="x", pady=(10, 0))
+        self.label(tally, "Elemental shards this run", size=9, color=MUTED).pack(side="left")
+        self.element_labels = {}
+        for el in ("Fire", "Water", "Thunder", "Wind", "Light", "Dark"):
+            lab = self.label(tally, f"{el} 0", size=9, bold=True, color=ELEMENT_COLORS[el])
+            lab.pack(side="left", padx=(12, 0))
+            self.element_labels[el] = lab
+
+    def show_elemental(self, shards):
+        """Ex page tally: shards = {"Fire Soul Shard": 12, ...} (missing = 0)."""
+        for el, lab in getattr(self, "element_labels", {}).items():
+            lab.config(text=f"{el} {shards.get(f'{el} Soul Shard', 0)}")
 
     def genesis_tick_all(self, mode):
         """Tick every pick, or untick them all if they're all ticked already."""
@@ -903,6 +947,8 @@ class App:
         self.genesis_name = name
         self.set_state(name, f"{', '.join(picks)} -> {len(stages)} stages")
         self.log(f"--- {name}: {', '.join(picks)} ---", "muted")
+        if mode == "extra":
+            self.show_elemental({})
 
         def job():
             try:
@@ -910,10 +956,13 @@ class App:
                 reason = genesis_farm.GenesisFarm(
                     log=lambda m: self.q.put(("log", m)), stop=self.genesis_stop, mode=mode,
                     pause=self.genesis_pause, leaves=leaves,
-                    status=lambda t: self.q.put(("gstatus", t))).run(picks, counts, solo)
+                    status=lambda t: self.q.put(("gstatus", t)),
+                    on_shards=lambda s: self.q.put(("gshards", s))).run(picks, counts, solo)
             except Exception as e:
-                reason = f"{name} error: {e}"
-                self.q.put(("log", reason, "bad"))
+                saved = farm.log_error(name)
+                reason = f"{name} error: {e!r}"
+                self.q.put(("log", reason + (f" (details saved in {saved})" if saved else ""),
+                            "bad"))
             self.q.put(("gdone", reason))
 
         self.genesis_worker = threading.Thread(target=job, daemon=True)
@@ -997,8 +1046,10 @@ class App:
         self.enable(self.stop_btn, busy)
         paused = (run and self.state == "Paused") or (grun and self.genesis_pause.is_set())
         self.pause_btn.config(text="Resume" if paused else "Pause")
-        for w in (self.max_spin, self.thr_spin, self.act_check, self.script_menu):
+        for w in (self.max_spin, self.goal_spin, self.thr_spin, self.act_check, self.script_menu):
             w.config(state="disabled" if run else "normal")
+        for b in self.goal_buttons:   # the goal is read at Start
+            self.enable(b, not run)
         self.enable(self.new_btn, not run)
         self.enable(self.import_btn, not run)  # importing switches to the new script
         for sp in self.leaf_spins:   # leaf limits are read at Start
@@ -1050,8 +1101,10 @@ class App:
             reason = str(e)
             self.q.put(("log", reason, "bad"))
         except Exception as e:
+            saved = farm.log_error(f"script {script}")
             reason = f"Error: {e!r}"
-            self.q.put(("log", reason, "bad"))
+            self.q.put(("log", reason + (f" (details saved in {saved})" if saved else ""),
+                        "bad"))
         self.q.put(("done", reason))
 
     def toggle_merc(self):
@@ -1091,8 +1144,85 @@ class App:
         if self.script.get() not in farm.list_scripts():
             self.script.set(farm.DEFAULT_SCRIPT)
 
+    # ---------- item goal ----------
+    def refresh_goal(self):
+        """Show the picked script's item goal (picture, count, item name)."""
+        goal = farm.load_goal(self.script.get())
+        self.goal_loading = True
+        self.goal_count.set(str(goal["count"]) if goal and goal["count"] else "")
+        self.goal_loading = False
+        img = goal["img"] if goal else None
+        if img is None:
+            self.goal_photo = None
+            self.goal_thumb.config(image="", text="none", width=6, height=1)
+        else:
+            h, w = img.shape[:2]
+            sc = min(56 / w, 30 / h, 1.0)
+            small = farm.cv2.resize(img, (max(1, int(w * sc)), max(1, int(h * sc))),
+                                    interpolation=farm.cv2.INTER_AREA)
+            _, buf = farm.cv2.imencode(".png", small)
+            self.goal_photo = tk.PhotoImage(data=base64.b64encode(buf.tobytes()))
+            self.goal_thumb.config(image=self.goal_photo, text="", width=0, height=0)
+        self.goal_name.config(text=(goal["name"] or "(name read on the first drop)")
+                              if img is not None else "")
+
+    def goal_count_changed(self):
+        if self.goal_loading:
+            return
+        text = self.goal_count.get().strip()
+        try:
+            n = max(0, int(text)) if text else 0
+        except ValueError:
+            return
+        farm.set_goal(self.script.get(), count=n or None)
+
+    def goal_capture(self):
+        self.log("Item goal: drag a box round the item's icon on a results screen "
+                 "(just the picture, not the x12), then press Enter", "info")
+        script = self.script.get()
+
+        def job():
+            try:
+                farm.grab_goal(script)
+                self.q.put(("log", f"Saved the item goal's picture for script '{script}'", "good"))
+            except SystemExit as e:
+                self.q.put(("log", f"Item goal: {e}", "bad"))
+            except Exception as e:
+                self.q.put(("log", f"Item goal capture failed: {e!r}", "bad"))
+            self.q.put(("grab_done", self.refresh_goal))
+
+        threading.Thread(target=job, daemon=True).start()
+
+    def goal_from_file(self):
+        path = filedialog.askopenfilename(
+            parent=self.root, title="Picture of the item",
+            filetypes=[("Images", "*.png *.jpg *.jpeg *.webp *.bmp")])
+        if not path:
+            return
+        img = farm.cv2.imread(path, farm.cv2.IMREAD_UNCHANGED)
+        if img is None:
+            messagebox.showerror("Item goal", "Couldn't read that image.", parent=self.root)
+            return
+        _, region = farm.find_window()
+        width = region[2] if region else 2405  # assume it was cut from the game at its current size
+        farm.set_goal_image(self.script.get(), img, width)
+        self.log(f"Item goal picture from {Path(path).name} (window width {width})", "good")
+        self.refresh_goal()
+
+    def goal_clear(self):
+        goal = farm.load_goal(self.script.get())
+        if not goal:
+            return
+        if not messagebox.askyesno("Item goal", "Remove this script's item goal?\n\nIts picture "
+                                   "goes to the script's _old folder.", parent=self.root):
+            return
+        farm.clear_goal(self.script.get())
+        self.log(f"Item goal removed from script '{self.script.get()}'", "info")
+        self.refresh_goal()
+
     def pick_script(self, name):
         self.script.set(name)
+        self.refresh_goal()
         used = sorted(i.split("/", 1)[1] for i in farm.used_ids(name))
         self.log(f"Script: {name} - {len(used)} buttons: {', '.join(used) or 'none picked yet'}",
                  "info")
@@ -1260,16 +1390,17 @@ class App:
                     c.highlight(last.rsplit(" (", 1)[0])
             elif kind == "done":
                 self.worker = None
+                self.refresh_goal()
                 self.set_state("Stopped", msg[1])
                 self.update_buttons()
             elif kind == "check":
                 _, (w, h), scores, action = msg
                 self.log(f"--- Check screen (window {w}x{h}, threshold {farm.THRESHOLD:.2f}) ---",
                          "muted")
-                for name, score in scores:
-                    ok = score >= farm.THRESHOLD
-                    self.log(f"  {name:<16} {score:.2f}{'  <- seen' if ok else ''}",
-                             "good" if ok else "muted")
+                for name, score, diff in scores:
+                    note = farm.check_note(score, diff)
+                    self.log(f"  {name:<16} {score:.2f}{'  ' + note if note else ''}",
+                             "good" if note == "<- seen" else "warn" if note else "muted")
                 self.log(action, "info")
             elif kind == "check_done":
                 self.enable(self.check_btn, True)
@@ -1292,6 +1423,9 @@ class App:
                 self.update_ready(msg[1])
             elif kind == "update_failed":
                 self.update_failed(msg[1])
+            elif kind == "gshards":
+                if self.genesis_mode == "extra":
+                    self.show_elemental(msg[1])
             elif kind == "gstatus":
                 if not self.genesis_running():
                     pass
@@ -1530,6 +1664,13 @@ class Customizer:
             self.draw_flow()
 
     # ---------- the flow ----------
+    def tag(self, *parts):
+        """A canvas tag for a card. Not the step name itself: Tk splits a tag at spaces, so a
+        card named "try again" would get the tags "step:try" and "again" and no click would
+        reach it."""
+        tags = self.__dict__.setdefault("_tags", {})
+        return tags.setdefault(parts, f"card{len(tags)}")
+
     def draw_flow(self):
         c, m = self.flow, self.model
         if m is None:
@@ -1627,7 +1768,7 @@ class Customizer:
         c, m = self.flow, self.model
         entries = m["groups"][key]
         x1, y1, x2, y2 = box
-        tag = f"row:{key}"
+        tag = self.tag("row", key)
         sel = self.selected == ("step", key)
         live = self.live == key
         c.create_rectangle(x1, y1, x2, y2, fill=PANEL, tags=tag, width=3 if (sel or live) else 1,
@@ -1658,7 +1799,7 @@ class Customizer:
         c.tag_bind(tag, "<Button-1>", lambda _e, k=key: self.select(("step", k)))
         last = len(m["priority"]) - 1
         for label, delta, x, ok in (("▲", -1, x2 - 64, i > 0), ("▼", 1, x2 - 28, i < last)):
-            bt = f"move:{key}:{delta}"
+            bt = self.tag("move", key, delta)
             c.create_rectangle(x - 15, y1 + 16, x + 15, y2 - 16, fill=FIELD if ok else PANEL,
                                outline="", tags=bt)
             c.create_text(x, (y1 + y2) // 2, text=label, fill=FG if ok else GREY,
@@ -1716,7 +1857,7 @@ class Customizer:
         live = self.live == key
         dim = m["learned"] and not pressed
         outline = YELLOW if live else BLUE if sel else (FIELD if dim else GREY)
-        tag = f"step:{key}"
+        tag = self.tag("step", key)
         c.create_rectangle(x1, y1, x2, y2, fill=PANEL, outline=outline,
                            width=3 if (sel or live) else 1, tags=tag)
         c.create_text(x1 + 10, y1 + 9, anchor="nw", text=self.step_title(key, entries),
@@ -1749,7 +1890,7 @@ class Customizer:
         c = self.flow
         x1, y1, x2, y2 = box
         sel = self.selected == ("entry", b["id"])
-        tag = f"entry:{b['id']}"
+        tag = self.tag("entry", b["id"])
         c.create_rectangle(x1, y1, x2, y2, fill=PANEL, outline=BLUE if sel else ORANGE,
                            width=3 if sel else 1, dash=() if sel else (3, 2), tags=tag)
         c.create_text(x1 + 10, y1 + 9, anchor="nw", text=b["name"], fill=FG, width=self.CARD_W - 20,
