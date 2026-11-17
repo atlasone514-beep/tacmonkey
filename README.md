@@ -49,6 +49,24 @@ If the game has a different mod version than the app expects, the log says so.
 
 Without the mod, the farm uses touch taps (the game window must stay uncovered).
 
+**Item goal:** under *Stop when*, "Item: I have [N] of [picture]" stops the script once you own
+N of an item. Capture the item's icon on a results screen (just the picture, not the `x12`),
+or load it from a file. On each results screen the farm finds the icon and, through the mod,
+reads the item's name and its "(Owned: N)", then stops there before tapping on. Once the name
+is known, the item is picked from the drop list by name, so look-alike icons (the gear Diagram
+scrolls) aren't mixed up. Without the mod it counts the runs the item dropped in instead. It
+only sees the drops showing on screen. The goal is saved with the script and travels in a
+shared `.tacscript`.
+
+**Check screen** shows each image's score. "Shape matches, but colours are off" means the
+picture is found but its colours differ, so it isn't tapped (another screen state, or a dimmed
+screen). Images grabbed at another window size are fine: the farm resizes them and compares
+colours after a light blur.
+
+**Errors:** an unexpected error is logged in the window and its full details are added to
+`errors.log` in the TACMonkey folder. If the AP refill misses a button, the farm tries the
+refill again (it stops after 3 failures in a row).
+
 ## Scripts
 
 **Customize** opens a script in one of two views (switch with the tabs):
@@ -92,7 +110,7 @@ the mod), capture the button once, click its card and tick **Press in every scri
 script then checks it before its own steps. It isn't part of any script's steps or priority.
 
 **Sharing:** **Export script** writes one `.tacscript` file with the images the script uses,
-plus its steps, priority, run counter, tap spots and learned arrows. Your friend opens it with
+plus its steps, priority, run counter, tap spots, learned arrows and item goal. Your friend opens it with
 **Import** (main window) or **Import script** (Customize). It becomes a new script with its own
 copy of the images, so nothing they already have is overwritten. Then they press **Check
 screen** to see whether the images match on their window.
@@ -113,6 +131,8 @@ Needs the mod. Start from the home screen or anywhere in Genesis.
 - **Pause** waits for the stage it's on to finish. You can play meanwhile: on **Resume** (or
   F8) the farm finds its way back to the chapter. F9 stops it.
 - On Stop, the log shows the shards got so far; while it runs, the status line keeps a total.
+  The Ex farm's summary lists only the six elemental Soul Shards, and the Ex page counts them
+  up during the run (each stage's own line still lists its Diagram Pieces).
 
 **Leaves (AP refill):** when AP runs out, the Genesis and Ex farms and the AP refill action
 refill it with Alchemy Drops. The **Leaves** row in the main window sets how many per refill
