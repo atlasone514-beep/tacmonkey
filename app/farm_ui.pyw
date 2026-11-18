@@ -634,8 +634,9 @@ class App:
                                       wraplength=520)
         self.every_label.pack(anchor="w")
         self.section(card, "Popups")
-        self.label(card, "Peddler Shop -> View Later: automatic while the mod is running.",
-                   size=9, anchor="w").pack(anchor="w")
+        self.label(card, ", ".join(f"{name} -> {answer}" for name, _, _, answer in
+                                   farm.KNOWN_POPUPS) + ": automatic while the mod is running.",
+                   size=9, anchor="w", justify="left", wraplength=520).pack(anchor="w")
 
     def refresh_buttons_page(self):
         try:
