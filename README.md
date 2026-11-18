@@ -65,6 +65,14 @@ picture is found but its colours differ, so it isn't tapped (another screen stat
 screen). Images grabbed at another window size are fine: the farm resizes them and compares
 colours after a light blur.
 
+**Game in the background:** a script needs the game's picture. Covered by other windows is
+fine (with the mod, taps work there too); **minimized is not**, since Windows doesn't draw a
+minimized window. While there's no picture the log says why: minimized, not found, or a black
+picture (some PCs stop drawing a covered window: keep part of it visible, or turn off
+"Optimizations for windowed games" in Windows Settings > Display > Graphics). If the picture
+stops changing for 20 s the log says so too, and **Check screen** reports whether the picture is
+live. The Genesis farm doesn't use the picture, only the mod.
+
 **Errors:** an unexpected error is logged in the window and its full details are added to
 `errors.log` in the TACMonkey folder. If the AP refill misses a button, the farm tries the
 refill again (it stops after 3 failures in a row).
@@ -104,8 +112,10 @@ the empty spot, `10` topmost, and `09` is the default run counter. TACMonkey off
 **tidy** them into plain names (`go`, `end quest`); the Buttons page has the same button. Every
 script keeps running as before, and a backup zip of `buttons/` and `scripts/` is saved first.
 
-**Peddler Shop:** when the mod is running, the farm and the Genesis farm press **View Later**
-on the Peddler Shop popup by themselves.
+**Known popups:** when the mod is running, the farm and the Genesis farm answer these by
+themselves: the Peddler Shop (**View Later**) and the Vision Clear Reward (**OK**). The list is
+`KNOWN_POPUPS` in `farm.py`: each popup is found by its object's name in the mod's list and
+answered with one safe button. Buttons that spend gems or open a shop are never added.
 
 **Every script:** for other popups that can show up in any script (or the Peddler Shop without
 the mod), capture the button once, click its card and tick **Press in every script**. Every
