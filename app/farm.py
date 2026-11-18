@@ -75,7 +75,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-VERSION = "1.5.2"   # TACMonkey release (the setup and the window show it)
+VERSION = "1.5.3"   # TACMonkey release (the setup and the window show it)
 MOD_VERSION = "1.2.1"  # TAC Auto Tap version shipped with this release (release/build.py checks it)
 WINDOW_TITLE = "The Alchemist Code"
 # APP_DIR holds your buttons, scripts and settings; RES_DIR the files shipped with the program.
@@ -155,6 +155,38 @@ def find_window():
     if rect.right <= 0 or rect.bottom <= 0:
         return None, None
     return hwnd, (origin.x, origin.y, rect.right, rect.bottom)
+
+
+def window_state():
+    """Why find_window() found no window: "not found", "minimized" or "no size"."""
+    hwnd = user32.FindWindowW(None, WINDOW_TITLE)
+    if not hwnd:
+        return "not found"
+    return "minimized" if user32.IsIconic(hwnd) else "no size"
+
+
+# what the farm says while it has no picture of the game (see run and check)
+NO_PICTURE = {
+    "not found": f"Waiting: no window called '{WINDOW_TITLE}' - is the game running?",
+    "minimized": "Waiting: the game is minimized - a minimized game isn't drawn, so there's "
+                 "nothing to look at. Restore it; to keep it out of the way, put other windows "
+                 "over it instead.",
+    "no size": "Waiting: the game window has no size yet (still opening?)",
+    "black": "Waiting: the game's picture comes back black - Windows isn't drawing it right now "
+             "(on some PCs, while it's covered). Keep part of it visible, or turn off "
+             "'Optimizations for windowed games' in Windows Settings > Display > Graphics.",
+}
+FROZEN_AFTER = 20    # s: the game's picture unchanged this long while farming -> say so (once)
+STILL = 0.05         # frame_change below this = the same picture (a picture Windows stopped
+                     # updating comes back identical, 0.0; a quiet live screen measured 0.21+)
+
+
+def frame_change(a, b):
+    """How much two captures differ (mean, 0-255, on small copies): ~0 = the same picture."""
+    if a.shape != b.shape:
+        return 255.0
+    small = lambda f: cv2.resize(f, (96, 54), interpolation=cv2.INTER_AREA).astype(np.int16)
+    return float(np.abs(small(a) - small(b)).mean())
 
 
 class BITMAPINFOHEADER(ctypes.Structure):
@@ -1155,21 +1187,48 @@ def used_actions(script=None):
     return [i for i in used_ids(script) if i in ACTIONS]
 
 
-PEDDLER = "UnlockGuerrillaShopPopup"   # the Peddler Shop popup that can follow any quest
+# Popups that can come up during any farm, with the one safe button for each - pressed through
+# the mod by the script farm and the Genesis farm alike. A popup is found by its object's name in
+# the mod's list (e.g. "UICanvas(Clone)/ConceptCardTrustMasterReward(Clone)/window/btn_ok") and
+# answered with the button whose path ends so. To add one: read its list while it's showing.
+# Never add a button that spends gems or opens a shop.
+KNOWN_POPUPS = (
+    # (name for the log, popup object, end of its button's path, what the button says)
+    ("Peddler Shop", "UnlockGuerrillaShopPopup", "btn_cancel", "View Later"),
+    ("Vision Clear Reward", "ConceptCardTrustMasterReward", "window/btn_ok", "OK"),
+)
+PEDDLER = KNOWN_POPUPS[0][1]
 
 
-def press_view_later():
-    """If the Peddler Shop popup is showing, press its View Later (through the mod). True if so."""
+def known_popup(els):
+    """(name, answer, button) of a known popup showing in the mod's list els, or None."""
+    for name, obj, end, answer in KNOWN_POPUPS:
+        btn = next((e for e in els if obj in e.get("path", "") and e["path"].endswith(end)
+                    and e.get("on")), None)
+        if btn:
+            return name, answer, btn
+    return None
+
+
+def press_known_popup():
+    """If a known popup is showing, press its safe button (through the mod). Returns (name,
+    answer) if one was pressed, else None."""
     reply = mod_send("list", timeout=5.0)
-    if not reply or PEDDLER not in reply:
-        return False
+    if not reply or not any(obj in reply for _, obj, _, _ in KNOWN_POPUPS):
+        return None
     try:
         els = json.loads(reply)
     except ValueError:
-        return False
-    btn = next((e for e in els if PEDDLER in e.get("path", "") and e["path"].endswith("btn_cancel")
-                and e.get("on")), None)
-    return bool(btn) and mod_send(f"tap {btn['x']:.4f} {btn['y']:.4f}", timeout=5.0) is not None
+        return None
+    hit = known_popup(els)
+    if hit and mod_send(f"tap {hit[2]['x']:.4f} {hit[2]['y']:.4f}", timeout=5.0) is not None:
+        return hit[:2]
+    return None
+
+
+def press_view_later():
+    """Kept for older callers: press any known popup's safe button. True if one was pressed."""
+    return press_known_popup() is not None
 
 
 def ap_window_open():
@@ -1563,10 +1622,18 @@ def check(script=None):
     templates = load_templates(script)
     hwnd, region = find_window()
     if not region:
-        sys.exit(f"Window '{WINDOW_TITLE}' not found or minimized.")
+        sys.exit(NO_PICTURE[window_state()].replace("Waiting: ", "Check screen: "))
     frame = capture(hwnd, region)
     if frame is None:
-        sys.exit("Captured a black frame - make sure the game is open and not minimized.")
+        sys.exit(NO_PICTURE["black"].replace("Waiting: ", "Check screen: "))
+    time.sleep(1.0)   # a second look: does Windows keep the picture up to date?
+    again = capture(hwnd, region)
+    moved = frame_change(frame, again) if again is not None else None
+    picture = ("Picture: black on the second look - Windows stops drawing the game at times"
+               if moved is None else
+               "Picture: live (it changed within a second)" if moved > STILL else
+               "Picture: didn't change within a second - fine on a still screen, but if the "
+               "game is moving, Windows isn't updating its picture (e.g. while it's covered)")
     every = every_script_templates(script)
     scores = [(name, *score_and_colour(frame, tpl, ref)) for name, tpl, ref in templates + every]
     goal = load_goal(script)
@@ -1592,7 +1659,7 @@ def check(script=None):
                 break
         else:
             action = "Would click: nothing"
-    return (region[2], region[3]), scores, action
+    return (region[2], region[3]), scores, action + "\n" + picture
 
 
 def check_note(score, diff):
@@ -1683,6 +1750,8 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
             ("" if status else " (Needs the mod - it isn't running.)"))
     last_ap_check = last_peddler_check = 0.0
     refill_fails = 0   # AP refills in a row that didn't finish
+    no_picture = None  # why there's no picture of the game right now (a NO_PICTURE key)
+    still_frame, still_since, frozen_said = None, time.time(), False   # frozen-picture watch
     log("F8 = pause/resume, F9 = stop (from any window). Keep the game open and uncovered.")
     flow = FlowRecorder(script)  # learns the arrows the customizer draws
     last_click, runs, f8_prev = {}, 0, False
@@ -1719,15 +1788,31 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
         hwnd, region = find_window()
         frame = capture(hwnd, region) if region else None
         if frame is None:
-            show("Waiting for the game (loading, minimized or closed)")
+            why = "black" if region else window_state()
+            if why != no_picture:   # each new reason goes into the log once
+                say(NO_PICTURE[why])
+                no_picture = why
+            show(NO_PICTURE[why].split(" - ")[0])
             time.sleep(SCAN_INTERVAL)
             continue
+        if no_picture:
+            say("The game's picture is back - carrying on")
+            no_picture = None
+        if still_frame is None or frame_change(frame, still_frame) > STILL:
+            still_frame, still_since, frozen_said = frame, time.time(), False
+        elif not frozen_said and time.time() - still_since > FROZEN_AFTER:
+            say(f"The game's picture hasn't changed for {FROZEN_AFTER} s. If the game is behind "
+                "other windows, Windows may not be updating its picture on this PC: bring it to "
+                "the front, or press Check screen while it's covered (it says if the picture is "
+                "live).")
+            frozen_said = True
 
         if status and time.time() - last_peddler_check >= ACTION_CHECK:
             last_peddler_check = time.time()
-            if press_view_later():
-                say("Peddler Shop popped up - View Later [mod]")
-                last = "View Later (Peddler Shop)"
+            popup = press_known_popup()
+            if popup:
+                say(f"{popup[0]} popped up - {popup[1]} [mod]")
+                last = f"{popup[1]} ({popup[0]})"
                 last_action = time.time()
                 repeat_button, warned = None, False
                 time.sleep(1.0)
@@ -1868,7 +1953,10 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
                 show("Running")
                 break
         else:
-            if time.time() - last_action > STALL_WARNING:
+            if refill and status and time.time() - last_action > 5 and refill.close_success(0):
+                say("Closed the \"AP successfully replenished\" popup [mod]")
+                last_action = time.time()
+            elif time.time() - last_action > STALL_WARNING:
                 if not warned:
                     say(f"nothing recognised for {STALL_WARNING}s - unknown screen/popup? "
                         "(Check screen / `python farm.py test` shows the scores)")
