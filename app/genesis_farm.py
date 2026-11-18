@@ -225,22 +225,26 @@ class GenesisFarm:
             self.sleep(2.5)
         raise RuntimeError("couldn't reach the Genesis chapter list - start from the home screen")
 
-    def dismiss_peddler(self, els=None):
-        """Press View Later on the Peddler Shop popup if it's showing. True if it was."""
-        btn = next((e for e in (els if els is not None else self.elements())
-                    if PEDDLER in e["path"] and e["path"].endswith("btn_cancel") and e["on"]), None)
-        if not btn:
+    def dismiss_popup(self, els=None):
+        """Press the safe button of a known popup (farm.KNOWN_POPUPS: the Peddler Shop's View
+        Later, the Vision Clear Reward's OK ...) if one is showing. True if it was."""
+        hit = farm.known_popup(els if els is not None else self.elements())
+        if not hit:
             return False
+        name, answer, btn = hit
         self.press(btn)
-        self.log("  Peddler Shop popped up - View Later")
+        self.log(f"  {name} popped up - {answer}")
         self.sleep(1.5)
         return True
+
+    dismiss_peddler = dismiss_popup   # its old name
 
     def close_popups(self):
         for _ in range(4):
             here = self.probe(OUTSIDE)
-            if PEDDLER in here:
-                self.dismiss_peddler()
+            if any(obj in here for _, obj, _, _ in farm.KNOWN_POPUPS):
+                if not self.dismiss_popup():
+                    return
             elif "Win_Btn_Decide" in here:          # a game notice: its OK closes it
                 self.tap(NOTICE_OK)
             elif "GenesisQuestConfirm" in here or "QuestDetail" in here:
@@ -345,6 +349,32 @@ class GenesisFarm:
                 return v
         return self.slider_value()
 
+    SUCCESS_OK = "HealApResult/layout/ok"   # seen live: UICanvas(Clone)/HealAP(Clone)/
+    #                                         CanvasBoundsPanel/Panel/HealApResult/layout/ok
+
+    def success_ok(self):
+        """The OK of the "AP successfully replenished" popup, if it's up - only that exact
+        button, so the Alchemy Drops amount step's OK is never pressed a second time."""
+        return next((e for e in self.elements() if e["top"] and e["on"]
+                     and e["path"].endswith(self.SUCCESS_OK)), None)
+
+    def close_success(self, wait):
+        """Press the success popup's OK - waiting up to `wait` s for it - until it's gone.
+        True if it was pressed."""
+        presses = 0
+        end = time.time() + wait
+        while presses < 5:   # (looks at least once, even with wait=0)
+            ok = self.success_ok()
+            if ok:
+                self.press(ok)
+                presses += 1
+                self.sleep(1.0)
+            elif presses or time.time() >= end:
+                break
+            else:
+                self.sleep(0.4)
+        return presses > 0
+
     def leaf_summary(self):
         left = f", {self.leaves_left} left" if self.leaves_left is not None else ""
         return f"{self.leaves_used} {AP_ITEM} used this session{left}"
@@ -374,6 +404,9 @@ class GenesisFarm:
             if self.leaves_used >= most:
                 self.leaf_stop(f"Leaf limit: {most} per session reached")
             want = min(per, most - self.leaves_used)
+        if self.close_success(0):   # a refill's success popup was left up: just close it
+            self.log("  Closed the \"AP successfully replenished\" popup")
+            return
         els = self.elements()
         # the amount step may already be open (e.g. pressed by hand): carry on if it's for
         # Alchemy Drops (and no "stop below" check needs the list), else cancel it and pick
@@ -415,11 +448,12 @@ class GenesisFarm:
             self.log(f"  (the game allows only {got} {AP_ITEM} right now - using {got})")
         # the OK can take a moment to show (or be briefly covered): wait for it, don't look once
         self.press(self.find_ok(5), "The Alchemy Drops amount step's OK")
-        done = self.find_ok(8)
-        self.sleep(0.8)
-        ok = self.find_ok() if done else None   # "AP successfully replenished" - may close by itself
-        if ok:
-            self.press(ok)
+        # then "AP successfully replenished" opens on top with its own OK. The amount step's OK
+        # can still be on screen for a moment, and the popup can take a while: looking once
+        # (too early) pressed nothing and left the farm stuck on that popup. Wait for an OK
+        # that isn't the amount step's, press it, and check it has gone.
+        if not self.close_success(12):
+            self.log("  (the \"AP successfully replenished\" popup didn't show up - carrying on)")
         self.leaves_used += got
         if self.leaves_left is not None:
             self.leaves_left -= got
@@ -430,8 +464,8 @@ class GenesisFarm:
         els = [e for e in self.elements() if e["top"]]
         paths = " ".join(e["path"] for e in els)
         alltext = " ".join(e["text"] for e in els).replace("\xa0", " ")
-        if PEDDLER in paths:
-            return "peddler", els
+        if any(obj in paths for _, obj, _, _ in farm.KNOWN_POPUPS):
+            return "popup", els
         if "RaidResultWindow" in paths:
             return "result", els
         if "RaidSettings" in paths:
@@ -470,8 +504,9 @@ class GenesisFarm:
                 self.log(f"  {key}: skipping {n}x")
                 did_skip = True
                 self.sleep(2.0)
-            elif state == "peddler":
-                self.dismiss_peddler(els)
+            elif state == "popup":
+                if not self.dismiss_popup(els):
+                    self.sleep(1.0)
             elif state == "apwindow":
                 try:
                     self.replenish_ap()
@@ -493,6 +528,8 @@ class GenesisFarm:
                     if skip:
                         self.press(skip)
                 self.sleep(1.5)
+            elif self.close_success(0):   # a refill's success popup was left up
+                self.log("  Closed the \"AP successfully replenished\" popup")
             else:
                 self.sleep(1.0)
         raise RuntimeError(f"{key}: stuck after skipping")
