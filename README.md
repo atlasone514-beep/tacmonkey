@@ -73,6 +73,11 @@ picture (some PCs stop drawing a covered window: keep part of it visible, or tur
 stops changing for 20 s the log says so too, and **Check screen** reports whether the picture is
 live. The Genesis farm doesn't use the picture, only the mod.
 
+**The game's own picture (mod 1.3):** with TAC Auto Tap 1.3, when Windows' picture comes back
+black, or stops changing while the game shows something else, the farm reads the frame from inside
+the game instead (the mod's `shot` command) and says so in the log; after a minute it tries
+Windows' picture again. On PCs where Windows' picture works, nothing changes.
+
 **Errors:** an unexpected error is logged in the window and its full details are added to
 `errors.log` in the TACMonkey folder. If the AP refill misses a button, the farm tries the
 refill again (it stops after 3 failures in a row).
@@ -113,7 +118,8 @@ the empty spot, `10` topmost, and `09` is the default run counter. TACMonkey off
 script keeps running as before, and a backup zip of `buttons/` and `scripts/` is saved first.
 
 **Known popups:** when the mod is running, the farm and the Genesis farm answer these by
-themselves: the Peddler Shop (**View Later**) and the Vision Clear Reward (**OK**). The list is
+themselves: the Peddler Shop (**View Later**), the Vision Clear Reward (**OK**) and the
+monthly Login Bonus (**Close**; its free **Receive** is left for you). The list is
 `KNOWN_POPUPS` in `farm.py`: each popup is found by its object's name in the mod's list and
 answered with one safe button. Buttons that spend gems or open a shop are never added.
 
@@ -121,8 +127,15 @@ answered with one safe button. Buttons that spend gems or open a shop are never 
 the mod), capture the button once, click its card and tick **Press in every script**. Every
 script then checks it before its own steps. It isn't part of any script's steps or priority.
 
+**When seen, press:** an image's details panel has a **Press** list. *This image* is the usual
+behaviour. Pick *another button* and, when this image is seen, the farm finds that button on
+screen and taps it instead. If it isn't up yet, it waits (and says so after 5 s) without tapping
+the first image. Pick *A fixed spot...* to drag a small box on a capture; its centre is tapped
+instead. The other button doesn't have to be one of the script's steps. It's saved per script.
+
 **Sharing:** **Export script** writes one `.tacscript` file with the images the script uses,
-plus its steps, priority, run counter, tap spots, learned arrows and item goal. Your friend opens it with
+plus its steps, priority, run counter, tap spots, "When seen, press" choices (and the buttons
+they press), learned arrows and item goal. Files exported by older versions still import. Your friend opens it with
 **Import** (main window) or **Import script** (Customize). It becomes a new script with its own
 copy of the images, so nothing they already have is overwritten. Then they press **Check
 screen** to see whether the images match on their window.
@@ -142,6 +155,12 @@ Needs the mod. Start from the home screen or anywhere in Genesis.
   every unit on that stage is ticked. Units with only shared stages (marked `*`) keep them.
 - **Pause** waits for the stage it's on to finish. You can play meanwhile: on **Resume** (or
   F8) the farm finds its way back to the chapter. F9 stops it.
+- **Grace period (built in):** when the game answers slowly, every wait stretches (up to 3x)
+  before anything counts as stuck. If a stage still gets stuck ("stuck after skipping", "team
+  screen didn't open" ...), the farm gives the game 10 s, closes popups, goes back into the
+  chapter and tries that stage again. It reads the stage's attempts first, so a skip that went
+  through isn't spent twice. After 3 grace periods in one run it stops as before; each one is
+  written to `errors.log`. Running out of Alchemy Drops stops at once.
 - On Stop, the log shows the shards got so far; while it runs, the status line keeps a total.
   The Ex farm's summary lists only the six elemental Soul Shards, and the Ex page counts them
   up during the run (each stage's own line still lists its Diagram Pieces).

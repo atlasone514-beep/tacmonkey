@@ -16,6 +16,12 @@
 //                    its game data fields and picture names, entries separated by " ||| ".
 //   inspect FX FY -> the same kind of dump for the object under the point and its parents.
 //   scroll FX FY V -> move the list under the point to V (0..1).
+//   itemsof PART  -> like items, but the list is found by a piece of its path (for lists with
+//                    something over them, like a quest's results screen).
+//   shot [Q]      -> the frame the game just drew, as "ok <w>x<h> <base64 JPEG>" (quality Q,
+//                    default 70) - read inside the game, so it works while the window is covered.
+// Several programs can be connected at once (up to 8); each command still runs on the game's
+// main thread, one per frame step.
 // The press is sent through Unity's EventSystem the same way a real touch is: pointer down,
 // pointer up, click - on the main thread.
 //
@@ -34,6 +40,7 @@ using System.Threading;
 using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
+using BepInEx.Unity.IL2CPP.Utils.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -43,11 +50,13 @@ namespace TACAutoTap;
 public class Plugin : BasePlugin
 {
     public const string Guid = "tac.autotap";
-    public const string Version = "1.2.1";
+    public const string Version = "1.3.0";
     public const int Port = 47613;
     private const int MaxLine = 512;
     private static readonly string[] Commands =
-        { "ping", "tap", "probe", "list", "click", "items", "inspect", "scroll" };
+        { "ping", "tap", "probe", "list", "click", "items", "inspect", "scroll", "itemsof", "shot" };
+    private const int MaxClients = 8;
+    private static int _clients;
 
     internal static ManualLogSource L;
     internal static readonly ConcurrentQueue<Request> Pending = new();
@@ -76,9 +85,37 @@ public class Plugin : BasePlugin
 
         while (true)
         {
+            TcpClient accepted;
             try
             {
-                using var client = listener.AcceptTcpClient();
+                accepted = listener.AcceptTcpClient();
+            }
+            catch (Exception e)
+            {
+                L.LogDebug($"accept failed: {e.Message}");
+                continue;
+            }
+            // one thread per connection: a slow or silent program no longer holds up the others
+            if (Interlocked.Increment(ref _clients) > MaxClients)
+            {
+                Interlocked.Decrement(ref _clients);
+                accepted.Close();
+                continue;
+            }
+            new Thread(() =>
+            {
+                try { Serve(accepted); }
+                finally { Interlocked.Decrement(ref _clients); }
+            }) { IsBackground = true, Name = "TACAutoTap client" }.Start();
+        }
+    }
+
+    private static void Serve(TcpClient accepted)
+    {
+        {
+            try
+            {
+                using var client = accepted;
                 client.NoDelay = true;
                 client.ReceiveTimeout = 5000;
                 using var stream = client.GetStream();
@@ -148,6 +185,12 @@ public class TapRunner : MonoBehaviour
     {
         while (Plugin.Pending.TryDequeue(out var req))
         {
+            if (req.Line.StartsWith("shot"))
+            {
+                // the frame has to be read once it's drawn: at the end of this frame
+                StartCoroutine(Shot(req).WrapToIl2Cpp());
+                continue;
+            }
             try
             {
                 req.Reply = Handle(req.Line);
@@ -159,6 +202,21 @@ public class TapRunner : MonoBehaviour
             }
             req.Done.Set();
         }
+    }
+
+    private System.Collections.IEnumerator Shot(Request req)
+    {
+        yield return new WaitForEndOfFrame();
+        try
+        {
+            req.Reply = ScreenGrab.Jpeg(req.Line);
+        }
+        catch (Exception e)
+        {
+            req.Reply = $"err {e.GetType().Name}: {e.Message.Replace('\n', ' ')}";
+            Plugin.L.LogWarning($"'shot' failed: {e}");
+        }
+        req.Done.Set();
     }
 
     private static string Handle(string line)
@@ -191,6 +249,9 @@ public class TapRunner : MonoBehaviour
                 if (p.Length < 4) return "err usage: scroll FX FY V";
                 return UiInspect.Scroll(at, float.Parse(p[3], CultureInfo.InvariantCulture));
             }
+            case "itemsof":
+                if (p.Length < 2) return "err usage: itemsof PART-OF-THE-LIST'S-PATH";
+                return UiInspect.ItemsOf(line.Substring(line.IndexOf(' ') + 1).Trim());
             case "click":
                 if (p.Length < 2) return "err usage: click <text on the button> [#N]";
                 return UiQuery.Click(line.Substring(line.IndexOf(' ') + 1), Press);
