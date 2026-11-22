@@ -29,6 +29,7 @@
     <Reference Include="$(Game)\BepInEx\interop\UnityEngine.CoreModule.dll" Private="false" />
     <Reference Include="$(Game)\BepInEx\interop\UnityEngine.UI.dll" Private="false" />
     <Reference Include="$(Game)\BepInEx\interop\UnityEngine.UIModule.dll" Private="false" />
+    <Reference Include="$(Game)\BepInEx\interop\UnityEngine.ImageConversionModule.dll" Private="false" />
     <Reference Include="$(Game)\BepInEx\interop\Unity.TextMeshPro.dll" Private="false" />
   </ItemGroup>
 </Project>

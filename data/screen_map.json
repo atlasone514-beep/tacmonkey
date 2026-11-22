@@ -1,0 +1,406 @@
+{
+ "_about": "Screens of The Alchemist Code as the TAC Auto Tap mod's list names them, recorded 2026-11-19 by a navigation-only walk (nothing bought, claimed or started). 'marker' appears in an on-screen path while the screen shows; 'open' is the path ends to tap from home, in order; 'back' leaves it.",
+ "screens": {
+  "home": {
+   "marker": "HomeBG/HomeBGUI",
+   "open": [],
+   "back": null,
+   "buttons": [
+    "Alchemia Port",
+    "Enlightened Bond",
+    "Secret Shop"
+   ],
+   "note": "Main menu",
+   "checked": true
+  },
+  "items": {
+   "marker": "ItemListWindow",
+   "open": [
+    "HomeBG/HomeBGUI/CanvasBoundsPanel/menu/item"
+   ],
+   "back": "SRPG_ITEMLIST/UI/CanvasBoundsPanel/ItemListWindow(Clone)/CanvasBoundsPanel/window/close",
+   "buttons": [
+    "Consumables",
+    "Equipment",
+    "Evolution Material(s)",
+    "Gear Shards",
+    "Materials",
+    "Other",
+    "Soul Shards",
+    "Tickets"
+   ],
+   "note": "Inventory, 7 tabs",
+   "checked": true
+  },
+  "gift box": {
+   "marker": "Mailbox2",
+   "open": [
+    "HomeBG/HomeBGUI/CanvasBoundsPanel/menu/gift"
+   ],
+   "back": "ModalCanvas/Mailbox2(Clone)/CanvasBoundsPanel/window/btn_close",
+   "buttons": [
+    "Claim",
+    "Claim All",
+    "Expiring",
+    "History",
+    "No Expiration"
+   ],
+   "note": "Gifts: Claim All (readall) and Claim per gift (btn_read) - free, for a Claim rewards task",
+   "checked": true
+  },
+  "challenge balloon": {
+   "marker": "challenge/progress_parent/balloon",
+   "open": [
+    "HomeBG/HomeBGUI/CanvasBoundsPanel/menu/challenge/icon"
+   ],
+   "back": "HomeBGUI/CanvasBoundsPanel/menu/challenge/progress_parent/balloon/Button_Close",
+   "buttons": [
+    "Alchemia Port",
+    "Claim",
+    "Enlightened Bond",
+    "Secret Shop"
+   ],
+   "note": "Small panel on home with a Claim (Button_Reward)",
+   "checked": true
+  },
+  "adventure": {
+   "marker": "SRPG_Adventure",
+   "open": [
+    "HomeBG/HomeBGUI/CanvasBoundsPanel/menu/adventue/button"
+   ],
+   "back": "SRPG_Adventure/Canvas/CanvasBoundsPanel/UIRoot/UI/Back",
+   "buttons": [],
+   "note": "",
+   "checked": true
+  },
+  "combat power ranking": {
+   "marker": "CombatPowerRanking",
+   "open": [
+    "HomeBG/HomeBGUI/CanvasBoundsPanel/menu/combat_power"
+   ],
+   "back": "ModalCanvas/CombatPowerRanking(Clone)/CanvasBoundsPanel/window/close",
+   "buttons": [
+    "Alchemia Port",
+    "Combat Power",
+    "Select Unit"
+   ],
+   "note": "",
+   "checked": true
+  },
+  "hard quest skips": {
+   "marker": "QuestBookmarkWindow",
+   "open": [
+    "HomeBG/HomeBGUI/CanvasBoundsPanel/menu/hardskip/icon"
+   ],
+   "back": "QuestBookmarkWindow(Clone)/CanvasBoundsPanel/window/bg/Btn_Close",
+   "buttons": [
+    "3 time(s)",
+    "Filter",
+    "Prepare for Battle"
+   ],
+   "note": "Every unit's Hard quest: 'Attempts 0/3', 'Shards Owned'; '3 time(s)' (btn_bundle) and 'Prepare for Battle' (Btn_Battle) - the data for a shard goal and a Hard farm",
+   "checked": true
+  },
+  "enlightened bond": {
+   "marker": "SRPG_Bond",
+   "open": [
+    "HomeBG/HomeBGUI/CanvasBoundsPanel/mapbutton/bond"
+   ],
+   "back": "SRPG_MAINMENU/CanvasBoundsPanel/PlayerStatus/option_back/back",
+   "buttons": [],
+   "note": "",
+   "checked": true
+  },
+  "guild (Alchemia Port)": {
+   "marker": "GuildLobby",
+   "open": [
+    "HomeBG/HomeBGUI/CanvasBoundsPanel/mapbutton/guild"
+   ],
+   "back": "Canvas/GuildManager/GuildLobby(Clone)/CanvasBoundsPanel/window/left/back",
+   "buttons": [
+    "Attend",
+    "Info"
+   ],
+   "note": "facility_* buttons are guild facilities, not ways out",
+   "checked": true
+  },
+  "secret shop": {
+   "marker": "LimitedShopWindow",
+   "open": [
+    "HomeBG/HomeBGUI/CanvasBoundsPanel/mapbutton/limitedshop"
+   ],
+   "back": "LIMITED_SRPG_SHOP/UI/CanvasBoundsPanel/LimitedShopWindow/window/back",
+   "buttons": [
+    "Back",
+    "Help",
+    "L3d"
+   ],
+   "note": "",
+   "checked": true
+  },
+  "arena lobby": {
+   "marker": "BattleLobby",
+   "open": [
+    "HomeBG/HomeBGUI/CanvasBoundsPanel/versus"
+   ],
+   "back": "ModalCanvas/BattleLobby(Clone)/CanvasBoundsPanel/window/back",
+   "buttons": [
+    "Back",
+    "Rewards can be claimed."
+   ],
+   "note": "Duel shows 'Rewards can be claimed.'",
+   "checked": true
+  },
+  "summon": {
+   "marker": "GACHA",
+   "open": [
+    "HomeBG/HomeBGUI/CanvasBoundsPanel/gacha"
+   ],
+   "back": "SRPG_MAINMENU/CanvasBoundsPanel/PlayerStatus/option_back/back",
+   "buttons": [
+    "10470",
+    "10x Summon | 300",
+    "1x Summon | 30",
+    "L2372d",
+    "L4d"
+   ],
+   "note": "Look only - never press inside",
+   "checked": true
+  },
+  "shop": {
+   "marker": "SRPG_SHOP",
+   "open": [
+    "HomeBG/HomeBGUI/CanvasBoundsPanel/shop/normalshop"
+   ],
+   "back": "UICanvas(Clone)/Win_Btn_DecideCancel_Flx_C(Clone)/layout/Btn/Btn_Cancel",
+   "buttons": [
+    "Cancel",
+    "Confirm"
+   ],
+   "note": "Opens with 'Convert Zeni items (e.g. Ingots) to Zeni?' - answer Cancel",
+   "checked": true
+  },
+  "inn (friends)": {
+   "marker": "SRPG_INN",
+   "open": [
+    "HomeBG/HomeBGUI/CanvasBoundsPanel/menu/friend"
+   ],
+   "back": "SRPG_MAINMENU/CanvasBoundsPanel/PlayerStatus/option_back/back",
+   "buttons": [
+    "Friend List",
+    "Friend Notifications | 2",
+    "Help",
+    "Invite a Friend",
+    "Search Friend",
+    "Select Mercenary"
+   ],
+   "note": "",
+   "checked": true
+  },
+  "quests": {
+   "marker": "QuestList/default",
+   "open": [
+    "HomeBG/HomeBGUI/CanvasBoundsPanel/quest/event"
+   ],
+   "back": "ModalCanvas/TownQuestList(Clone)/CanvasBoundsPanel/window/QuestList/default/back",
+   "buttons": [
+    "Back"
+   ],
+   "note": "button1 Story, button2 Event, button3 Trials, button4 Multiplay",
+   "checked": true
+  },
+  "quests: story": {
+   "marker": "QuestList/story",
+   "open": [
+    "HomeBG/HomeBGUI/CanvasBoundsPanel/quest/event",
+    "QuestList/default/button1/image"
+   ],
+   "back": "ModalCanvas/TownQuestList(Clone)/CanvasBoundsPanel/window/QuestList/story/back",
+   "buttons": [
+    "Back"
+   ],
+   "note": "button1 Main Story, button2 Ancient Story (locked), button3 Genesis Story, button4 Sacred Stone, button5 Babel Chronicles",
+   "checked": true
+  },
+  "quests: event": {
+   "marker": "QuestList/event",
+   "open": [
+    "HomeBG/HomeBGUI/CanvasBoundsPanel/quest/event",
+    "QuestList/default/button2/image"
+   ],
+   "back": "ModalCanvas/TownQuestList(Clone)/CanvasBoundsPanel/window/QuestList/event/back",
+   "buttons": [
+    "Back"
+   ],
+   "note": "button2 Event Quest, button3 Daily Quests, button4 Event Archives, button5 Key Quests",
+   "checked": true
+  },
+  "quests: trials": {
+   "marker": "QuestList/challenge",
+   "open": [
+    "HomeBG/HomeBGUI/CanvasBoundsPanel/quest/event",
+    "QuestList/default/button3/image"
+   ],
+   "back": "ModalCanvas/TownQuestList(Clone)/CanvasBoundsPanel/window/QuestList/challenge/back",
+   "buttons": [
+    "Back"
+   ],
+   "note": "button1 Elite Gate, button2 Babel Tower, button3 Shadow Plane Karma",
+   "checked": true
+  },
+  "multiplay": {
+   "marker": "SRPG_HOME_MULTIPLAY",
+   "open": [
+    "HomeBG/HomeBGUI/CanvasBoundsPanel/quest/event",
+    "QuestList/default/button4/image"
+   ],
+   "back": "SRPG_MAINMENU/CanvasBoundsPanel/PlayerStatus/option_back/back",
+   "buttons": [
+    "Enter Code",
+    "Help",
+    "L11h",
+    "Recruit Listing"
+   ],
+   "note": "Enter Code, Recruit Listing, event co-op quests",
+   "checked": true
+  },
+  "party (unit list)": {
+   "marker": "SRPG_UNITLIST",
+   "open": [
+    "SRPG_MAINMENU/CanvasBoundsPanel/ShortcutRoot/Shortcut/ShortcutMenu/open",
+    "ShortcutMenu/menu/layout/party"
+   ],
+   "back": "SRPG_MAINMENU/CanvasBoundsPanel/PlayerStatus/option_back/back",
+   "buttons": [
+    "! | 85 | / | 5901",
+    "! | 85 | / | 99 | 5259",
+    "! | 91 | / | 93 | 6835",
+    "! | 95 | / | 5028",
+    "! | 95 | / | 99 | 5730",
+    "! | 96 | / | 99 | 6617",
+    "! | 97 | / | 5776",
+    "! | 99 | / | 5248",
+    "! | 99 | / | 5482",
+    "! | 99 | / | 6257",
+    "! | 99 | / | 6976",
+    "! | 99 | / | 7184",
+    "Combat Power",
+    "Filter",
+    "Seal Auto-Disassembly Settings",
+    "Seal Disassembly",
+    "Search",
+    "To next level: | 4 | units",
+    "錬成"
+   ],
+   "note": "",
+   "checked": true
+  },
+  "artifacts": {
+   "marker": "SRPG_ARTIFACTS",
+   "open": [
+    "SRPG_MAINMENU/CanvasBoundsPanel/ShortcutRoot/Shortcut/ShortcutMenu/open",
+    "ShortcutMenu/menu/layout/artifact"
+   ],
+   "back": "SRPG_MAINMENU/CanvasBoundsPanel/PlayerStatus/option_back/back",
+   "buttons": [
+    "! | 1 | / | 30",
+    "! | 30 | /",
+    "Enlightened Skill",
+    "Filter",
+    "Help",
+    "List",
+    "Rarity",
+    "Search",
+    "Sell",
+    "分解",
+    "抽出",
+    "武輝石",
+    "錬成"
+   ],
+   "note": "Has Decompose / Transmute dialogs - never press",
+   "checked": true
+  },
+  "vision cards": {
+   "marker": "ConceptCardList",
+   "open": [
+    "SRPG_MAINMENU/CanvasBoundsPanel/ShortcutRoot/Shortcut/ShortcutMenu/open",
+    "ShortcutMenu/menu/layout/conceptcard"
+   ],
+   "back": "SRPG_MAINMENU/CanvasBoundsPanel/PlayerStatus/option_back/back",
+   "buttons": [
+    "! | 1 | / | 30",
+    "! | 15 | / | 40",
+    "! | 30 | /",
+    "! | 30 | / | 36",
+    "! | 40 | /",
+    "Convert",
+    "Filter",
+    "Rarity",
+    "Search"
+   ],
+   "note": "",
+   "checked": true
+  },
+  "missions": {
+   "marker": "TrophyWindow",
+   "open": [
+    "SRPG_MAINMENU/CanvasBoundsPanel/ShortcutRoot/Shortcut/ShortcutMenu/open",
+    "ShortcutMenu/menu/layout/mission"
+   ],
+   "back": "TrophyWindow(Clone)/CanvasBoundsPanel/root/window/close",
+   "buttons": [
+    "Claim All",
+    "Completed!",
+    "Help"
+   ],
+   "note": "Daily / weekly missions - for a Claim rewards task",
+   "checked": true
+  },
+  "settings": {
+   "marker": "Config_Home",
+   "open": [
+    "SRPG_MAINMENU/CanvasBoundsPanel/PlayerStatus/option"
+   ],
+   "back": "ModalCanvas/Config_Home(Clone)/CanvasBoundsPanel/window/close",
+   "buttons": [
+    "Chat Settings",
+    "Display",
+    "News",
+    "Options",
+    "Player Info",
+    "Select Mercenary",
+    "名前の変更(Max 16 characters )"
+   ],
+   "note": "",
+   "checked": true
+  }
+ },
+ "dialogs": {
+  "notice (one OK)": {
+   "marker": "Win_Btn_Decide_Flx",
+   "safe": "Btn_Decide",
+   "note": "e.g. 'Currently not available.'"
+  },
+  "question (Cancel / Confirm)": {
+   "marker": "Win_Btn_DecideCancel",
+   "safe": "Btn_Cancel",
+   "note": "e.g. the shop's 'Convert Zeni items to Zeni?' - Cancel is safe"
+  },
+  "AP successfully replenished": {
+   "marker": "HealApResult",
+   "safe": "HealApResult/layout/ok"
+  },
+  "Vision Clear Reward": {
+   "marker": "ConceptCardTrustMasterReward",
+   "safe": "window/btn_ok"
+  },
+  "Login Bonus": {
+   "marker": "LoginBonusWindow",
+   "safe": "LoginBonus_month(Clone)/close"
+  },
+  "Peddler Shop": {
+   "marker": "UnlockGuerrillaShopPopup",
+   "safe": "btn_cancel"
+  }
+ }
+}
