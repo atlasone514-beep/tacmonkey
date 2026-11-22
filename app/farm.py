@@ -75,8 +75,8 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-VERSION = "1.5.3"   # TACMonkey release (the setup and the window show it)
-MOD_VERSION = "1.2.1"  # TAC Auto Tap version shipped with this release (release/build.py checks it)
+VERSION = "1.6.0"   # TACMonkey release (the setup and the window show it)
+MOD_VERSION = "1.3.0"  # TAC Auto Tap version shipped with this release (release/build.py checks it)
 WINDOW_TITLE = "The Alchemist Code"
 # APP_DIR holds your buttons, scripts and settings; RES_DIR the files shipped with the program.
 # Run from source both are this folder; as the installed TACMonkey.exe, APP_DIR is the exe's
@@ -173,12 +173,48 @@ NO_PICTURE = {
                  "over it instead.",
     "no size": "Waiting: the game window has no size yet (still opening?)",
     "black": "Waiting: the game's picture comes back black - Windows isn't drawing it right now "
-             "(on some PCs, while it's covered). Keep part of it visible, or turn off "
-             "'Optimizations for windowed games' in Windows Settings > Display > Graphics.",
+             "(on some PCs, while it's covered). With TAC Auto Tap 1.3 the farm reads the game's "
+             "own picture instead (update TACMonkey with the game closed); until then keep part "
+             "of it visible.",
 }
 FROZEN_AFTER = 20    # s: the game's picture unchanged this long while farming -> say so (once)
 STILL = 0.05         # frame_change below this = the same picture (a picture Windows stopped
                      # updating comes back identical, 0.0; a quiet live screen measured 0.21+)
+
+
+GAME_PICTURE_FOR = 60    # s: once Windows' picture fails, use the game's own for this long
+STALE_CHECK = 3          # s: Windows' picture unchanged this long -> compare with the game's own
+STALE_STUCK = 5          # s: ... but only once nothing was pressed this long, or a mod tap missed
+STALE_BACKOFF_MAX = 120  # s: each check that finds Windows' picture fine doubles the wait, to this
+STALE_DIFF = 2.0         # frame_change between the two above this = Windows' picture is stale
+
+
+def mod_can_shot(status):
+    """True if the running mod (its 'pong <version> ...') has the 'shot' command (1.3.0+)."""
+    parts = (status or "").split()
+    try:
+        return len(parts) > 1 and tuple(int(x) for x in parts[1].split(".")[:2]) >= (1, 3)
+    except ValueError:
+        return False
+
+
+def game_frame(region):
+    """The frame the game just drew, read inside the game by the mod (mod 1.3 'shot'), sized to
+    the window like capture() - or None. For PCs where Windows stops drawing a covered window."""
+    import base64
+    reply = mod_send("shot 70", timeout=6.0)
+    if not reply or not reply.startswith("ok "):
+        return None
+    try:
+        data = base64.b64decode(reply.split(" ", 2)[2])
+        frame = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+    except (IndexError, ValueError):
+        return None
+    if frame is None:
+        return None
+    if (frame.shape[1], frame.shape[0]) != (region[2], region[3]):
+        frame = cv2.resize(frame, (region[2], region[3]), interpolation=cv2.INTER_AREA)
+    return frame
 
 
 def frame_change(a, b):
@@ -263,26 +299,49 @@ MOD_PORT = 47613
 USE_MOD = True
 last_tap = ""  # how the last successful tap was done: "mod" or "touch" (for the log)
 MOD_RETRY = 30.0      # after failing to reach the mod, wait this long before trying again
+MOD_TAP_WAIT = 4.0    # a tap's reply wait: longer than the mod's own 3 s, so "err timeout" arrives
 _mod_down_until = 0.0
+
+
+_mod_call = threading.local()   # .error: why this thread's last mod_send gave None
 
 
 def mod_send(command, timeout=3.0, force=False):
     """Send one line to the TAC Auto Tap mod and return its reply, or None if it isn't running.
     (Windows takes a moment to refuse a local connection, so a failure is remembered for
-    MOD_RETRY seconds instead of slowing every tap down.)"""
+    MOD_RETRY seconds instead of slowing every tap down.)
+
+    A connection that opens but gets no reply in time is different: the mod is running but the
+    game is busy (loading) or another program holds the mod's one connection. That gives None
+    too (mod_error() says "slow") but doesn't count as "not running" - before, one slow reply
+    switched the farm to touch taps for MOD_RETRY seconds."""
     global _mod_down_until
     if not force and time.time() < _mod_down_until:
+        _mod_call.error = "down"
         return None
     try:
-        with socket.create_connection(("127.0.0.1", MOD_PORT), timeout=0.5) as s:
+        s = socket.create_connection(("127.0.0.1", MOD_PORT), timeout=0.5)
+    except OSError:
+        _mod_down_until = time.time() + MOD_RETRY
+        _mod_call.error = "down"
+        return None
+    try:
+        with s:
             s.settimeout(timeout)
             s.sendall((command + "\n").encode("ascii"))
             reply = s.makefile("r", encoding="utf-8").readline().strip() or None
-        _mod_down_until = 0.0  # reachable again (e.g. a forced ping after the game started)
-        return reply
     except OSError:
-        _mod_down_until = time.time() + MOD_RETRY
+        _mod_call.error = "slow"
         return None
+    _mod_down_until = 0.0  # reachable again (e.g. a forced ping after the game started)
+    _mod_call.error = None
+    return reply
+
+
+def mod_error():
+    """Why this thread's last mod_send returned None: "down" (not running), "slow" (no reply in
+    time) or None."""
+    return getattr(_mod_call, "error", None)
 
 
 def mod_status():
@@ -301,6 +360,9 @@ def mod_mismatch(status):
             "some buttons may not work until then.")
 
 
+last_mod_miss = 0.0   # when a mod tap last found nothing pressable at the point (stale picture?)
+
+
 def mod_tap(hwnd, x, y):
     """Ask the mod to press what's at screen point (x, y). Returns its 'ok ...' reply, or None if
     the mod isn't running or found nothing pressable there (the caller then touch-taps)."""
@@ -310,8 +372,17 @@ def mod_tap(hwnd, x, y):
     if rect.right <= 0 or rect.bottom <= 0:
         return None
     fx, fy = (x - origin.x) / rect.right, (y - origin.y) / rect.bottom
-    reply = mod_send(f"tap {fx:.5f} {fy:.5f}")
-    return reply if reply and reply.startswith("ok") else None
+    reply = mod_send(f"tap {fx:.5f} {fy:.5f}", timeout=MOD_TAP_WAIT)
+    if reply and reply.startswith("ok"):
+        return reply
+    if reply and reply.startswith(("nohandler", "notfound")):
+        global last_mod_miss
+        last_mod_miss = time.time()   # nothing pressable where the picture showed a button
+    if (reply and reply.startswith("err timeout")) or (reply is None and mod_error() == "slow"):
+        # the game was busy: the tap waits in the mod's queue and runs when the game catches up.
+        # Touch-tapping as well pressed the button twice.
+        return "late"
+    return None
 
 
 def tap(hwnd, x, y):
@@ -323,8 +394,9 @@ def tap(hwnd, x, y):
     """
     global _touch_ready, last_tap
     x, y = int(x), int(y)
-    if USE_MOD and mod_tap(hwnd, x, y):
-        last_tap = "mod"
+    reply = mod_tap(hwnd, x, y) if USE_MOD else None
+    if reply:
+        last_tap = "mod, late - the game was busy" if reply == "late" else "mod"
         return True
     if user32.GetAncestor(user32.WindowFromPoint(wintypes.POINT(x, y)), 2) != hwnd:
         return False
@@ -616,8 +688,9 @@ def listed_drop(fx, fy):
         return None
     best = None
     for e in els:
-        if not (isinstance(e, dict) and e.get("path", "").endswith("dropitem")
-                and "itemlist" in e.get("path", "") and OWNED_RE.search(e.get("text", ""))):
+        if not (isinstance(e, dict) and str(e.get("path", "")).endswith("dropitem")
+                and "itemlist" in str(e.get("path", "")) and OWNED_RE.search(str(e.get("text", "")))
+                and isinstance(e.get("x"), (int, float)) and isinstance(e.get("y"), (int, float))):
             continue
         dx, dy = abs(e["x"] - fx), abs(e["y"] - fy)
         if dx > e.get("w", 0.08) * 0.75 or dy > e.get("h", 0.13):   # not this icon's entry
@@ -629,7 +702,24 @@ def listed_drop(fx, fy):
     parts = [t.strip() for t in best[1]["text"].replace("\xa0", " ").split("|")]
     i = next(i for i, t in enumerate(parts) if OWNED_RE.search(t))
     got = re.fullmatch(r"[x×X]?\s*(\d+)", parts[i - 1]) if i > 0 else None
-    return int(got.group(1)) if got else None, int(OWNED_RE.search(parts[i]).group(1))
+    node = re.search(r"/Node_(\d+)/", best[1]["path"])
+    return (int(got.group(1)) if got else None, int(OWNED_RE.search(parts[i]).group(1)),
+            int(node.group(1)) if node else None)
+
+
+def listed_name(node):
+    """The name of drop number `node` on a quest's results screen, read through the mod's
+    "itemsof" (mod 1.3+; the list is found by its path, past the skip button). None if unknown."""
+    if node is None:
+        return None
+    reply = mod_send("itemsof itemlist_new", timeout=6.0)
+    if not reply or not reply.startswith("ok"):
+        return None
+    for chunk in reply.split(" ||| ")[1:]:
+        if chunk.startswith(f"#{node} "):
+            m = re.search(r"\bname=([^,<>{}=]+?),type=", chunk)
+            return m.group(1).strip() if m else None
+    return None
 
 
 def read_drop(fx, fy, want=None):
@@ -646,7 +736,11 @@ def read_drop(fx, fy, want=None):
     position, without the name)."""
     listed = listed_drop(fx, fy)
     if listed:
-        return want, listed[0], listed[1]
+        got, owned, node = listed
+        name = listed_name(node)   # mod 1.3: the drop's name, found by the list's path
+        if want and name and name != want:
+            return None            # a look-alike icon: not the goal item
+        return name or want, got, owned
     reply = mod_send(f"inspect {fx:.4f} {fy:.4f}", timeout=5.0) or ""
     m = re.search(r"\bname=([^,<>{}=]+?),type=", reply)
     name = want or (m.group(1).strip() if m else None)
@@ -674,9 +768,10 @@ def read_drop(fx, fy, want=None):
 def script_settings(script=None):
     f = script_dir(script) / SCRIPT_FILE
     try:
-        return json.loads(f.read_text())
+        settings = json.loads(f.read_text())
     except (OSError, ValueError):
         return {}
+    return settings if isinstance(settings, dict) else {}   # e.g. a hand-edited "[]"
 
 
 def new_script_settings(script):
@@ -751,8 +846,10 @@ def export_script(script, path):
     counters = counter_names(script)
     src_steps = step_map(script)
     images, renamed, missing, out_steps = {}, {}, [], {}
-    files = {}
-    for bid in sorted(i for i in want if i not in ACTIONS):
+    files, out_of, press_images = {}, {}, {}
+    targets = press_targets(script)   # 'When seen, press' buttons travel along, unpicked
+    extra = sorted({t["image"] for t in targets.values() if "image" in t} - set(want))
+    for bid in sorted(i for i in want if i not in ACTIONS) + extra:
         if bid not in pool:
             missing.append(bid)
             continue
@@ -766,9 +863,13 @@ def export_script(script, path):
                 n += 1
             out = f"{name}_{n}"
             renamed[f"{home}/{name}"] = out
+        out_of[bid] = out
         if out in files:
             continue  # the very same image twice
         files[out] = data
+        if bid in extra:   # only pressed through 'When seen, press': kept apart from "images"
+            press_images[out] = {"ref": load_refs(script_dir(home)).get(name)}
+            continue       # so versions before it don't make it a step of its own
         images[out] = {"ref": load_refs(script_dir(home)).get(name),
                        "count": name in counters}
         step = group_key(name, src_steps)
@@ -785,16 +886,31 @@ def export_script(script, path):
                 "options": {k: sorted(v) for k, v in step_options(script).items()
                             if any(group_key(n, out_steps) == k for n in images)},
                 "spots": {k: list(v) for k, v in load_spots(script).items()}}
+    press_as = {}
+    for name, t in targets.items():
+        if name not in images or name in renamed.values():
+            continue
+        if "spot" in t:
+            press_as[name] = {"spot": list(t["spot"])}
+        elif t["image"] in out_of:
+            press_as[name] = {"image": out_of[t["image"]]}
+    if press_as:
+        manifest["press_as"] = press_as
+        manifest["press_images"] = {k: v for k, v in press_images.items()
+                                    if any(t.get("image") == k for t in press_as.values())}
     goal = load_goal(script)
     if goal and goal["img"] is not None:
         manifest["goal"] = {"count": goal["count"], "ref": goal["ref"], "name": goal["name"]}
     with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as z:
         z.writestr("manifest.json", json.dumps(manifest, indent=2))
         for name, data in files.items():
-            z.writestr(f"images/{name}.png", data)
+            if name in images:
+                z.writestr(f"images/{name}.png", data)
+            elif name in manifest.get("press_images", {}):
+                z.writestr(f"press/{name}.png", data)
         if "goal" in manifest:
             z.write(goal_image_path(script), "goal/item.png")
-    return len(files), renamed, missing
+    return len(images) + len(manifest.get("press_images", {})), renamed, missing
 
 
 def free_script_name(name):
@@ -826,27 +942,36 @@ def import_script(path, name=None):
         if not isinstance(images, dict) or len(images) > SHARE_MAX_IMAGES:
             raise ShareError("The script file's image list is broken.")
         notes = []
-        decoded = {}
-        for img_name, meta in images.items():
-            if not isinstance(img_name, str) or not SHARE_NAME.match(img_name) or \
-                    not isinstance(meta, dict):
-                raise ShareError(f"Unsafe image name in the script file: {img_name!r}")
-            try:
-                info = z.getinfo(f"images/{img_name}.png")
-            except KeyError:
-                notes.append(f"{img_name} is listed but missing from the file - skipped")
-                continue
-            if info.file_size > SHARE_MAX_IMAGE_BYTES:
-                raise ShareError(f"{img_name}.png is too large to be a button image.")
-            img = cv2.imdecode(np.frombuffer(z.read(info), np.uint8), cv2.IMREAD_COLOR)
-            if img is None:
-                raise ShareError(f"{img_name}.png isn't a readable image.")
-            decoded[img_name] = (img, meta)
-        actions = [a for a in manifest.get("actions") or [] if a in ACTIONS]
+        decoded, press_decoded = {}, {}   # press_*: 'When seen, press' pictures (1.6+)
+        press_images = manifest.get("press_images") or {}
+        if not isinstance(press_images, dict) or \
+                len(images) + len(press_images) > SHARE_MAX_IMAGES:
+            press_images = {}
+        for folder_name, listed, into in (("images", images, decoded),
+                                          ("press", press_images, press_decoded)):
+            for img_name, meta in listed.items():
+                if not isinstance(img_name, str) or not SHARE_NAME.match(img_name) or \
+                        not isinstance(meta, dict) or img_name in decoded:
+                    raise ShareError(f"Unsafe image name in the script file: {img_name!r}")
+                try:
+                    info = z.getinfo(f"{folder_name}/{img_name}.png")
+                except KeyError:
+                    notes.append(f"{img_name} is listed but missing from the file - skipped")
+                    continue
+                if info.file_size > SHARE_MAX_IMAGE_BYTES:
+                    raise ShareError(f"{img_name}.png is too large to be a button image.")
+                img = cv2.imdecode(np.frombuffer(z.read(info), np.uint8), cv2.IMREAD_COLOR)
+                if img is None:
+                    raise ShareError(f"{img_name}.png isn't a readable image.")
+                into[img_name] = (img, meta)
+        raw_actions = manifest.get("actions")
+        actions = [a for a in raw_actions if isinstance(a, str) and a in ACTIONS] \
+            if isinstance(raw_actions, list) else []
         if not decoded and not actions:
             raise ShareError("The script file has no buttons in it.")
         spots = {}
-        for key, val in (manifest.get("spots") or {}).items():
+        raw_spots = manifest.get("spots")
+        for key, val in (raw_spots.items() if isinstance(raw_spots, dict) else []):
             try:
                 x, y = float(val[0]), float(val[1])
             except (TypeError, ValueError, IndexError, KeyError):
@@ -883,7 +1008,7 @@ def import_script(path, name=None):
     folder = script_dir(script)
     folder.mkdir(parents=True)
     refs = {}
-    for img_name, (img, meta) in decoded.items():
+    for img_name, (img, meta) in {**decoded, **press_decoded}.items():
         cv2.imwrite(str(folder / f"{img_name}.png"), img)  # re-encoded: only pixels come in
         ref = meta.get("ref")
         if isinstance(ref, int) and 100 <= ref <= 10000:
@@ -913,6 +1038,23 @@ def import_script(path, name=None):
             if isinstance(k, str) and k in steps and isinstance(v, list)}
     if opts:
         settings["options"] = dict(sorted(opts.items()))
+    press_as = {}   # 'When seen, press': only to pictures that came in this file
+    raw_press = manifest.get("press_as")
+    for n, t in (raw_press.items() if isinstance(raw_press, dict) else []):
+        if n not in decoded or not isinstance(t, dict):
+            continue
+        if isinstance(t.get("image"), str) and t["image"] != n and \
+                (t["image"] in decoded or t["image"] in press_decoded):
+            press_as[n] = {"image": f"{script}/{t['image']}"}
+            continue
+        try:
+            x, y = float(t["spot"][0]), float(t["spot"][1])
+        except (KeyError, TypeError, ValueError, IndexError):
+            continue
+        if 0 <= x <= 1 and 0 <= y <= 1:
+            press_as[n] = {"spot": [x, y]}
+    if press_as:
+        settings["press_as"] = dict(sorted(press_as.items()))
     _write_settings(script, settings)
     if goal:
         img, count, ref, gname = goal
@@ -920,7 +1062,7 @@ def import_script(path, name=None):
         set_goal(script, count=count or None, ref=ref, name=gname or None)
     if manifest.get("app_version") and manifest["app_version"] != VERSION:
         notes.append(f"made with TACMonkey {manifest['app_version']} (you have {VERSION})")
-    return script, len(decoded), notes
+    return script, len(decoded) + len(press_decoded), notes
 
 
 TIDY_WORDS = {"endquest": "end quest", "tryagain": "try again"}
@@ -1068,7 +1210,8 @@ def used_ids(script=None):
     images replacing those with the same number, minus any it had turned off."""
     settings = script_settings(script)
     if "use" in settings:
-        return list(settings["use"])
+        use = settings["use"]
+        return [i for i in use if isinstance(i, str) and "/" in i] if isinstance(use, list) else []
     ids = [f"{DEFAULT_SCRIPT}/{f.stem}" for f in sorted(BUTTON_DIR.glob("*.png"))]
     if script and script != DEFAULT_SCRIPT:
         own = [f.stem for f in sorted(script_dir(script).glob("*.png"))]
@@ -1108,7 +1251,8 @@ def counter_names(script=None, templates=None):
     or by default every used image numbered COUNT_BUTTON (09_endquest, 09_tryagain)."""
     settings = script_settings(script)
     if "count" in settings:
-        return set(settings["count"])
+        count = settings["count"]
+        return {n for n in count if isinstance(n, str)} if isinstance(count, list) else set()
     if templates is not None:
         names = [name for name, _, _ in templates]
     else:  # from the picks, not load_templates(): that stops on a script with nothing picked
@@ -1196,6 +1340,9 @@ KNOWN_POPUPS = (
     # (name for the log, popup object, end of its button's path, what the button says)
     ("Peddler Shop", "UnlockGuerrillaShopPopup", "btn_cancel", "View Later"),
     ("Vision Clear Reward", "ConceptCardTrustMasterReward", "window/btn_ok", "OK"),
+    # the monthly login bonus on the main menu; its "Receive" (the free total-days reward) is
+    # left for you - or a future "claim rewards" task
+    ("Login Bonus", "LoginBonusWindow", "LoginBonus_month(Clone)/close", "Close"),
 )
 PEDDLER = KNOWN_POPUPS[0][1]
 
@@ -1203,8 +1350,10 @@ PEDDLER = KNOWN_POPUPS[0][1]
 def known_popup(els):
     """(name, answer, button) of a known popup showing in the mod's list els, or None."""
     for name, obj, end, answer in KNOWN_POPUPS:
-        btn = next((e for e in els if obj in e.get("path", "") and e["path"].endswith(end)
-                    and e.get("on")), None)
+        btn = next((e for e in els if isinstance(e, dict) and obj in str(e.get("path", ""))
+                    and str(e["path"]).endswith(end) and e.get("on")
+                    and isinstance(e.get("x"), (int, float)) and isinstance(e.get("y"), (int, float))),
+                   None)
         if btn:
             return name, answer, btn
     return None
@@ -1245,14 +1394,16 @@ def describe_library(script=None):
     counters = counter_names(script)
     spots = load_spots(script)
     steps = step_map(script)
+    targets = press_targets(script)
     out = [{"id": aid, "name": name, "home": ACTION_HOME, "img": action_badge("AP refill\nAlch. Drops"),
             "ref": None, "used": aid in used, "counter": False, "marker": False, "spot": None,
-            "action": True, "every": False, "about": about} for aid, (name, about) in ACTIONS.items()]
+            "press": None, "action": True, "every": False, "about": about} for aid, (name, about) in ACTIONS.items()]
     for button_id, name, home, tpl, ref in sorted(library(), key=lambda b: (b[1], b[2])):
         marker = name.startswith("x_")
         out.append({"id": button_id, "name": name, "home": home, "img": tpl, "ref": ref,
                     "used": button_id in used, "counter": name in counters, "marker": marker,
                     "spot": None if marker else spots.get(group_key(name, steps)),
+                    "press": None if marker else targets.get(name),
                     "step": group_key(name, steps), "action": False,
                     "every": button_id in every})
     return out
@@ -1371,6 +1522,98 @@ def load_spots(script=None):
         if f.exists():
             spots.update({k: tuple(v) for k, v in json.loads(f.read_text()).items()})
     return spots
+
+
+PRESS_AS_WAIT = 5   # s: X seen but its "press" button Y isn't: say so after this long
+
+
+def press_targets(script=None):
+    """'When seen, press' (Scripts page): {image name: {"image": button id}} = when that image
+    is seen, find that other button and tap it instead; {image name: {"spot": (x, y)}} = tap
+    that spot (fractions of the window). Images without an entry are tapped themselves."""
+    raw = script_settings(script).get("press_as")
+    out = {}
+    for name, val in (raw.items() if isinstance(raw, dict) else []):
+        if not isinstance(name, str) or not isinstance(val, dict):
+            continue
+        if isinstance(val.get("image"), str) and val["image"]:
+            out[name] = {"image": val["image"]}
+            continue
+        try:
+            x, y = float(val["spot"][0]), float(val["spot"][1])
+        except (KeyError, TypeError, ValueError, IndexError):
+            continue
+        if 0 <= x <= 1 and 0 <= y <= 1:
+            out[name] = {"spot": (x, y)}
+    return out
+
+
+def set_press_target(script, name, target):
+    """target: {"image": button id}, {"spot": (x, y)}, or None = press the image itself."""
+    settings = script_settings(script)
+    targets = press_targets(script)
+    if target:
+        targets[name] = target
+    else:
+        targets.pop(name, None)
+    if targets:
+        settings["press_as"] = {k: ({"spot": [round(v["spot"][0], 4), round(v["spot"][1], 4)]}
+                                    if "spot" in v else v) for k, v in sorted(targets.items())}
+    else:
+        settings.pop("press_as", None)
+    _write_settings(script, settings)
+
+
+def target_templates(targets):
+    """{button id: (name, image, capture width)} for the buttons press targets point at."""
+    want = {v["image"] for v in targets.values() if "image" in v}
+    return {bid: (name, tpl, ref) for bid, name, _, tpl, ref in library() if bid in want}         if want else {}
+
+
+def describe_target(target):
+    """'next button' / 'a fixed spot (50% across, 93% down)' / '' for a press target."""
+    if not target:
+        return ""
+    if "spot" in target:
+        return f"a fixed spot ({target['spot'][0]:.0%} across, {target['spot'][1]:.0%} down)"
+    return target["image"].rsplit("/", 1)[-1]
+
+
+def press_point(button, hit, frame, size, spots, targets, target_tpls):
+    """Where to tap for a hit: (x, y, note). x is None when the image's 'When seen, press'
+    button isn't on screen (then nothing is tapped)."""
+    target = targets.get(hit[0])
+    if target and "spot" in target:
+        return int(size[0] * target["spot"][0]), int(size[1] * target["spot"][1]), " -> fixed spot"
+    if target:
+        label = describe_target(target)
+        tpl = target_tpls.get(target["image"])
+        if tpl is None:
+            return None, None, f" -> {label}, but that picture is gone"
+        found = find_button(frame, [tpl], False)
+        if not found:
+            return None, None, f" -> {label} isn't on screen"
+        return found[2], found[3], f" -> {found[0]} ({found[1]:.2f})"
+    return tap_point(button, hit, size, spots)
+
+
+def pick_spot():
+    """Drag a small box on a fresh capture of the game: its centre as (x, y) fractions of the
+    window, or None if cancelled."""
+    hwnd, region = find_window()
+    if not region:
+        sys.exit(f"Window '{WINDOW_TITLE}' not found or minimized.")
+    frame = capture(hwnd, region)
+    if frame is None:   # Windows' picture black: the game's own (mod 1.3)
+        frame = game_frame(region)
+    if frame is None:
+        sys.exit("Captured a black frame - make sure the game is open and not minimized.")
+    x, y, w, h = cv2.selectROI("Drag a small box on the spot to press, ENTER to save, C to cancel",
+                               frame, showCrosshair=True)
+    cv2.destroyAllWindows()
+    if w == 0 or h == 0:
+        return None
+    return (x + w / 2) / frame.shape[1], (y + h / 2) / frame.shape[0]
 
 
 def tap_point(button, hit, size, spots):
@@ -1624,16 +1867,25 @@ def check(script=None):
     if not region:
         sys.exit(NO_PICTURE[window_state()].replace("Waiting: ", "Check screen: "))
     frame = capture(hwnd, region)
+    source = "Windows"
+    if frame is None and mod_can_shot(mod_status()):
+        frame, source = game_frame(region), "the game (through the mod)"
     if frame is None:
         sys.exit(NO_PICTURE["black"].replace("Waiting: ", "Check screen: "))
     time.sleep(1.0)   # a second look: does Windows keep the picture up to date?
-    again = capture(hwnd, region)
+    again = capture(hwnd, region) if source == "Windows" else game_frame(region)
     moved = frame_change(frame, again) if again is not None else None
     picture = ("Picture: black on the second look - Windows stops drawing the game at times"
                if moved is None else
                "Picture: live (it changed within a second)" if moved > STILL else
                "Picture: didn't change within a second - fine on a still screen, but if the "
                "game is moving, Windows isn't updating its picture (e.g. while it's covered)")
+    picture += f"; read from {source}"
+    if source == "Windows" and moved is not None and moved <= STILL and mod_can_shot(mod_status()):
+        own = game_frame(region)
+        if own is not None and frame_change(again, own) > STALE_DIFF:
+            picture += (" - but the game's own picture is different: Windows' picture is stale "
+                        "here, so the farm uses the game's own")
     every = every_script_templates(script)
     scores = [(name, *score_and_colour(frame, tpl, ref)) for name, tpl, ref in templates + every]
     goal = load_goal(script)
@@ -1651,11 +1903,15 @@ def check(script=None):
         action = f"Act finished -> would click: {back[0]} at ({back[2]},{back[3]}) in the window"
     else:
         spots = load_spots(script)
+        targets = press_targets(script)
+        target_tpls = target_templates(targets)
         for button, variants in groups.items():
             hit = find_button(frame, variants, button in top)
             if hit:
-                x, y, note = tap_point(button, hit, (region[2], region[3]), spots)
-                action = f"Would click: {hit[0]} at ({x},{y}) in the window{note}"
+                x, y, note = press_point(button, hit, frame, (region[2], region[3]), spots,
+                                         targets, target_tpls)
+                action = (f"{hit[0]} is seen{note} -> would wait for it" if x is None else
+                          f"Would click: {hit[0]}{note} at ({x},{y}) in the window")
                 break
         else:
             action = "Would click: nothing"
@@ -1715,6 +1971,16 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
     if spots:
         log("Fixed tap spots: " + ", ".join(f"{b} at {x:.0%} across, {y:.0%} down"
                                             for b, (x, y) in sorted(spots.items())))
+    targets = press_targets(script)
+    target_tpls = target_templates(targets)
+    waiting_for, waiting_since, waiting_said = None, 0.0, False   # X seen, its Y not yet
+    if targets:
+        log("When seen, press: " + ", ".join(f"{n} -> {describe_target(t)}"
+                                            for n, t in sorted(targets.items())))
+        gone = sorted(t["image"] for t in targets.values()
+                      if "image" in t and t["image"] not in target_tpls)
+        if gone:
+            log(f"Note: pictures picked to press are gone: {', '.join(gone)}")
     if not act_switch:
         markers = {}  # act_finished() never fires without the markers
         log("Act switching is off.")
@@ -1751,6 +2017,9 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
     last_ap_check = last_peddler_check = 0.0
     refill_fails = 0   # AP refills in a row that didn't finish
     no_picture = None  # why there's no picture of the game right now (a NO_PICTURE key)
+    can_shot = USE_MOD and mod_can_shot(status)   # mod 1.3+: the game can send its own picture
+    game_picture_until = stale_checked = 0.0      # using the game's own picture until then
+    stale_wait = STALE_CHECK                      # gap between stale checks (grows while fine)
     still_frame, still_since, frozen_said = None, time.time(), False   # frozen-picture watch
     log("F8 = pause/resume, F9 = stop (from any window). Keep the game open and uncovered.")
     flow = FlowRecorder(script)  # learns the arrows the customizer draws
@@ -1786,7 +2055,38 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
             continue
 
         hwnd, region = find_window()
-        frame = capture(hwnd, region) if region else None
+        if region and time.time() < game_picture_until:
+            frame = game_frame(region)   # Windows' picture failed a moment ago: the game's own
+            if frame is None:
+                game_picture_until = 0.0
+        else:
+            if game_picture_until:
+                say("Trying Windows' picture of the game again")
+                game_picture_until = 0.0
+            frame = capture(hwnd, region) if region else None
+            if frame is None and region and can_shot:
+                frame = game_frame(region)
+                if frame is not None:
+                    say("Windows isn't drawing the game (black picture) - using the game's own "
+                        "picture from the mod instead")
+                    game_picture_until = time.time() + GAME_PICTURE_FOR
+            elif frame is not None and can_shot and still_frame is not None and \
+                    time.time() - still_since > STALE_CHECK and \
+                    frame_change(frame, still_frame) <= STILL and \
+                    (last_mod_miss > stale_checked or            # a tap found no button there
+                     (time.time() - last_action > STALE_STUCK and  # or nothing pressed for a while
+                      time.time() - stale_checked > stale_wait)):
+                # Windows' picture hasn't moved and something's off: is it stale? (On PCs where
+                # Windows' picture works this rarely runs, and backs off each time it's fine.)
+                stale_checked = time.time()
+                own = game_frame(region)
+                if own is not None and frame_change(frame, own) > STALE_DIFF:
+                    say("Windows' picture of the game is stale (the game shows something else) - "
+                        "using the game's own picture from the mod instead")
+                    frame, game_picture_until = own, time.time() + GAME_PICTURE_FOR
+                    stale_wait = STALE_CHECK
+                else:
+                    stale_wait = min(stale_wait * 2, STALE_BACKOFF_MAX)
         if frame is None:
             why = "black" if region else window_state()
             if why != no_picture:   # each new reason goes into the log once
@@ -1912,8 +2212,18 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
             hit = find_button(frame, variants, button in top_steps)
             if hit:
                 name, score, cx, cy = hit
+                cx, cy, where = press_point(button, hit, frame, (region[2], region[3]), spots,
+                                            targets, target_tpls)
+                if cx is None:   # 'When seen, press' button not up yet: wait, don't tap X
+                    if waiting_for != name:
+                        waiting_for, waiting_since, waiting_said = name, time.time(), False
+                    elif not waiting_said and time.time() - waiting_since > PRESS_AS_WAIT:
+                        say(f"{name} is seen{where} - waiting for it")
+                        waiting_said = True
+                    show(f"Waiting: {name} seen{where}")
+                    break
+                waiting_for = None
                 streak = repeats + 1 if button == repeat_button else 1
-                cx, cy, where = tap_point(button, hit, (region[2], region[3]), spots)
                 if button in spot_steps and streak % 2 == 1:  # 1st, 3rd... tap: empty area
                     fx, fy = TAP_ANYWHERE.get(button, EMPTY_SPOT)
                     cx, cy = int(region[2] * fx), int(region[3] * fy)
