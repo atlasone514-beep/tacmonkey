@@ -33,7 +33,27 @@ internal static class UiInspect
         if (hit == null) return "notfound nothing under the point";
         var sr = hit.GetComponentInParent<ScrollRect>();
         if (sr == null || sr.content == null) return $"notfound no list at {TapRunner.PathOfPublic(hit)}";
-        var content = sr.content;
+        return DescribeList(sr.content);
+    }
+
+    /// "itemsof PART": like "items", but finds the list by a piece of its path instead of by
+    /// pointing at it - for screens with something over the list (a quest's results screen has
+    /// a full-screen skip button above its drops).
+    public static string ItemsOf(string part)
+    {
+        foreach (var o in UnityEngine.Object.FindObjectsOfType(Il2CppType.Of<ScrollRect>()))
+        {
+            var sr = o.TryCast<ScrollRect>();
+            if (sr == null || !sr.isActiveAndEnabled || sr.content == null) continue;
+            if (TapRunner.PathOfPublic(sr.content.gameObject).Contains(part) ||
+                TapRunner.PathOfPublic(sr.gameObject).Contains(part))
+                return DescribeList(sr.content);
+        }
+        return $"notfound no list matching {part}";
+    }
+
+    private static string DescribeList(Transform content)
+    {
         var sb = new StringBuilder($"ok {TapRunner.PathOfPublic(content.gameObject)} entries={content.childCount}");
         for (int i = 0; i < content.childCount; i++)
         {

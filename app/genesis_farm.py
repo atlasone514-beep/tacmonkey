@@ -31,6 +31,12 @@ ALL_EXTRA = "ALL"            # the Ex farm's "every Extra stage" pick (a key in 
 AP_ITEM = "Alchemy Drops"   # exact row name; not "Alchemy Droplets" / event drops
 AP_PCS = 7                  # Alchemy Drops per refill unless the leaf settings say otherwise
 SKIPS = 3                   # skips per stage (the daily Hard attempts)
+# Grace period (built in): a slow game stretches every wait (up to LAG_MAX times), and a stage
+# that still gets stuck is given GRACE_WAIT s, then tried again - at most GRACE_TRIES per run.
+LAG_MAX = 3.0
+SLOW_REPLY = 1.5            # s: a mod reply slower than this is a sign the game is lagging
+GRACE_WAIT = 10             # s
+GRACE_TRIES = 3
 
 # window fractions (same at any window size)
 LIST_X, SLOTS = 0.777, (0.365, 0.599, 0.834)    # Genesis chapter list entries
@@ -131,17 +137,43 @@ class GenesisFarm:
         self.leaves = leaves or leaf_settings()
         self.leaves_used = 0
         self.leaves_left = None   # Alchemy Drops owned, as last read
+        self.lag = 1.0            # patience: waits are stretched this much (grows when slow)
+        self.recoveries = 0       # stuck stages given a grace period this run
 
     # ---------- talking to the mod ----------
     def send(self, cmd, timeout=8.0):
-        if self.stop.is_set():
-            raise Stop()
-        for _ in range(3):
+        """One mod command. "err timeout" means the game was busy (e.g. loading): a read is asked
+        again; a tap, click or scroll is already queued in the game, so it isn't sent twice."""
+        busy = False
+        for _ in range(8):
+            if self.stop.is_set():
+                raise Stop()
+            start = time.time()
             r = farm.mod_send(cmd, timeout=timeout, force=True)
-            if r is not None:
-                return r
-            time.sleep(1)
-        raise RuntimeError("TAC Auto Tap mod not reachable - is the game running with the mod?")
+            if r is None:
+                busy = farm.mod_error() == "slow"
+                if busy:
+                    self.note_speed(slow=True)
+                time.sleep(1)
+                continue
+            self.note_speed(slow=r.startswith("err timeout") or time.time() - start > SLOW_REPLY)
+            if r.startswith("err timeout"):
+                if cmd.startswith(("tap", "click", "scroll")):
+                    self.sleep(1.5)   # it runs when the game catches up
+                    return "ok (late - the game was busy)"
+                busy = True
+                self.sleep(1.5)
+                continue
+            return r
+        raise RuntimeError("the game isn't answering (busy, paused or frozen?)" if busy else
+                           "TAC Auto Tap mod not reachable - is the game running with the mod?")
+
+    def note_speed(self, slow):
+        """Grace period: each slow reply raises the patience a step; fast ones lower it slowly."""
+        before = self.lag
+        self.lag = min(LAG_MAX, self.lag + 0.5) if slow else max(1.0, self.lag - 0.02)
+        if before < 2.0 <= self.lag:
+            self.log("  The game is slow right now - waiting longer before calling anything stuck")
 
     def tap(self, p):
         return self.send(f"tap {p[0]:.4f} {p[1]:.4f}")
@@ -153,7 +185,25 @@ class GenesisFarm:
         return self.send(f"inspect {p[0]:.4f} {p[1]:.4f}", timeout=10)
 
     def elements(self):
-        return json.loads(self.send("list", timeout=10))
+        """The mod's list of pressable things on screen (entries checked: path, x, y; text, top
+        and on default to empty / False)."""
+        r = ""
+        for _ in range(3):
+            r = self.send("list", timeout=10)
+            try:
+                els = json.loads(r)
+            except ValueError:
+                els = None
+            if isinstance(els, list):
+                out = []
+                for e in els:
+                    if isinstance(e, dict) and isinstance(e.get("path"), str) and \
+                            isinstance(e.get("x"), (int, float)) and isinstance(e.get("y"), (int, float)):
+                        out.append({**e, "text": str(e.get("text") or ""),
+                                    "top": bool(e.get("top")), "on": bool(e.get("on"))})
+                return out
+            self.sleep(1.0)
+        raise RuntimeError(f"the mod's list came back unreadable: {r[:60]!r}")
 
     @staticmethod
     def texts(reply):
@@ -164,7 +214,8 @@ class GenesisFarm:
             raise Stop()
 
     def wait_for(self, fn, timeout=12.0, every=0.4):
-        end = time.time() + timeout
+        """fn() until it's truthy, for up to timeout s - stretched while the game is slow."""
+        end = time.time() + timeout * self.lag
         while time.time() < end:
             v = fn()
             if v:
@@ -427,8 +478,8 @@ class GenesisFarm:
             row = next((e for e in els if e["top"] and e["on"] and "HealAPItemList" in e["path"]
                         and AP_ITEM in [p.strip() for p in e["text"].replace("\xa0", " ").split("|")]),
                        None)
-            if not row:
-                raise RuntimeError(f"Replenish AP is open but '{AP_ITEM}' isn't there (out of them?)")
+            if not row:   # out of them: a retry wouldn't help
+                self.leaf_stop(f"Replenish AP is open but '{AP_ITEM}' isn't there (out of them?)")
             parts = [p.strip() for p in row["text"].replace("\xa0", " ").split("|")]
             i = parts.index(AP_ITEM)
             if i > 0 and parts[i - 1].isdigit():   # owned count sits right before the name
@@ -482,7 +533,10 @@ class GenesisFarm:
         got = {}
         did_skip = False
         refill_fails = 0
-        for _ in range(30):
+        start = time.time()
+        for _ in range(120):   # ~50 s, stretched while the game is slow
+            if time.time() - start > 50 * self.lag:
+                break
             state, els = self.screen_state()
             if state == "team":
                 btn = next((e for e in els if e["path"].endswith("ticket/btn")), None)
@@ -595,7 +649,10 @@ class GenesisFarm:
             self.on_shards(dict(self.shards))
             self.status(f"{key} done - {self.shard_summary()}")
         self.tap(TEAM_BACK)   # goes back to the stage popup
-        for _ in range(10):
+        start = time.time()
+        for _ in range(40):
+            if time.time() - start > 15 * self.lag:
+                raise RuntimeError(f"{key}: didn't get back to the map")
             self.sleep(1.2)
             self.close_popups()
             if self.on_map():
@@ -605,6 +662,32 @@ class GenesisFarm:
         else:
             raise RuntimeError(f"{key}: didn't get back to the map")
         self.sleep(0.8)
+
+    def grace(self, st, err):
+        """A stage got stuck: give the game GRACE_WAIT s, tidy up, and say whether to try it
+        again (False once GRACE_TRIES are used). Call it inside the except block. A retry can't
+        spend twice: the stage's attempts are read again, and a used-up stage is skipped."""
+        key = st["stage"] if self.mode == "hard" else f"EX {st['stage']}"
+        self.recoveries += 1
+        err = str(err)
+        err = err[len(key) + 2:] if err.startswith(f"{key}: ") else err
+        farm.log_error(f"{self.label} Genesis farm, {key} (grace period {self.recoveries})")
+        if self.recoveries > GRACE_TRIES:
+            self.log(f"  {key}: {err} - still stuck after {GRACE_TRIES} grace periods this run")
+            return False
+        wait = round(GRACE_WAIT * self.lag)
+        self.log(f"  {key}: {err} - giving the game {wait} s, then trying {key} again "
+                 f"({self.recoveries} of {GRACE_TRIES})")
+        self.status(f"{key}: giving the game {wait} s")
+        self.sleep(wait)
+        self.lag = min(LAG_MAX, self.lag + 0.5)   # and be more patient from here on
+        try:
+            self.close_success(0)
+            self.close_ap_window()
+            self.close_popups()
+        except RuntimeError:
+            pass
+        return True
 
     def elemental(self):
         """{element: shards} got this session (Ex drops the six elemental Soul Shards)."""
@@ -649,11 +732,19 @@ class GenesisFarm:
             for st in order:
                 if self.wait_if_paused():
                     chapter = None   # reopen the chapter: the game may have moved meanwhile
-                if st["chapter"] != chapter:
-                    chapter = st["chapter"]
-                    self.log(f"ch{chapter} {st['chapter_name']}")
-                    self.open_chapter(st["chapter_iname"])
-                self.farm_stage(st)
+                while True:
+                    try:
+                        if st["chapter"] != chapter:
+                            chapter = None
+                            self.log(f"ch{st['chapter']} {st['chapter_name']}")
+                            self.open_chapter(st["chapter_iname"])
+                            chapter = st["chapter"]
+                        self.farm_stage(st)
+                        break
+                    except RuntimeError as e:
+                        chapter = None   # find the way back in from wherever it is
+                        if not self.grace(st, e):
+                            raise
             self.go_genesis()
             self.log(f"{name} finished. {self.shard_summary()}")
             return "Finished."

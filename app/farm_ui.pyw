@@ -1878,6 +1878,8 @@ class Customizer:
                 f"{len(entries)} variant{'s' if len(entries) > 1 else ''}")
         if any(b["spot"] for b in entries):
             foot += "  ·  fixed spot"
+        if any(b.get("press") for b in entries):
+            foot += "  ·  presses another"
         c.create_text(x1 + 10, y2 - 16, anchor="w", text=foot, fill=MUTED, font=(FONT, 8),
                       tags=tag)
         c.create_text(x2 - 10, y2 - 16, anchor="e", text=f"#{m['priority'].index(key) + 1}",
@@ -1963,6 +1965,7 @@ class Customizer:
         canvas.pack(side="left", fill="both", expand=True)
         body = tk.Frame(canvas, bg=PANEL)
         canvas.create_window(0, 0, window=body, anchor="nw", width=262)
+        self.press_pool = None   # the Press lists' pictures, read once for this panel
         for b in entries:
             self.detail_entry(body, b)
         body.update_idletasks()
@@ -1985,6 +1988,8 @@ class Customizer:
             about += "\npressed in every script, before its own steps"
         if b.get("spot"):
             about += f"\ntaps a fixed spot ({b['spot'][0]:.0%} across, {b['spot'][1]:.0%} down)"
+        if b.get("press"):
+            about += f"\nwhen seen, presses {farm.describe_target(b['press'])} instead"
         app.label(box, about, size=8, color=MUTED, wraplength=250, justify="left").pack(anchor="w")
         if not (b["marker"] or b["action"] or global_only):
             var = tk.BooleanVar(value=b["counter"])
@@ -2003,6 +2008,7 @@ class Customizer:
                            command=lambda: self.every(b, evar.get())).pack(anchor="w", pady=(4, 0))
         if not (b["marker"] or b["action"] or global_only):
             self.step_chooser(box, b)
+            self.press_chooser(box, b)
         grid = tk.Frame(box, bg=FIELD)
         grid.pack(fill="x", pady=(4, 0))
         grid.columnconfigure((0, 1), weight=1)
@@ -2039,6 +2045,90 @@ class Customizer:
         menu["menu"].config(bg=FIELD, fg=FG, activebackground=BLUE, activeforeground=DARK,
                             font=(FONT, 9), bd=0)
         menu.pack(side="left", fill="x", expand=True, padx=(6, 0))
+
+    PRESS_SELF, PRESS_SPOT = "This image", "A fixed spot..."
+
+    def press_chooser(self, parent, b):
+        """'Press [This image v]' - when this image is seen, tap another button (found on
+        screen) or a fixed spot instead of the image itself."""
+        if self.press_pool is None:   # every other picture, this script's first
+            self.press_pool = sorted(
+                (e for e in farm.describe_library(self.script)
+                 if not e["action"] and not e["marker"]),
+                key=lambda e: (not e["used"], e["name"].lower(), e["home"]))
+        names = [e["name"] for e in self.press_pool]
+        labels = {}
+        for e in self.press_pool:
+            if e["id"] == b["id"]:
+                continue
+            lab = e["name"] if e["used"] and names.count(e["name"]) == 1 else \
+                f"{e['name']}  (from {e['home']})"
+            labels[lab] = e["id"]
+        target = b.get("press")
+        spot_label = self.PRESS_SPOT
+        if target and "spot" in target:
+            spot_label = f"A fixed spot ({target['spot'][0]:.0%}, {target['spot'][1]:.0%})"
+            current = spot_label
+        elif target:
+            current = next((lab for lab, i in labels.items() if i == target["image"]),
+                           f"{farm.describe_target(target)} (picture gone)")
+        else:
+            current = self.PRESS_SELF
+        options = [self.PRESS_SELF, spot_label] + list(labels)
+        if current not in options:
+            options.append(current)
+        row = tk.Frame(parent, bg=FIELD)
+        row.pack(fill="x", pady=(4, 0))
+        self.app.label(row, "Press", size=9, color=MUTED).pack(side="left")
+        var = tk.StringVar(value=current)
+
+        def chosen(lab):
+            if lab == current and lab != spot_label:
+                return
+            if lab == self.PRESS_SELF:
+                self.set_press(b, None)
+            elif lab == spot_label:
+                self.pick_press_spot(b)
+            elif lab in labels:
+                self.set_press(b, {"image": labels[lab]})
+
+        menu = tk.OptionMenu(row, var, *options, command=chosen)
+        menu.config(bg=PANEL, fg=FG, activebackground=GREY, activeforeground=FG, relief="flat",
+                    bd=0, highlightthickness=0, font=(FONT, 9), anchor="w")
+        menu["menu"].config(bg=FIELD, fg=FG, activebackground=BLUE, activeforeground=DARK,
+                            font=(FONT, 9), bd=0)
+        menu.pack(side="left", fill="x", expand=True, padx=(6, 0))
+
+    def set_press(self, b, target):
+        farm.set_press_target(self.script, b["name"], target)
+        self.app.log(f"{self.script}: when {b['name']} is seen, it presses "
+                     + (farm.describe_target(target) if target else "the image itself"), "info")
+        self.refresh()
+
+    def pick_press_spot(self, b):
+        if not messagebox.askokcancel(
+                "Fixed spot", "Open the screen in the game where it should press first.\n\n"
+                "After OK, a capture opens: drag a small box on the spot (its centre is "
+                "pressed), then press Enter (C cancels).", parent=self.win):
+            self.refresh()
+            return
+        app, script = self.app, self.script
+
+        def job():
+            spot = None
+            try:
+                spot = farm.pick_spot()
+            except SystemExit as e:
+                app.q.put(("log", f"Fixed spot: {e}", "bad"))
+            except Exception as e:
+                app.q.put(("log", f"Fixed spot failed: {e!r}", "bad"))
+            if spot:
+                farm.set_press_target(script, b["name"], {"spot": spot})
+                app.q.put(("log", f"{script}: when {b['name']} is seen, it presses "
+                                  f"{farm.describe_target({'spot': spot})}", "info"))
+            app.q.put(("grab_done", self.refresh_if_open))
+
+        threading.Thread(target=job, daemon=True).start()
 
     def move_to_step(self, b, key):
         """key = another step (join it as a variant), or None = a step of its own."""
