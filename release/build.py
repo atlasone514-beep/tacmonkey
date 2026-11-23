@@ -118,12 +118,15 @@ def main():
     BUILD.mkdir(exist_ok=True)
     Image.open(png).convert("RGBA").resize((256, 256), Image.LANCZOS).save(
         ico, sizes=[(n, n) for n in (16, 20, 24, 32, 40, 48, 64, 128, 256)])
+    live = REPO / "data" / "live" / "box_events.json"   # first-start copy (git pull first)
     pyi = [sys.executable, "-m", "PyInstaller", "--noconfirm", "--clean", "--log-level", "WARN",
            "--workpath", BUILD / "work", "--specpath", BUILD, "--icon", ico,
            "--add-data", f"{png};."]
     run(pyi + ["--windowed", "--name", "TACMonkey", "--distpath", BUILD / "app",
                "--add-data", f"{REPO / 'app' / 'genesis_shards.json'};.",
                "--add-data", f"{REPO / 'app' / 'genesis_extra.json'};.",
+               "--add-data", f"{REPO / 'app' / 'portraits'};portraits",   # Box events tab pictures
+               *(["--add-data", f"{live};."] if live.exists() else []),   # box events at release
                REPO / "app" / "farm_ui.pyw"])
     app = BUILD / "app" / "TACMonkey"
     with zipfile.ZipFile(PAYLOAD / "app.zip", "w", zipfile.ZIP_DEFLATED) as z:

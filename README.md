@@ -32,7 +32,8 @@ If the game has a different mod version than the app expects, the log says so.
 
 | Folder | What's in it |
 |---|---|
-| `app/` | The farm (`farm.py`), its window (`farm_ui.pyw`) and the Genesis / Ex Genesis farm (`genesis_farm.py`) |
+| `app/` | The farm (`farm.py`), its window (`farm_ui.pyw`, with `farm_ui_box.py`), the Genesis / Ex Genesis farm (`genesis_farm.py`), the box event farm (`box_farm.py`), the event scanner (`event_scan.py`), live data (`live_data.py`, `texts.py`) and unit portraits (`portraits/`) |
+| `data/live/` | What the Dev page publishes: box events, pushed scripts and changed wording (every TACMonkey downloads it) |
 | `mod/TACAutoTap/` | BepInEx 6 IL2CPP plugin: presses UI buttons from inside the game over 127.0.0.1:47613 |
 | `tools/` | `modtest.py` (talk to the mod by hand), Genesis loot reader (`--extra` for Extra stages) and reports, and the BepInEx loader patcher |
 | `data/genesis/` | Unit shard drops of all 95 Genesis Hard stages (table, list, full loot CSV, raw results), and what the Extra stages drop |
@@ -140,9 +141,55 @@ they press), learned arrows and item goal. Files exported by older versions stil
 copy of the images, so nothing they already have is overwritten. Then they press **Check
 screen** to see whether the images match on their window.
 
+## Box events
+
+The **Box events** page has three tabs along the top: **Box events**, **Genesis** and **Ex**.
+
+**Box events tab:** every box event that's live, with a tile per unit whose Soul Shards its
+quests drop (portrait, name, quests, how many are left today). Tick units (the number beside a
+ticked unit is how many of its quests to farm) and press **Start box farm**: it opens Quest >
+Event, goes into each event, and skips the quests that drop those units, with the same skip, AP
+refill (Leaves), popups, grace period and pause as the Genesis farm. Needs the mod. The search box
+filters units by name. Portraits are only pictures; nothing is found by them.
+
+**Daily counter:** quests done today are remembered until the game's reset at 00:00 GMT (the tab
+shows how long until then). After a stop, Start goes straight to the quests that are left. Before
+pressing a quest the farm reads its row's "used / max", so quests played by hand count too and
+nothing is spent twice.
+
+**Where the events come from:** a file on GitHub (`data/live/box_events.json`) that TACMonkey
+downloads on start with the update check (or **Refresh** / **Check now**). Publishing a new box
+event doesn't make a new release, so nobody gets an update prompt.
+
+## Dev page (developer only)
+
+**Ctrl+Shift+D** turns on a **Dev** page (saved in `dev.json`, only on that PC). It needs a
+fine-grained GitHub token with *Contents: read and write* on this repository only (also kept in
+`dev.json`, never shared).
+
+- **Box event: scan.** With the game on Quest > Event: **Read event list**, pick the event, give
+  it a name for players, then **Scan whole event** (goes in, reads every quest and its Loot, comes
+  back), **Scan the open list** (the quest list you have open; put e.g. `Hard` in *Place* if the
+  event has more than one list) or **Add the open Quest Details** (a quest's magnifier you opened
+  yourself). Scans of a few places add up in a draft (`box_draft.json`). Nothing is pressed that
+  spends AP or attempts. Each unit's portrait is guessed from its shard's id; click one to pick
+  another. **Publish** puts the event in the live file for everyone; **Remove an event from live**
+  takes one out.
+- **Scripts: push to everyone.** Pick a script, write what's new, **Push script**. Every TACMonkey
+  then asks once: **Add it** (added as a new script, nothing of theirs is changed), **Not now**
+  (asks on the next start) or **Never for this one**. A new push of the same script asks again.
+  The file is checked against its SHA-256 before it's added.
+- **Texts.** **Edit texts...** lists every piece of wording on the pages (search, built-in text,
+  what players see). Changes go out with **Publish texts**. Text with `{fields}` keeps them; an
+  edit that doesn't fit falls back to the built-in wording.
+
+`app/event_scan.py` also runs on its own: `python event_scan.py` scans every event's quests and
+loot into `event_scan.json` (`--survey` for quest rows only).
+
 ## Genesis farm
 
-Needs the mod. Start from the home screen or anywhere in Genesis.
+Needs the mod. Start from the home screen or anywhere in Genesis (the **Genesis** tab of the Box
+events page).
 
 - **Units (Hard):** tick the units whose shards you want. The number that appears beside a
   ticked unit is how many of its stages to farm, newest chapter first. Each stage is skipped
@@ -166,7 +213,7 @@ Needs the mod. Start from the home screen or anywhere in Genesis.
   up during the run (each stage's own line still lists its Diagram Pieces).
 
 **Leaves (AP refill):** when AP runs out, the Genesis and Ex farms and the AP refill action
-refill it with Alchemy Drops. The **Leaves** row in the main window sets how many per refill
+refill it with Alchemy Drops (the box event farm too). The **Leaves** row in the main window sets how many per refill
 (7 by default), the most to use per session, and a number of owned drops to stop below. Leave
 the last two blank for no limit. When a limit is reached, the farm stops instead of refilling.
 
