@@ -139,6 +139,7 @@ class GenesisFarm:
         self.leaves_left = None   # Alchemy Drops owned, as last read
         self.lag = 1.0            # patience: waits are stretched this much (grows when slow)
         self.recoveries = 0       # stuck stages given a grace period this run
+        self.skips = SKIPS        # skips per stage (the box farm sets it per quest)
 
     # ---------- talking to the mod ----------
     def send(self, cmd, timeout=8.0):
@@ -548,8 +549,8 @@ class GenesisFarm:
                 self.sleep(1.5)
             elif state == "skipdialog":
                 n = self.slider_value()
-                if n is not None and n < SKIPS:
-                    self.set_slider(SKIPS)
+                if n is not None and n < self.skips:
+                    self.set_slider(self.skips)
                     n = self.slider_value()
                 ok = next((e for e in els if e["path"].endswith("bg/ok")), None)
                 if not ok:
