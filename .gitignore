@@ -25,3 +25,9 @@ dotnet-sdk*/
 
 # release builds (release/build.py)
 build/
+
+# live data: downloaded copy, Dev page token / draft, scanner output (data/live/ is the published file)
+app/box_events.json
+app/dev.json
+app/box_draft.json
+app/event_scan.json
