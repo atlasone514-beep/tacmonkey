@@ -24,6 +24,7 @@ except Exception as e:  # e.g. opencv missing - pythonw has no console to show i
     raise SystemExit(1)
 import farm_ui_box
 import live_data
+import notify
 import texts
 import updater
 from texts import t
@@ -55,7 +56,8 @@ farm_ui_box.use_theme(BG=BG, PANEL=PANEL, FIELD=FIELD, FG=FG, MUTED=MUTED, DARK=
                       ACCENT_TEXT=ACCENT_TEXT, NAV_SEL="#1d3857", TILE=TILE, FONT=FONT)
 
 
-class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage):
+class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
+          farm_ui_box.VcrPage):
     def __init__(self, root):
         self.root = root
         self.q = queue.Queue()
@@ -188,6 +190,13 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage):
             return None
         slug = re.sub(r"[^a-z0-9]+", "_", text.lower()).strip("_")[:48]
         return f"ui.{slug}" if slug else None
+
+    def notify_end(self, title, reason, extra=""):
+        """A Windows notification when a script or farm ends by itself (finished, a goal, a
+        limit, an error) - not when Stop or F9 was pressed."""
+        if not self.notify_done.get() or str(reason).startswith("Stopped"):
+            return
+        notify.notify(title, " ".join(x for x in (str(reason), extra) if x))
 
     def show_update(self, info):
         self.update_info = info
@@ -386,6 +395,7 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage):
     PAGES = (  # key, icon (Segoe Fluent Icons / MDL2 Assets glyph), label
         ("story", "", "Scripts"),
         ("farms", "", "Box events"),
+        ("vcr", "", "VCR"),
         ("leaves", "", "Leaves"),
         ("buttons", "", "Buttons"),
         ("dev", "\ue90f", "Dev"),
@@ -424,6 +434,7 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage):
         self.build_farm_tabs(self.pages["farms"])
         self.build_story(self.pages["story"])
         self.build_genesis()
+        self.build_vcr(self.pages["vcr"])
         self.build_leaves(self.pages["leaves"])
         self.build_buttons_page(self.pages["buttons"])
         self.build_settings(self.pages["settings"])
@@ -810,6 +821,9 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage):
         self.check(card, "Keep this window on top", self.on_top,
                    lambda: self.root.attributes("-topmost", self.on_top.get())).pack(
             fill="x", pady=(8, 0))
+        self.notify_done = tk.BooleanVar(value=True)
+        self.check(card, "Windows notification when a script or farm finishes", self.notify_done,
+                   self.save_settings).pack(fill="x", pady=(4, 0))
         self.check_updates = tk.BooleanVar(value=True)
         row = tk.Frame(card, bg=PANEL)
         row.pack(fill="x")
@@ -822,7 +836,9 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage):
 
     # ---------- shared Start / Pause / Stop ----------
     def start_any(self):
-        if self.page in self.PAGE_MODE:
+        if self.page == "vcr":
+            self.vcr_go()
+        elif self.page in self.PAGE_MODE:
             self.genesis_go(self.PAGE_MODE[self.page])
         else:
             self.start()
@@ -1108,6 +1124,7 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage):
         self.genesis_stop, self.genesis_pause = threading.Event(), threading.Event()
         leaves, solo = self.leaf_settings(), self.genesis_solo_on(mode)
         self.genesis_name = name
+        self.last_shards = {}   # this run's shards, for the notification at the end
         self.set_state(name, f"{', '.join(picks)} -> {len(stages)} stages")
         self.log(f"--- {name}: {', '.join(picks)} ---", "muted")
         if mode == "extra":
@@ -1208,6 +1225,8 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage):
                     "box": t("start.box", "Start box farm")}[mode]
             can = not busy and bool(self.genesis_selected(mode)) and not getattr(self, "dev_busy",
                                                                                  False)
+        elif self.page == "vcr":
+            text, can = t("start.vcr", "Start VCR farm"), not busy
         else:
             text, can = t("start.script", "Start script"), not busy
         self.start_btn.config(text=text)
@@ -1485,6 +1504,8 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage):
         self.import_asked = s.get("import_asked", False)
         self.tidy_asked = s.get("tidy_asked", False)
         self.check_updates.set(s.get("check_updates", True))
+        self.notify_done.set(s.get("notify_done", True))
+        self.vcr_leaves.set(s.get("vcr_leaves", True))
         self.editor_view = s.get("editor_view", "flow")
         self.toggle_merc()
         for mode, prefix in (("hard", "genesis"), ("extra", "ex")):
@@ -1520,6 +1541,8 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage):
                                             "import_asked": self.import_asked,
                                             "tidy_asked": self.tidy_asked,
                                             "check_updates": self.check_updates.get(),
+                                            "notify_done": self.notify_done.get(),
+                                            "vcr_leaves": self.vcr_leaves.get(),
                                             "editor_view": self.editor_view,
                                             "genesis_units": self.genesis_selected("hard"),
                                             "genesis_counts": self.genesis_count_map("hard"),
@@ -1574,6 +1597,8 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage):
                 self.worker = None
                 self.refresh_goal()
                 self.set_state("Stopped", msg[1])
+                self.notify_end(t("notify.script", "{script} finished", script=self.script.get()),
+                                msg[1], "" if "run" in str(msg[1]).lower() else f"{self.runs} runs")
                 self.update_buttons()
             elif kind == "check":
                 _, (w, h), scores, action = msg
@@ -1611,6 +1636,7 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage):
             elif kind == "update_failed":
                 self.update_failed(msg[1])
             elif kind == "gshards":
+                self.last_shards = dict(msg[1])
                 if self.genesis_mode == "extra":
                     self.show_elemental(msg[1])
                 elif self.genesis_mode == "box":
@@ -1633,6 +1659,9 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage):
                 self.genesis_worker = None
                 self.genesis_pause.clear()
                 self.set_state("Stopped", msg[1])
+                got = ", ".join(f"{u} x{n}" for u, n in getattr(self, "last_shards", {}).items())
+                self.notify_end(t("notify.farm", "{farm} finished", farm=self.genesis_name),
+                                msg[1], t("notify.shards", "Shards: {got}", got=got) if got else "")
                 self.update_buttons()
         if self.genesis_running():   # F8 pause / resume and F9 stop work for the Genesis farm too
             keys = (farm.key_down(farm.VK_F8), farm.key_down(farm.VK_F9))

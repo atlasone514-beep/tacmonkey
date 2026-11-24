@@ -274,6 +274,60 @@ class BoxTab:
             on_shards=lambda s: self.q.put(("gshards", s)))
 
 
+class VcrPage:
+    """VCR page: replay the quest that's open until every equipped memento is at 100%."""
+
+    def build_vcr(self, page):
+        card = self.page_card(page, "VCR farm", key="vcr.title")
+        self.label(card, "Replays the quest you're on until every equipped memento is at 100% "
+                         "(each finished run adds 0.1%). Start it on the quest's team screen "
+                         "(Go). Any stage works.", size=9, color=MUTED, wraplength=520,
+                   justify="left", anchor="w", key="vcr.help").pack(anchor="w")
+        self.label(card, "Each run: Go → the battle plays on auto → Quest Missions → Try Again! "
+                         "→ Go again. It stops by itself once all the mementos are at 100%.",
+                   size=9, color=MUTED, wraplength=520, justify="left", anchor="w",
+                   key="vcr.loop").pack(anchor="w", pady=(6, 0))
+        self.vcr_leaves = tk.BooleanVar(value=True)
+        self.check(card, "Use leaves when AP runs out", self.vcr_leaves, self.save_settings,
+                   key="vcr.leaves").pack(fill="x", pady=(10, 0))
+        self.label(card, "Alchemy Drops per refill and the limits come from the Leaves page. "
+                         "Off: it stops when AP runs out.", size=9, color=MUTED, wraplength=500,
+                   justify="left", anchor="w", key="vcr.leaves_help").pack(anchor="w",
+                                                                         padx=(24, 0))
+
+    def vcr_go(self):
+        if self.running() or self.genesis_running():
+            return
+        import vcr_farm
+        self.genesis_mode = "vcr"
+        self.save_settings()
+        name = t("vcr.name", "VCR farm")
+        self.genesis_stop, self.genesis_pause = threading.Event(), threading.Event()
+        leaves = self.leaf_settings()
+        self.genesis_name = name
+        self.last_shards = {}
+        use = self.vcr_leaves.get()
+        self.set_state(name, t("vcr.state", "until every memento is at 100%"))
+        self.log(f"--- {name} ---", "muted")
+        put = self.q.put
+
+        def job():
+            try:
+                reason = vcr_farm.VcrFarm(
+                    use_leaves=use, log=lambda m: put(("log", m)), stop=self.genesis_stop,
+                    pause=self.genesis_pause, leaves=leaves,
+                    status=lambda s: put(("gstatus", s))).run()
+            except Exception as e:
+                saved = farm.log_error(name)
+                reason = f"{name}: {e}"
+                put(("log", reason + (f" (details saved in {saved})" if saved else ""), "bad"))
+            put(("gdone", reason))
+
+        self.genesis_worker = threading.Thread(target=job, daemon=True)
+        self.genesis_worker.start()
+        self.update_buttons()
+
+
 class ScriptOffers:
     """Scripts the developer pushed: ask once per version whether to add them."""
 
