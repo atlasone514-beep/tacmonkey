@@ -79,6 +79,11 @@ black, or stops changing while the game shows something else, the farm reads the
 the game instead (the mod's `shot` command) and says so in the log; after a minute it tries
 Windows' picture again. On PCs where Windows' picture works, nothing changes.
 
+**Notifications:** when a script, the box farm, Genesis or Ex ends by itself (finished, a goal
+or limit reached, an error), Windows shows a notification with the reason (and the shards got).
+Pressing Stop or F9 doesn't notify. Turn it off in Settings: *Windows notification when a script
+or farm finishes*. Focus Assist / Do not disturb hides it like any other notification.
+
 **Errors:** an unexpected error is logged in the window and its full details are added to
 `errors.log` in the TACMonkey folder. If the AP refill misses a button, the farm tries the
 refill again (it stops after 3 failures in a row).
@@ -160,6 +165,23 @@ nothing is spent twice.
 **Where the events come from:** a file on GitHub (`data/live/box_events.json`) that TACMonkey
 downloads on start with the update check (or **Refresh** / **Check now**). Publishing a new box
 event doesn't make a new release, so nobody gets an update prompt.
+
+## VCR farm
+
+Every finished run adds 0.1% to each equipped memento's progress (錬金境界値 on the result
+screen); at 100% the memento's VCR is earned. The **VCR** page replays the quest you're on until
+every equipped memento is at 100%:
+
+- Open any quest's team screen and press **Start VCR farm**.
+- Each run: **Go** → the battle plays on auto → Quest Missions (closed by tapping empty space) →
+  EXP count-up (skipped) → result screen → **Try Again!** → **Go** again. A "Peddler Shop:
+  Bazaar Found!" popup gets **View Later**.
+- After each run the log shows every memento's %. Once they're all at 100% or more, the farm
+  stops on the result screen.
+- **Use leaves when AP runs out**: refills with Alchemy Drops using the Leaves page's settings
+  and limits. Off: the farm stops when AP runs out.
+
+The farm reads the screen through the mod, so it doesn't need button images.
 
 ## Dev page (developer only)
 
