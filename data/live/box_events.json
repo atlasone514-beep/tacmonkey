@@ -1,6 +1,6 @@
 {
  "format": 1,
- "updated": "2026-11-25 21:14",
+ "updated": "2026-11-25 21:43",
  "events": {
   "ADVANCE_ORION_CC": {
    "quests": [
@@ -3321,6 +3321,491 @@
    "chapter": "ADVANCE_DUNG_01",
    "list": "archive",
    "id": "ADVANCE_DUNG_01",
+   "added": "2026-11-25"
+  },
+  "ADVANCE_REN_CC": {
+   "name": "Soap Bubbles and Deception",
+   "quests": [
+    {
+     "title": "Soap Bubbles and Deception [Hard] (Hard Stage 1)",
+     "name": "Hard Stage 1",
+     "iname": "QE_EV_ADVANCE_REN_CC_HA_01",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_REN_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_RAP",
+       "name": "Spiral Flow Blade Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_TWINSWORD",
+       "name": "Trace Blades Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ONM_SOUBI",
+       "name": "Hidden Scroll Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_VEST",
+       "name": "Vest Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MAS",
+       "name": "Drunkard's Masu Cup Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURO",
+       "name": "Stamp of Certain Delivery Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_REN_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_REN",
+       "name": "Ren Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NATSUME",
+       "name": "Natsume Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_ATK_MACE",
+       "name": "Mace",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+       "name": "Shinobi Shoes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_SMALL",
+       "name": "Picmy Figurine Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+       "name": "Compass Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_WATCH",
+       "name": "Old Pocket Watch Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.18,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "Soap Bubbles and Deception [Hard] (Hard Stage 2)",
+     "name": "Hard Stage 2",
+     "iname": "QE_EV_ADVANCE_REN_CC_HA_02",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_REN_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_NATSU01",
+       "name": "Fierce God's Hairpin Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_JAMADHAR",
+       "name": "Jamadhar Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MFEN_SWORD",
+       "name": "White Serpent Blade Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_SPD_FEATHER",
+       "name": "Blue Feather",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SABER",
+       "name": "Saber Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_TRUMPET",
+       "name": "Trumpet Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+       "name": "Black Belt Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_PI_REN",
+       "name": "Ren Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NATSUME",
+       "name": "Natsume Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_ATK_MACE",
+       "name": "Mace",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+       "name": "Shinobi Shoes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_SMALL",
+       "name": "Picmy Figurine Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+       "name": "Compass Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_WATCH",
+       "name": "Old Pocket Watch Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_REN_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.33,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "Soap Bubbles and Deception [Hard] (Hard Stage 3)",
+     "name": "Hard Stage 3",
+     "iname": "QE_EV_ADVANCE_REN_CC_HA_03",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_REN_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_RAP",
+       "name": "Spiral Flow Blade Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_TWINSWORD",
+       "name": "Trace Blades Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ONM_SOUBI",
+       "name": "Hidden Scroll Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_HP_CAP",
+       "name": "Thick Hat",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_GETA",
+       "name": "Single-Tooth Geta Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_CHOKER",
+       "name": "Elemental Belt Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHIELD",
+       "name": "Lion Monarch Shield Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_PI_REN",
+       "name": "Ren Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NATSUME",
+       "name": "Natsume Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_ATK_MACE",
+       "name": "Mace",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+       "name": "Shinobi Shoes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_SMALL",
+       "name": "Picmy Figurine Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+       "name": "Compass Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_WATCH",
+       "name": "Old Pocket Watch Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_REN_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.45,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "Soap Bubbles and Deception [Hard] (Hard Stage 4)",
+     "name": "Hard Stage 4",
+     "iname": "QE_EV_ADVANCE_REN_CC_HA_04",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_REN_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_NATSU01",
+       "name": "Fierce God's Hairpin Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_JAMADHAR",
+       "name": "Jamadhar Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MFEN_SWORD",
+       "name": "White Serpent Blade Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_SPD_GEAR",
+       "name": "Harmonic Cogs",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_JAVELIN",
+       "name": "Javelin Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_MACHINEWING",
+       "name": "Mechanical Wing Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_PI_REN",
+       "name": "Ren Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NATSUME",
+       "name": "Natsume Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_ATK_MACE",
+       "name": "Mace",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+       "name": "Shinobi Shoes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_SMALL",
+       "name": "Picmy Figurine Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+       "name": "Compass Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_WATCH",
+       "name": "Old Pocket Watch Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_REN_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.6,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "Soap Bubbles and Deception [Hard] (Hard Stage 5)",
+     "name": "Hard Stage 5",
+     "iname": "QE_EV_ADVANCE_REN_CC_HA_05",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_REN_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_RAP",
+       "name": "Spiral Flow Blade Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_NATSU01",
+       "name": "Fierce God's Hairpin Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_RABBIT",
+       "name": "Rabbit's Foot Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DEF_BANGLE",
+       "name": "Copper Bangle",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_SMALL",
+       "name": "Picmy Figurine Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+       "name": "Compass Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_WATCH",
+       "name": "Old Pocket Watch Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_PI_REN",
+       "name": "Ren Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NATSUME",
+       "name": "Natsume Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_ATK_MACE",
+       "name": "Mace",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+       "name": "Shinobi Shoes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_REN_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.72,
+      0.39
+     ],
+     "max": 3
+    }
+   ],
+   "kind": "map",
+   "chapter": "ADVANCE_REN_CC",
+   "list": "boss battle list",
+   "id": "ADVANCE_REN_CC",
    "added": "2026-11-25"
   }
  },
