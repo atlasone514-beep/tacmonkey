@@ -125,7 +125,7 @@ ELEMENTS = ("Fire", "Water", "Thunder", "Wind", "Light", "Dark")   # Ex drops "F
 
 class GenesisFarm:
     def __init__(self, log=print, stop=None, mode="hard", pause=None, status=None, leaves=None,
-                 on_shards=None):
+                 on_shards=None, counter=None):
         self.log = log
         self.stop = stop or threading.Event()
         self.pause = pause or threading.Event()   # set = pause before the next stage
@@ -140,6 +140,8 @@ class GenesisFarm:
         self.lag = 1.0            # patience: waits are stretched this much (grows when slow)
         self.recoveries = 0       # stuck stages given a grace period this run
         self.skips = SKIPS        # skips per stage (the box farm sets it per quest)
+        # daily counter (box_farm.DayCounter): Hard stages done today, until 00:00 GMT
+        self.counter = counter if mode == "hard" else None
 
     # ---------- talking to the mod ----------
     def send(self, cmd, timeout=8.0):
@@ -256,8 +258,24 @@ class GenesisFarm:
     def on_team(self):
         return any("PartyEditor2" in e["path"] for e in self.elements() if e["top"])
 
+    @property
+    def navigator(self):
+        if getattr(self, "_nav", None) is None:
+            import navigator
+            self._nav = navigator.Navigator(self, log=self.log)
+        return self._nav
+
     def go_genesis(self):
-        """Get to the Genesis chapter list from the home screen or anywhere inside Genesis."""
+        """Get to the Genesis chapter list from any screen the menu map knows (navigator.py);
+        if that fails, the old way (home screen or anywhere inside Genesis)."""
+        if self.on_chapter_list():
+            return
+        try:
+            self.navigator.go("genesis list")
+            if self.wait_for(self.on_chapter_list, 6):
+                return
+        except RuntimeError as e:
+            self.log(f"  (menu map: {e} - trying the usual way)")
         for _ in range(10):
             if self.on_chapter_list():
                 return
@@ -630,6 +648,7 @@ class GenesisFarm:
         att = self.popup_attempts()
         if att and att[0] >= att[1]:
             self.log(f"  {key}: attempts {att[0]}/{att[1]} used today - skipped")
+            self.note_done(st, att[1])
             self.close_popups()
             return
         self.tap(POPUP_OK)
@@ -639,6 +658,7 @@ class GenesisFarm:
             return
         self.sleep(1.0)
         got, skipped = self.skip_stage(key)
+        self.note_done(st, att[1] if att else SKIPS)   # skipped, or no attempts left
         if not skipped:
             self.log(f"  {key}: no attempts left today - skipped" if self.mode == "hard" else
                      f"  {key}: can't skip - no attempt left today, or not cleared by hand yet")
@@ -663,6 +683,14 @@ class GenesisFarm:
         else:
             raise RuntimeError(f"{key}: didn't get back to the map")
         self.sleep(0.8)
+
+    @staticmethod
+    def day_key(st):
+        return f"genesis|{st['stage']}"
+
+    def note_done(self, st, most):
+        if self.counter is not None:
+            self.counter.note(self.day_key(st), most, most)
 
     def grace(self, st, err):
         """A stage got stuck: give the game GRACE_WAIT s, tidy up, and say whether to try it
@@ -725,6 +753,13 @@ class GenesisFarm:
             raise RuntimeError(f"unknown picks: {unknown}")
         order = plan(data, units, counts, solo and self.mode == "hard")
         name = "Genesis farm" if self.mode == "hard" else "Ex Genesis farm"
+        if self.counter is not None:   # straight to the stages left today
+            done = [s for s in order if self.counter.finished(self.day_key(s), SKIPS)]
+            if done:
+                self.log(f"{name}: {len(done)} stage{'s' if len(done) != 1 else ''} already "
+                         f"done today - "
+                         f"{', '.join(s['stage'] for s in done)}")
+                order = [s for s in order if s not in done]
         self.log(f"{name}: {', '.join(units)} -> {len(order)} {self.label} stages"
                  f"{' (solo stages only)' if solo and self.mode == 'hard' else ''}: "
                  f"{', '.join(s['stage'] for s in order)}")

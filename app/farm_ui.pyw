@@ -401,8 +401,8 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
         ("dev", "\ue90f", "Dev"),
         ("settings", "", "Settings"),
     )
-    PAGE_MODE = {"box": "box", "genesis": "hard", "ex": "extra"}   # tabs that run a farm
-    FARM_TABS = (("box", "Box events"), ("genesis", "Genesis"), ("ex", "Ex"))   # tabs on top
+    PAGE_MODE = {"box": "box", "ex": "extra"}   # tabs that run a farm (box: box events + Genesis)
+    FARM_TABS = (("box", "Box events"), ("ex", "Genesis Ex"))   # tabs on top
     NAV_SEL, NAV_HOVER = "#1d3857", "#2c2c2c"
 
     def build(self):
@@ -885,8 +885,9 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
             self.genesis_data[mode] = data
             self.genesis_vars[mode], self.genesis_counts[mode] = {}, {}
             self.genesis_spins[mode] = {}
-        self.genesis_grid(self.page_card(self.pages["genesis"], "Genesis farm - units (Hard)",
-                                         key="genesis.title"))
+        import genesis_farm   # the Genesis units are tiles on the Box events tab (farm_ui_box)
+        self.genesis_owners = genesis_farm.shared_owners(self.genesis_data["hard"])
+        self.genesis_star = {}
         self.ex_list(self.page_card(self.pages["ex"], "Ex Genesis farm - chapters (Extra)",
                                     key="ex.title"))
 
@@ -905,55 +906,6 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
         """The units whose shards drop in a chapter's Hard stages."""
         return sorted({u for u, d in self.genesis_data["hard"].items()
                        for st in d["stages"] if st["chapter"] == chapter}, key=str.lower)
-
-    def genesis_grid(self, frame):
-        mode, data = "hard", self.genesis_data["hard"]
-        import genesis_farm
-        self.genesis_owners = genesis_farm.shared_owners(data)
-        self.genesis_star = {}
-        self.label(frame, "Tick units. The number beside one is how many of its stages to farm, "
-                          "newest chapter first. Each stage is skipped with 3 skip tickets.",
-                   size=9, color=MUTED, wraplength=520, justify="left",
-                   key="genesis.help").pack(anchor="w")
-        self.check(frame, "Solo stages only (skip stages shared with another unit)",
-                   self.genesis_solo, self.genesis_changed).pack(anchor="w", pady=(6, 0))
-        grid = tk.Frame(frame, bg=PANEL)
-        grid.pack(fill="x", pady=(6, 4))
-        cols = 3
-        keys = sorted(data, key=str.lower)
-        for i, key in enumerate(keys):
-            n = len(data[key]["stages"])
-            var = tk.BooleanVar(value=False)
-            count = tk.IntVar(value=n)
-            cell = tk.Frame(grid, bg=PANEL)
-            cell.grid(row=i // cols, column=i % cols, sticky="w", padx=(0, 6), pady=1)
-            spin = tk.Spinbox(cell, from_=1, to=n, width=2, textvariable=count, wrap=False,
-                              command=self.genesis_changed, bg=FIELD, fg=FG, buttonbackground=FIELD,
-                              insertbackground=FG, relief="flat", font=(FONT, 9), justify="center",
-                              highlightthickness=0)
-            spin.bind("<KeyRelease>", lambda _e: self.genesis_changed())
-            spin.bind("<FocusOut>", lambda _e: self.genesis_changed())
-            cb = tk.Checkbutton(cell, text=key, variable=var, command=self.genesis_changed,
-                                bg=PANEL, fg=FG, activebackground=PANEL, activeforeground=FG,
-                                selectcolor=FIELD, highlightthickness=0, bd=0, font=(FONT, 10),
-                                anchor="w")
-            cb.pack(side="left")
-            if self.genesis_shared_only(key):
-                self.genesis_star[key] = cb   # gets a * while Solo stages only is ticked
-            self.genesis_vars[mode][key] = var
-            self.genesis_counts[mode][key] = count
-            self.genesis_spins[mode][key] = spin   # shown only while ticked
-        for c in range(cols):
-            grid.columnconfigure(c, weight=1)
-        if not keys:
-            self.label(grid, "genesis_shards.json not found", color=RED).grid(row=0, column=0)
-        self.genesis_star_note = self.label(frame, "* has only shared stages, so it keeps them",
-                                            size=8, color=MUTED)
-        self.genesis_star_anchor = tk.Frame(frame, bg=PANEL)   # the note is packed before this
-        self.genesis_star_anchor.pack(fill="x")
-        self.wip_team_row(frame)
-        self.genesis_info["hard"] = self.label(frame, "", size=9, color=MUTED, anchor="w")
-        self.genesis_info["hard"].pack(anchor="w", pady=(10, 0))
 
     def ex_list(self, frame):
         mode, data = "extra", self.genesis_data["extra"]
@@ -1008,7 +960,7 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
 
     def genesis_set_mode(self, mode):
         """Kept for old settings: show the page of that mode."""
-        self.show_page(self.GENESIS_MODES[mode][0])
+        self.show_page("ex" if mode == "extra" else "box")
 
     def genesis_selected(self, mode=None):
         return [k for k, v in self.genesis_vars[mode or self.genesis_mode].items() if v.get()]
@@ -1057,7 +1009,7 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
                                                        self.genesis_solo_on(mode))]
 
     def genesis_changed(self):
-        if not getattr(self, "genesis_info", None) or len(self.genesis_info) < 3:
+        if not all(k in getattr(self, "genesis_info", {}) for k in ("box", "extra")):
             return
         for key, spin in self.genesis_spins["box"].items():   # number boxes only while ticked
             on = self.genesis_vars["box"][key].get()
@@ -1081,30 +1033,48 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
                 full = was >= int(spin.cget("to"))
                 spin.config(to=total)
                 var.set(total if full else min(was, total))
-            if on and not spin.winfo_ismapped():
-                spin.pack(side="left", padx=(2, 0))
+            tile = self.box_tiles.get(("hard", key), {}).get("tile")
+            if tile is not None:
+                tile.config(highlightbackground=BLUE if on else TILE)
+            if on and not spin.winfo_manager():
+                spin.pack(side="right")
             elif not on and spin.winfo_manager():
                 spin.pack_forget()
         solo = self.genesis_solo.get()
         for key, cb in self.genesis_star.items():
             cb.config(text=key + (" *" if solo else ""))
-        note = self.genesis_star_note
-        if solo and not note.winfo_manager():
-            note.pack(anchor="w", before=self.genesis_star_anchor)
-        elif not solo and note.winfo_manager():
-            note.pack_forget()
-        picks = self.genesis_selected("box")
+        note = getattr(self, "genesis_star_note", None)
+        if note is not None:
+            try:
+                if solo and not note.winfo_manager():
+                    note.pack(side="right", padx=(0, 8))
+                elif not solo and note.winfo_manager():
+                    note.pack_forget()
+            except tk.TclError:
+                pass
+        picks, gpicks = self.genesis_selected("box"), self.genesis_selected("hard")
         quests = self.genesis_stages(picks, "box")
+        stages = self.genesis_stages(gpicks, "hard")
+        events = sum(1 for eid in self.live.get("events", {})
+                     if any(q["event"] == eid for u in picks for q in self.box_units.get(u, [])))
         self.genesis_info["box"].config(
-            text=t("box.ticked", "{n} quests ticked", n=len(quests)) if picks
-            else t("box.none_ticked", "Nothing ticked yet"))
-        self.set_badge("box", len(picks))
-        for mode, per, page in (("hard", 3, "genesis"), ("extra", 1, "ex")):
-            picks = self.genesis_selected(mode)
-            stages = self.genesis_stages(picks, mode)
-            self.genesis_info[mode].config(text=f"{len(stages)} stages · {len(stages) * per} "
-                                                f"skips" if picks else "Nothing ticked yet")
-            self.set_badge(page, len(picks))
+            text=t("box.ticked", "{n} quest{s} ticked in {e} event{es} - each event runs on "
+                   "its own, one after another", n=len(quests), s="" if len(quests) == 1 else "s",
+                   e=events, es="" if events == 1 else "s")
+            if picks else t("box.none_ticked", "Nothing ticked yet"))
+        if "hard" in self.genesis_info:
+            self.genesis_info["hard"].config(
+                text=t("box.genesis_ticked", "{n} stages · {skips} skips - farmed after the box "
+                       "events, chapter by chapter", n=len(stages), skips=len(stages) * 3)
+                if gpicks else t("box.none_ticked", "Nothing ticked yet"))
+        self.set_badge("box", len(picks) + len(gpicks))
+        picks = self.genesis_selected("extra")
+        stages = self.genesis_stages(picks, "extra")
+        self.genesis_info["extra"].config(text=f"{len(stages)} stages · {len(stages)} skips"
+                                          if picks else "Nothing ticked yet")
+        self.set_badge("ex", len(picks))
+        if getattr(self, "box_tiles", None):
+            self.box_counts_refresh()   # Solo stages only changes the Genesis tiles' counts
         self.update_buttons()
 
     def genesis_running(self):
@@ -1114,6 +1084,8 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
     def genesis_go(self, mode=None):
         mode = mode or self.genesis_mode
         picks = self.genesis_selected(mode)
+        if mode == "box":
+            return self.box_go()
         if not picks or self.running() or self.genesis_running():
             return
         self.genesis_mode = mode
@@ -1223,8 +1195,12 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
             text = {"hard": t("start.genesis", "Start Genesis farm"),
                     "extra": t("start.ex", "Start Ex farm"),
                     "box": t("start.box", "Start box farm")}[mode]
-            can = not busy and bool(self.genesis_selected(mode)) and not getattr(self, "dev_busy",
-                                                                                 False)
+            if mode == "box" and self.genesis_vars.get("hard"):
+                b, g = bool(self.genesis_selected("box")), bool(self.genesis_selected("hard"))
+                text = (t("start.box_genesis", "Start box + Genesis farm") if b and g else
+                        t("start.genesis", "Start Genesis farm") if g else text)
+            ticked = self.genesis_selected(mode) or (mode == "box" and self.genesis_selected("hard"))
+            can = not busy and bool(ticked) and not getattr(self, "dev_busy", False)
         elif self.page == "vcr":
             text, can = t("start.vcr", "Start VCR farm"), not busy
         else:
@@ -1530,6 +1506,8 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
         self.leaf_floor.set(str(s.get("leaf_floor") or ""))
         page = s.get("page") or {"extra": "ex", "hard": "genesis"}.get(s.get("genesis_mode"))
         self.farm_tab = s.get("farm_tab") if s.get("farm_tab") in self.PAGE_MODE else "box"
+        if page == "genesis":   # 1.7.0 had a Genesis tab: it's part of Box events now
+            page = "box"
         self.show_page(page if page in self.pages else "story")
         self.genesis_changed()
 
