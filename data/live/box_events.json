@@ -1,6 +1,6 @@
 {
  "format": 1,
- "updated": "2026-11-25 14:38",
+ "updated": "2026-11-25 19:55",
  "events": {
   "ADVANCE_ORION_CC": {
    "quests": [
@@ -505,6 +505,714 @@
    "list": "boss battle list",
    "name": "A Roar and a Thunderclap",
    "id": "ADVANCE_ORION_CC",
+   "added": "2026-11-25"
+  },
+  "ADVANCE_DIE_FROHLICHE": {
+   "name": "Qilin & Standing Alone",
+   "quests": [
+    {
+     "title": "Qilin & Standing Alone - Hard 1",
+     "name": "Hard Stage 1",
+     "iname": "QE_EV_ADVANCE_DIE_FROHLICHE_HA_01",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_DIE_FROHLICHE_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_EINZ01",
+       "name": "Creator's Gloves Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_NERO01",
+       "name": "Hollow Dark Crown Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_THOL_CLOTHES",
+       "name": "Black Robes of Evershade Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_KNIFE",
+       "name": "Ogre Knife Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MAS",
+       "name": "Drunkard's Masu Cup Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+       "name": "Knight Chess Piece Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_JAMADHAR",
+       "name": "Jamadhar Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_EINZ_01",
+       "name": "Twin Sharp Blades Pioneer Shard",
+       "type": "ArtifactPiece"
+      },
+      {
+       "iname": "IT_PI_ACHAD",
+       "name": "Acht Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_VIER",
+       "name": "Vier Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NOIN",
+       "name": "Neun Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_FURY",
+       "name": "Füry Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZYVA",
+       "name": "Sieba Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZENN",
+       "name": "Zehn Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_THOL",
+       "name": "Sol Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZWEI",
+       "name": "Zwei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_DREI",
+       "name": "Drei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_EINZ",
+       "name": "Eins Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NERO",
+       "name": "Nero Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_TENBIN",
+       "name": "Gem Seller's Scales Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_MACHINEWING",
+       "name": "Mechanical Wing Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GLASSPEN",
+       "name": "Glass Pen Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_CSWORD",
+       "name": "Crystal Sword Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_DIE_FROHLICHE_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.18,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "Qilin & Standing Alone - Hard 2",
+     "name": "Hard Stage 2",
+     "iname": "QE_EV_ADVANCE_DIE_FROHLICHE_HA_02",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_DIE_FROHLICHE_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_EINZ01",
+       "name": "Creator's Gloves Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_NERO01",
+       "name": "Hollow Dark Crown Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_THOL_CLOTHES",
+       "name": "Black Robes of Evershade Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_GEM_SPOON",
+       "name": "Silver Spoon",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+       "name": "Shinobi Shoes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_NECRO",
+       "name": "Necronomicon Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BERS",
+       "name": "Surya Gauntlet Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_EINZ_01",
+       "name": "Twin Sharp Blades Pioneer Shard",
+       "type": "ArtifactPiece"
+      },
+      {
+       "iname": "IT_PI_ACHAD",
+       "name": "Acht Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_VIER",
+       "name": "Vier Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NOIN",
+       "name": "Neun Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_FURY",
+       "name": "Füry Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZYVA",
+       "name": "Sieba Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZENN",
+       "name": "Zehn Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_THOL",
+       "name": "Sol Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZWEI",
+       "name": "Zwei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_DREI",
+       "name": "Drei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_EINZ",
+       "name": "Eins Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NERO",
+       "name": "Nero Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_TENBIN",
+       "name": "Gem Seller's Scales Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_MACHINEWING",
+       "name": "Mechanical Wing Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GLASSPEN",
+       "name": "Glass Pen Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_CSWORD",
+       "name": "Crystal Sword Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_DIE_FROHLICHE_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.33,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "Qilin & Standing Alone - Hard 3",
+     "name": "Hard Stage 3",
+     "iname": "QE_EV_ADVANCE_DIE_FROHLICHE_HA_03",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_DIE_FROHLICHE_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_EINZ01",
+       "name": "Creator's Gloves Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_NERO01",
+       "name": "Hollow Dark Crown Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_THOL_CLOTHES",
+       "name": "Black Robes of Evershade Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DEX_TRIANGLE",
+       "name": "Set Square",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_AX",
+       "name": "Great Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_COAT",
+       "name": "Noble Coat Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SHN_RUCK",
+       "name": "Akindo Bag Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_EINZ_01",
+       "name": "Twin Sharp Blades Pioneer Shard",
+       "type": "ArtifactPiece"
+      },
+      {
+       "iname": "IT_PI_ACHAD",
+       "name": "Acht Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_VIER",
+       "name": "Vier Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NOIN",
+       "name": "Neun Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_FURY",
+       "name": "Füry Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZYVA",
+       "name": "Sieba Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZENN",
+       "name": "Zehn Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_THOL",
+       "name": "Sol Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZWEI",
+       "name": "Zwei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_DREI",
+       "name": "Drei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_EINZ",
+       "name": "Eins Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NERO",
+       "name": "Nero Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_TENBIN",
+       "name": "Gem Seller's Scales Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_MACHINEWING",
+       "name": "Mechanical Wing Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GLASSPEN",
+       "name": "Glass Pen Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_CSWORD",
+       "name": "Crystal Sword Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_DIE_FROHLICHE_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.45,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "Qilin & Standing Alone - Hard 4",
+     "name": "Hard Stage 4",
+     "iname": "QE_EV_ADVANCE_DIE_FROHLICHE_HA_04",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_DIE_FROHLICHE_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_EINZ01",
+       "name": "Creator's Gloves Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_NERO01",
+       "name": "Hollow Dark Crown Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_THOL_CLOTHES",
+       "name": "Black Robes of Evershade Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DEF_BANGLE",
+       "name": "Copper Bangle",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_DICE",
+       "name": "Dice of Fate Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_DARKKABUTO",
+       "name": "Sinister Helmet Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_EINZ_01",
+       "name": "Twin Sharp Blades Pioneer Shard",
+       "type": "ArtifactPiece"
+      },
+      {
+       "iname": "IT_PI_ACHAD",
+       "name": "Acht Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_VIER",
+       "name": "Vier Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NOIN",
+       "name": "Neun Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_FURY",
+       "name": "Füry Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZYVA",
+       "name": "Sieba Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZENN",
+       "name": "Zehn Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_THOL",
+       "name": "Sol Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZWEI",
+       "name": "Zwei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_DREI",
+       "name": "Drei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_EINZ",
+       "name": "Eins Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NERO",
+       "name": "Nero Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_TENBIN",
+       "name": "Gem Seller's Scales Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_MACHINEWING",
+       "name": "Mechanical Wing Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GLASSPEN",
+       "name": "Glass Pen Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_CSWORD",
+       "name": "Crystal Sword Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_DIE_FROHLICHE_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.6,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "Qilin & Standing Alone - Hard 5",
+     "name": "Hard Stage 5",
+     "iname": "QE_EV_ADVANCE_DIE_FROHLICHE_HA_05",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_DIE_FROHLICHE_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_EINZ01",
+       "name": "Creator's Gloves Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_NERO01",
+       "name": "Hollow Dark Crown Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_THOL_CLOTHES",
+       "name": "Black Robes of Evershade Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_CHOKER",
+       "name": "Elemental Belt Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_STAFF",
+       "name": "Star Staff Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_KATAR",
+       "name": "Platinum Katar Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_HWIZ_KABUTO",
+       "name": "Extravagant Helmet Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_EINZ_01",
+       "name": "Twin Sharp Blades Pioneer Shard",
+       "type": "ArtifactPiece"
+      },
+      {
+       "iname": "IT_PI_EINZ",
+       "name": "Eins Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_TENBIN",
+       "name": "Gem Seller's Scales Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_MACHINEWING",
+       "name": "Mechanical Wing Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GLASSPEN",
+       "name": "Glass Pen Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_CSWORD",
+       "name": "Crystal Sword Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_DIE_FROHLICHE_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.72,
+      0.39
+     ],
+     "max": 3
+    }
+   ],
+   "kind": "map",
+   "chapter": "ADVANCE_DIE_FROHLICHE",
+   "list": "archive",
+   "main": [
+    "Eins"
+   ],
+   "id": "ADVANCE_DIE_FROHLICHE",
    "added": "2026-11-25"
   }
  },
