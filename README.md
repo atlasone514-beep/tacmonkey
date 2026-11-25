@@ -84,6 +84,11 @@ or limit reached, an error), Windows shows a notification with the reason (and t
 Pressing Stop or F9 doesn't notify. Turn it off in Settings: *Windows notification when a script
 or farm finishes*. Focus Assist / Do not disturb hides it like any other notification.
 
+**Finish and go home:** with a run limit set, tick *Then finish the last quest and go to the
+home screen* (needs the mod). When the counter is on Go (or Try Again), the last quest is played to
+the end and Go isn't pressed again; then the farm walks back to the home screen with the menu map.
+A counter on a later step stops there and goes home.
+
 **Errors:** an unexpected error is logged in the window and its full details are added to
 `errors.log` in the TACMonkey folder. If the AP refill misses a button, the farm tries the
 refill again (it stops after 3 failures in a row).
@@ -173,6 +178,16 @@ buttons. Only Back and menu buttons are pressed.
 shows how long until then). After a stop, Start goes straight to the quests that are left. Before
 pressing a quest the farm reads its row's "used / max", so quests played by hand count too and
 nothing is spent twice. Genesis Hard stages are counted the same way.
+
+**Event Archives:** older box events live in Quest > Event > **Event Archives** (Boss Battle
+Quest tab) and must be unlocked there for 24 hours. The farm finds an event there by its name when
+it isn't in the live list. Those units carry an **Archive** tag, and the pill at the top counts
+the archive events picked (3 a day): ticking a unit of a 4th event is refused with a warning. A
+locked archive event is unlocked with the day's free unlocks: OK is pressed
+only if the dialog is for that event and says "Free once per day", read in full. Once it says
+"Owned" (it would cost items) the farm presses Cancel and stops that job. Items and gems are never
+spent. Needs TAC Auto Tap 1.3.1. Both are on by default; the Dev page has a switch for each
+(the warning, the free unlock).
 
 **Where the events come from:** a file on GitHub (`data/live/box_events.json`) that TACMonkey
 downloads on start with the update check (or **Refresh** / **Check now**). Publishing a new box

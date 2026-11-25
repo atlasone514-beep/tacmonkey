@@ -75,8 +75,8 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-VERSION = "1.7.2"   # TACMonkey release (the setup and the window show it)
-MOD_VERSION = "1.3.0"  # TAC Auto Tap version shipped with this release (release/build.py checks it)
+VERSION = "1.7.3"   # TACMonkey release (the setup and the window show it)
+MOD_VERSION = "1.3.1"  # TAC Auto Tap version shipped with this release (release/build.py checks it)
 WINDOW_TITLE = "The Alchemist Code"
 # APP_DIR holds your buttons, scripts and settings; RES_DIR the files shipped with the program.
 # Run from source both are this folder; as the installed TACMonkey.exe, APP_DIR is the exe's
@@ -350,6 +350,25 @@ def mod_status():
     return reply if reply and reply.startswith("pong") else None
 
 
+def go_home(log=print, stop=None):
+    """After a finished script: walk the game back to the home screen with the menu map (only
+    Back and close buttons are pressed). Needs the mod. True if it got there."""
+    if not mod_status():
+        log("Couldn't go to the home screen: that needs the TAC Auto Tap mod.")
+        return False
+    import genesis_farm   # (it imports this module)
+    f = genesis_farm.GenesisFarm(log=log, stop=stop)
+    try:
+        f.navigator.go("home")
+    except genesis_farm.Stop:
+        return False
+    except RuntimeError as e:
+        log(f"Couldn't go to the home screen: {e}")
+        return False
+    log("Back on the home screen.")
+    return True
+
+
 def mod_mismatch(status):
     """A warning if the running mod isn't the version this app came with, else None."""
     parts = (status or "").split()
@@ -462,6 +481,17 @@ EMPTY_SPOT = (0.5, 0.93)   # where "tap an empty spot" taps: below the Quest Mis
 STARTER_ORDER = (("quest", "new quest"), ("skip",), ("hire",), ("wind",), ("merc",),
                  ("confirm",), ("go",), ("auto",), ("talk",), ("missions",),
                  ("end quest", "endquest", "try again", "tryagain"), ("act", "next act"))
+
+
+# Steps that start another run (a script that counts runs on Go has only just started its last
+# quest at the limit: "finish, then home" lets it finish and stops at the next of these)
+START_WORDS = ("go", "try again", "tryagain", "retry", "again")
+FINISH_WAIT = 20 * 60   # s: the last quest gets this long to finish before the script stops
+
+
+def is_start_step(key):
+    low = key.lower()
+    return any(low == w or low.startswith(w + " ") or low.startswith(w + "_") for w in START_WORDS)
 
 
 def step_rank(key):
@@ -1936,9 +1966,11 @@ def test(script=None):
 
 
 def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_switch=True,
-        skip_merc=None, script=None, leaves=None):
+        skip_merc=None, script=None, leaves=None, finish_last=False):
     """Farm until stopped and return why it stopped.
     leaves: the AP refill action's leaf settings (genesis_farm.leaf_settings).
+    finish_last: when max_runs is reached on a step that starts a run (Go), let that last quest
+    finish and stop at the next step that would start another (Go / Try again), unpressed.
 
     The window (farm_ui.pyw) passes threading.Events for stop/pause/skip_merc, its own log
     function and on_status(state, runs, last_click). F8 (pause/resume) and F9 (stop) work either
@@ -1968,6 +2000,7 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
     spot_steps = {k for k, o in opts.items() if "spot" in o}
     quest_steps = [k for k, o in opts.items() if "quest" in o and k in groups]
     results_steps = {k for k, v in groups.items() if any(n in counters for n, _, _ in v)}
+    finishing = None   # time the run limit was reached on a Go (finish_last: the last quest)
     if spots:
         log("Fixed tap spots: " + ", ".join(f"{b} at {x:.0%} across, {y:.0%} down"
                                             for b, (x, y) in sorted(spots.items())))
@@ -2223,6 +2256,10 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
                     show(f"Waiting: {name} seen{where}")
                     break
                 waiting_for = None
+                if finishing and button != repeat_button and is_start_step(button):
+                    reason = f"Reached {max_runs} runs - the last quest is finished."
+                    say(f"{name} would start another run - not pressed")
+                    break
                 streak = repeats + 1 if button == repeat_button else 1
                 if button in spot_steps and streak % 2 == 1:  # 1st, 3rd... tap: empty area
                     fx, fy = TAP_ANYWHERE.get(button, EMPTY_SPOT)
@@ -2259,7 +2296,11 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
                     runs += 1
                     log(f"  runs completed: {runs}")
                     if max_runs and runs >= max_runs:
-                        reason = f"Reached {max_runs} runs."
+                        if finish_last and is_start_step(button):
+                            finishing = time.time()
+                            say(f"Reached {max_runs} runs - letting the last quest finish")
+                        else:
+                            reason = f"Reached {max_runs} runs."
                 show("Running")
                 break
         else:
@@ -2274,6 +2315,9 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
                 show(f"Stuck: nothing recognised for {STALL_WARNING}s+")
             else:
                 show("Running")
+        if finishing and not reason and time.time() - finishing > FINISH_WAIT:
+            reason = (f"Reached {max_runs} runs - the last quest didn't finish within "
+                      f"{FINISH_WAIT // 60} minutes.")
         if reason:
             break
         time.sleep(SCAN_INTERVAL)

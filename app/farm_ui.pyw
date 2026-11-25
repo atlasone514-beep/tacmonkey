@@ -693,6 +693,13 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
         self.max_spin = self.spinbox(row, self.max_runs, from_=0, to=9999, increment=1)
         self.max_spin.pack(side="left", padx=6)
         self.label(row, "0 = never", color=MUTED).pack(side="left")
+        self.finish_home = tk.BooleanVar(value=True)
+        home = self.check(opts, "Then finish the last quest and go to the home screen",
+                          self.finish_home, self.save_settings)
+        home.pack(anchor="w", padx=(52, 0), pady=(4, 0))
+        self.label(opts, "Needs the mod. Counted on Go: the last quest runs to the end, Go isn't "
+                         "pressed again.", size=8, color=MUTED, anchor="w").pack(
+            anchor="w", padx=(76, 0))
         # item goal: "Item  I have [2000] of [icon] Mechanical Wing Piece  Capture  From file  Clear"
         row = tk.Frame(opts, bg=PANEL)
         row.pack(fill="x", pady=(6, 0))
@@ -822,6 +829,8 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
                    lambda: self.root.attributes("-topmost", self.on_top.get())).pack(
             fill="x", pady=(8, 0))
         self.notify_done = tk.BooleanVar(value=True)
+        self.archive_limit = tk.BooleanVar(value=True)   # Dev page: at most 3 archive events
+        self.archive_unlock = tk.BooleanVar(value=True)  # Dev page: use the day's free unlocks
         self.check(card, "Windows notification when a script or farm finishes", self.notify_done,
                    self.save_settings).pack(fill="x", pady=(4, 0))
         self.check_updates = tk.BooleanVar(value=True)
@@ -1075,6 +1084,7 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
         self.set_badge("ex", len(picks))
         if getattr(self, "box_tiles", None):
             self.box_counts_refresh()   # Solo stages only changes the Genesis tiles' counts
+        self.archive_refresh()
         self.update_buttons()
 
     def genesis_running(self):
@@ -1261,7 +1271,12 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
                               stop=self.stop_event, pause=self.pause_event,
                               on_status=lambda s, r, l: self.q.put(("status", s, r, l)),
                               act_switch=act_switch, skip_merc=self.skip_merc_event,
-                              script=script, leaves=leaves)
+                              script=script, leaves=leaves,
+                              finish_last=self.finish_home.get())
+            if self.finish_home.get() and max_runs and str(reason).startswith(
+                    f"Reached {max_runs} runs") and not self.stop_event.is_set():
+                self.q.put(("log", "Going to the home screen..."))
+                farm.go_home(log=lambda m: self.q.put(("log", m)), stop=self.stop_event)
         except SystemExit as e:
             reason = str(e)
             self.q.put(("log", reason, "bad"))
@@ -1481,6 +1496,9 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
         self.tidy_asked = s.get("tidy_asked", False)
         self.check_updates.set(s.get("check_updates", True))
         self.notify_done.set(s.get("notify_done", True))
+        self.finish_home.set(s.get("finish_home", True))
+        self.archive_limit.set(s.get("archive_limit", True))
+        self.archive_unlock.set(s.get("archive_unlock", True))
         self.vcr_leaves.set(s.get("vcr_leaves", True))
         self.editor_view = s.get("editor_view", "flow")
         self.toggle_merc()
@@ -1520,6 +1538,9 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
                                             "tidy_asked": self.tidy_asked,
                                             "check_updates": self.check_updates.get(),
                                             "notify_done": self.notify_done.get(),
+                                            "finish_home": self.finish_home.get(),
+                                            "archive_limit": self.archive_limit.get(),
+                                            "archive_unlock": self.archive_unlock.get(),
                                             "vcr_leaves": self.vcr_leaves.get(),
                                             "editor_view": self.editor_view,
                                             "genesis_units": self.genesis_selected("hard"),

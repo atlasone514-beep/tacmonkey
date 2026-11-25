@@ -50,7 +50,7 @@ namespace TACAutoTap;
 public class Plugin : BasePlugin
 {
     public const string Guid = "tac.autotap";
-    public const string Version = "1.3.0";
+    public const string Version = "1.3.1";
     public const int Port = 47613;
     private const int MaxLine = 512;
     private static readonly string[] Commands =
@@ -110,6 +110,9 @@ public class Plugin : BasePlugin
         }
     }
 
+    private static string OneLine(string reply) =>
+        (reply ?? "").Replace("\r\n", " / ").Replace("\n", " / ").Replace("\r", " / ");
+
     private static void Serve(TcpClient accepted)
     {
         {
@@ -134,7 +137,8 @@ public class Plugin : BasePlugin
                     var req = new Request(line);
                     Pending.Enqueue(req);
                     // The game handles it on its next frame (only ~7 fps when the window isn't focused).
-                    writer.WriteLine(req.Done.Wait(3000) ? req.Reply : "err timeout - game busy or paused");
+                    // One line per reply: a line break in game text (a dialog's second line) becomes " / ".
+                    writer.WriteLine(req.Done.Wait(3000) ? OneLine(req.Reply) : "err timeout - game busy or paused");
                 }
             }
             catch (Exception e)

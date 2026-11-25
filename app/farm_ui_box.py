@@ -22,6 +22,8 @@ from texts import t
 BG = PANEL = FIELD = FG = MUTED = DARK = GREY = BLUE = GREEN = ORANGE = RED = YELLOW = ""
 ACCENT_TEXT = NAV_SEL = TILE = ""
 FONT = "Segoe UI"
+ARCHIVE_MAX = 3   # Event Archives events open at once (the game's limit)
+ARCHIVE_BG, ARCHIVE_FG = "#352f4f", "#c4b5fd"   # the Archive pill and tags
 
 
 def use_theme(**colors):
@@ -109,8 +111,13 @@ class BoxTab:
         self.box_clock = tk.Label(row, text="", bg=NAV_SEL, fg=ACCENT_TEXT, font=(FONT, 9),
                                   padx=8, pady=3)
         self.box_clock.pack(side="left", padx=(8, 0))
+        # Event Archives: how many more archive events can be ticked (shown when there are any)
+        self.box_archive = tk.Label(row, text="", bg=ARCHIVE_BG, fg=ARCHIVE_FG, font=(FONT, 9),
+                                    padx=8, pady=3)
         self.box_refresh_btn = self.small_button(row, "Refresh", self.box_refresh, key="box.refresh")
-        self.box_refresh_btn.pack(side="left", padx=(8, 0))
+        self.box_refresh_btn.pack(side="right", padx=(8, 0))
+        self.box_warn = self.label(card, "", size=9, color=YELLOW, anchor="w", justify="left",
+                                   wraplength=540, key=False)
         self.box_body = tk.Frame(card, bg=PANEL)
         self.box_body.pack(fill="x", pady=(6, 0))
         foot = tk.Frame(card, bg=GREY, height=1)
@@ -158,6 +165,10 @@ class BoxTab:
             if not units:
                 continue
             g = self.box_group(ev.get("name") or eid, eid)
+            if ev.get("list") == "archive":
+                tk.Label(g["head"], text=t("box.archive_tag", "Archive"), bg=ARCHIVE_BG,
+                         fg=ARCHIVE_FG, font=(FONT, 8), padx=6).pack(side="left", padx=(0, 8),
+                                                                     before=g["left"])
             for u in units:
                 self.box_tile(g, "box", u, u in picked, counts.get(u))
         # Genesis Hard: the same tiles, farmed after the box quests by the same Start
@@ -208,7 +219,8 @@ class BoxTab:
         cnt = tk.IntVar(value=min(count or n, n))
         tile = tk.Frame(g["grid"], bg=TILE, highlightthickness=1, highlightbackground=TILE,
                         padx=6, pady=4, cursor="hand2")
-        cb = tk.Checkbutton(tile, variable=var, command=self.genesis_changed, bg=TILE,
+        cb = tk.Checkbutton(tile, variable=var, command=lambda: self.box_ticked(mode, unit, var),
+                            bg=TILE,
                             activebackground=TILE, selectcolor=FIELD, highlightthickness=0, bd=0)
         cb.pack(side="left")
         code = (self.box_pics.get(unit) if mode == "box" else
@@ -233,7 +245,7 @@ class BoxTab:
 
         def toggle(_e=None):
             var.set(not var.get())
-            self.genesis_changed()
+            self.box_ticked(mode, unit, var)
         for w in (tile, pic, text, name, sub):
             w.bind("<Button-1>", toggle)
         self.genesis_vars[mode][unit] = var
@@ -244,6 +256,48 @@ class BoxTab:
         self.box_tiles[key] = {"tile": tile, "sub": sub, "name": name, "mode": mode,
                                "unit": unit}
         g["keys"].append(key)
+
+    # ---------- Event Archives: at most ARCHIVE_MAX archive events at once ----------
+    def archive_events(self, units):
+        """The Event Archives events the units' quests are in."""
+        arch = {eid for eid, ev in self.live.get("events", {}).items() if ev.get("list") == "archive"}
+        return {q["event"] for u in units for q in self.box_units.get(u, []) if q["event"] in arch}
+
+    def box_ticked(self, mode, unit, var):
+        """A tile was ticked or unticked. Ticking a unit that needs one archive event too many
+        is refused (with a warning), unless the limit is off on the Dev page."""
+        warn = ""
+        if mode == "box" and var.get() and self.archive_limit.get():
+            others = [u for u in self.genesis_selected("box") if u != unit]
+            have = self.archive_events(others)
+            new = self.archive_events([unit]) - have
+            if new and len(have | new) > ARCHIVE_MAX:
+                var.set(False)
+                warn = t("box.archive_full", "Only {max} Event Archives events can be open at once "
+                         "- untick a unit from another archive event first (the limit can be "
+                         "turned off on the Dev page).", max=ARCHIVE_MAX)
+        self.box_warn.config(text=warn)
+        if warn and not self.box_warn.winfo_manager():
+            self.box_warn.pack(anchor="w", before=self.box_body, pady=(6, 0))
+        elif not warn and self.box_warn.winfo_manager():
+            self.box_warn.pack_forget()
+        self.genesis_changed()
+
+    def archive_refresh(self):
+        """The Archive pill: archive events still free (of ARCHIVE_MAX) for the ticked units."""
+        if not hasattr(self, "box_archive"):
+            return
+        any_archive = any(ev.get("list") == "archive" for ev in self.live.get("events", {}).values())
+        if not any_archive:
+            self.box_archive.pack_forget()
+            return
+        used = len(self.archive_events(self.genesis_selected("box")))
+        self.box_archive.config(text=t("box.archive_left", "Archive {left}/{max}",
+                                       left=ARCHIVE_MAX - used, max=ARCHIVE_MAX),
+                                bg=ARCHIVE_BG if used <= ARCHIVE_MAX else RED,
+                                fg=ARCHIVE_FG if used <= ARCHIVE_MAX else FG)
+        if not self.box_archive.winfo_manager():
+            self.box_archive.pack(side="left", padx=(8, 0))
 
     def portrait_list(self):
         if not hasattr(self, "_portrait_codes"):
@@ -392,6 +446,7 @@ class BoxTab:
                                          on_shards=lambda s: put(("gshards", merged(s))),
                                          **common)
                     f.leaves_used = used   # "at most N per session" covers the whole run
+                    f.mapper.free_unlock = self.archive_unlock.get()
                     reason = f.run(units, counts)
                 else:
                     f = genesis_farm.GenesisFarm(mode="hard", counter=box_farm.DayCounter(),
@@ -670,6 +725,12 @@ class DevPage:
         self.dev_btns.append(self.small_button(row, "Remove an event from live...",
                                                self.dev_remove_event))
         self.dev_btns[-1].pack(side="left", padx=8)
+        self.check(card, f"Limit Event Archives events to {ARCHIVE_MAX} on the Box events tab "
+                         "(warn and refuse one more)", self.archive_limit,
+                   self.archive_limit_changed).pack(fill="x", pady=(10, 0))
+        self.check(card, "Unlock locked Event Archives events with the day's free unlocks "
+                         "(never items: stops at \"Owned\")", self.archive_unlock,
+                   self.save_settings).pack(fill="x", pady=(4, 0))
         grid = tk.Frame(card, bg=PANEL)
         grid.pack(fill="x", pady=(10, 0))
         grid.columnconfigure(1, weight=1)
@@ -689,6 +750,13 @@ class DevPage:
         self.live_hooks = getattr(self, "live_hooks", []) + [self.dev_refresh]
         self.dev_refresh_choices()
         self.dev_refresh()
+
+    def archive_limit_changed(self):
+        if self.archive_limit.get() and len(self.archive_events(self.genesis_selected("box")))                 > ARCHIVE_MAX:
+            self.log(f"More than {ARCHIVE_MAX} archive events are ticked - untick some on the Box "
+                     "events tab (the ones ticked stay).", "warn")
+        self.save_settings()
+        self.archive_refresh()
 
     def style_menu(self, menu):
         menu.config(bg=FIELD, fg=FG, activebackground=GREY, activeforeground=FG, relief="flat",
@@ -907,7 +975,7 @@ class DevPage:
             event, quests = ms.scan(tab, log)
             if not event:
                 raise RuntimeError("couldn't read the event's id from its map")
-            origin = ms.learn_origin(event, f.navigator)
+            origin = ms.learn_origin(event, f.navigator, map_scan.event_names(None, quests))
             return event, quests, origin
 
         def done(result):
@@ -928,8 +996,9 @@ class DevPage:
                      "good")
             if not origin.get("list") or not origin.get("found"):
                 self.log("Couldn't tell which list this event is opened from - the farm won't "
-                         "find its way there. Open it from Quest > Event > Boss Battle Quest "
-                         "(or the Genesis list) and scan again.", "warn")
+                         "find its way there. Open it from Quest > Event > Boss Battle Quest, the "
+                         "Event Archives' Boss Battle Quest tab or the Genesis list, and scan "
+                         "again.", "warn")
             else:
                 self.log(f"  It's opened from the {origin['list']}: the farm goes there by itself.",
                          "muted")

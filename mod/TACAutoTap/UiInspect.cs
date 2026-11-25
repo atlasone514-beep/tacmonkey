@@ -138,7 +138,8 @@ internal static class UiInspect
                         if (v == null) continue;
                         var s = v.ToString();
                         if (string.IsNullOrEmpty(s) || s == "0" || s == "False") continue;
-                        parts.Add($"{f.Name}={Short(s)}");
+                        // on-screen text whole (a dialog's message, e.g. an unlock's cost), the rest short
+                        parts.Add($"{f.Name}={(f.Name == "mCurrentText" ? Short(s, 600) : Short(s))}");
                     }
                     else if (depth > 1 && !ft.IsValueType && !fname.StartsWith("UnityEngine.")
                              && !fname.StartsWith("System.") && !fname.StartsWith("Il2CppSystem."))
@@ -163,5 +164,6 @@ internal static class UiInspect
         if (!string.IsNullOrEmpty(s) && !list.Contains(s)) list.Add(Short(s));
     }
 
-    private static string Short(string s) => s.Length > 80 ? s.Substring(0, 80) + "..." : s;
+    private static string Short(string s, int most = 80) =>
+        s.Length > most ? s.Substring(0, most) + "..." : s;
 }

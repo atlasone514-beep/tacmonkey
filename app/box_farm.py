@@ -248,7 +248,7 @@ class BoxFarm(genesis_farm.GenesisFarm):
         if self.here != (eid, q.get("tab")) or not ms.on_map():
             self.here = None
             ms.open_event(ev.get("chapter") or eid, ev.get("list") or "event list",
-                          self.navigator)
+                          self.navigator, map_scan.event_names(ev.get("name"), ev["quests"]))
             if q.get("tab") and not ms.set_tab(q["tab"]):
                 raise RuntimeError(f"{name}: couldn't switch the map to {q['tab']}")
             self.sleep(1.0)
