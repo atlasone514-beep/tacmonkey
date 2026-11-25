@@ -169,6 +169,13 @@ def portraits(data, codes=None):
     return out
 
 
+def main_units(ev):
+    """The event's main units, marked on the Dev page (optional, any number): the Box events
+    tab shows them first and folds the other units away. [] = every unit shows."""
+    m = ev.get("main") or []
+    return [m] if isinstance(m, str) else list(m)
+
+
 def quest_units(q):
     return [SHARD.match(it["name"]).group(1) for it in q.get("loot", [])
             if it["type"] == "UnitPiece" and SHARD.match(it["name"])]
