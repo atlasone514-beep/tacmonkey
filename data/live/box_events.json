@@ -1,6 +1,6 @@
 {
  "format": 1,
- "updated": "2026-11-25 21:13",
+ "updated": "2026-11-25 21:14",
  "events": {
   "ADVANCE_ORION_CC": {
    "quests": [
@@ -2961,6 +2961,366 @@
     "Na Zhu"
    ],
    "id": "ADVANCE_ALSO_SPRACH_05",
+   "added": "2026-11-25"
+  },
+  "ADVANCE_DUNG_01": {
+   "name": "The Code of the Heroic Tale",
+   "quests": [
+    {
+     "title": "The Code of the Heroic Tale - Hard 1",
+     "name": "Hard Stage 1",
+     "iname": "QE_EV_ADVANCE_DUNG_01_HA_01",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_DUNG_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_DUNG_BELL01",
+       "name": "Bell's Clothes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_GEM_MARACAS",
+       "name": "Maracas",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_CHOKER",
+       "name": "Elemental Belt Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_AX",
+       "name": "Great Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_PI_DUNG_BELL",
+       "name": "Bell Cranel Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MOU_GAROMANTLE",
+       "name": "Hungry Wolf Cape Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_WAISTCLOTH",
+       "name": "Holy Brawler's Sash Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHIELD",
+       "name": "Lion Monarch Shield Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_DUNG_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.18,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "The Code of the Heroic Tale - Hard 2",
+     "name": "Hard Stage 2",
+     "iname": "QE_EV_ADVANCE_DUNG_01_HA_02",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_DUNG_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_DUNG_HEST01",
+       "name": "Hestia's Clothes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_MND_MUFFLER",
+       "name": "Wool Scarf",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_MND_CAPE",
+       "name": "Magic Cape",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_PARKA",
+       "name": "Magus Hood Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_DUNG_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_DUNG_HESTIA",
+       "name": "Hestia Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_RABBITDOLL",
+       "name": "Lucky Rabbit Figurine Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GEARROD",
+       "name": "Gear Rod Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ARMOR",
+       "name": "Flame Emperor Armor Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_WATCH",
+       "name": "Old Pocket Watch Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+       "name": "Black Belt Diagram Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.33,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "The Code of the Heroic Tale - Hard 3",
+     "name": "Hard Stage 3",
+     "iname": "QE_EV_ADVANCE_DUNG_01_HA_03",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_DUNG_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_DUNG_AIZ01",
+       "name": "Ais' Clothes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_ATK_MACE",
+       "name": "Mace",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GOGGLES",
+       "name": "Goggles Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_MACHINEWING",
+       "name": "Mechanical Wing Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MFEN_SWORD",
+       "name": "White Serpent Blade Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_TEM_SHIELD",
+       "name": "Divine Shield Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_TWOSWORDS",
+       "name": "Orichalcum Blades Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_DUNG_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.45,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "The Code of the Heroic Tale - Hard 4",
+     "name": "Hard Stage 4",
+     "iname": "QE_EV_ADVANCE_DUNG_01_HA_04",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_DUNG_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_DUNG_BELL01",
+       "name": "Bell's Clothes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_DUNG_HEST01",
+       "name": "Hestia's Clothes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_WATCH",
+       "name": "Old Pocket Watch Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_DUNG_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_DUNG_BELL",
+       "name": "Bell Cranel Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_DUNG_HESTIA",
+       "name": "Hestia Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MOU_GAROMANTLE",
+       "name": "Hungry Wolf Cape Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_WAISTCLOTH",
+       "name": "Holy Brawler's Sash Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_RABBITDOLL",
+       "name": "Lucky Rabbit Figurine Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GEARROD",
+       "name": "Gear Rod Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.6,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "The Code of the Heroic Tale - Hard 5",
+     "name": "Hard Stage 5",
+     "iname": "QE_EV_ADVANCE_DUNG_01_HA_05",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_DUNG_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_DUNG_BELL01",
+       "name": "Bell's Clothes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_DUNG_AIZ01",
+       "name": "Ais' Clothes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_TWOSWORDS",
+       "name": "Orichalcum Blades Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_DUNG_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_DUNG_BELL",
+       "name": "Bell Cranel Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MOU_GAROMANTLE",
+       "name": "Hungry Wolf Cape Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MAGICALLAMP",
+       "name": "Magical Lamp Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_JAMADHAR",
+       "name": "Jamadhar Diagram Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.72,
+      0.39
+     ],
+     "max": 3
+    }
+   ],
+   "kind": "map",
+   "chapter": "ADVANCE_DUNG_01",
+   "list": "archive",
+   "id": "ADVANCE_DUNG_01",
    "added": "2026-11-25"
   }
  },
