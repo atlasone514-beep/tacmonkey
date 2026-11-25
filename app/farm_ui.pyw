@@ -879,6 +879,7 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
         self.genesis_pause = threading.Event()
         self.genesis_keys_prev = (False, False)   # F8, F9 last poll
         self.genesis_solo = tk.BooleanVar(value=False)
+        self.box_solo = tk.BooleanVar(value=False)   # Box events: Solo stages only
         self.genesis_mode = "hard"
         self.genesis_name = "Genesis farm"
         self.genesis_data, self.genesis_vars, self.genesis_counts = {}, {}, {}
@@ -1012,7 +1013,8 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
         if mode == "box":
             import box_farm
             return [q["title"] for _, q in box_farm.plan(self.live, picks,
-                                                         self.genesis_count_map("box"))]
+                                                         self.genesis_count_map("box"),
+                                                         self.box_solo.get())]
         return [s["stage"] for s in genesis_farm.plan(self.genesis_data[mode], picks,
                                                        self.genesis_count_map(mode),
                                                        self.genesis_solo_on(mode))]
@@ -1022,6 +1024,16 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
             return
         for key, spin in self.genesis_spins["box"].items():   # number boxes only while ticked
             on = self.genesis_vars["box"][key].get()
+            total = len(self.box_quests(key)) if on else None
+            if on and total and int(spin.cget("to")) != total:   # Solo stages only changes the most
+                var = self.genesis_counts["box"][key]
+                try:
+                    was = int(var.get())
+                except (tk.TclError, ValueError):
+                    was = total
+                full = was >= int(spin.cget("to"))
+                spin.config(to=total)
+                var.set(total if full else min(was, total))
             tile = self.box_tiles.get(key, {}).get("tile")
             if tile is not None:
                 tile.config(highlightbackground=BLUE if on else TILE)
@@ -1052,6 +1064,14 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
         solo = self.genesis_solo.get()
         for key, cb in self.genesis_star.items():
             cb.config(text=key + (" *" if solo else ""))
+        for key, name in getattr(self, "box_star", {}).items():
+            name.config(text=key + (" *" if self.box_solo.get() else ""))
+        bnote = getattr(self, "box_star_note", None)
+        if bnote is not None:
+            if self.box_solo.get() and not bnote.winfo_manager():
+                bnote.pack(side="left")
+            elif not self.box_solo.get() and bnote.winfo_manager():
+                bnote.pack_forget()
         note = getattr(self, "genesis_star_note", None)
         if note is not None:
             try:
@@ -1065,7 +1085,7 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
         quests = self.genesis_stages(picks, "box")
         stages = self.genesis_stages(gpicks, "hard")
         events = sum(1 for eid in self.live.get("events", {})
-                     if any(q["event"] == eid for u in picks for q in self.box_units.get(u, [])))
+                     if any(q["event"] == eid for u in picks for q in self.box_quests(u)))
         self.genesis_info["box"].config(
             text=t("box.ticked", "{n} quest{s} ticked in {e} event{es} - each event runs on "
                    "its own, one after another", n=len(quests), s="" if len(quests) == 1 else "s",
@@ -1511,6 +1531,7 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
                     self.genesis_counts[mode][k].set(
                         min(max(n, 1), len(self.genesis_data[mode][k]["stages"])))
         self.genesis_solo.set(bool(s.get("genesis_solo", False)))
+        self.box_solo.set(bool(s.get("box_solo", False)))
         for k in s.get("box_units", []):
             if k in self.genesis_vars["box"]:
                 self.genesis_vars["box"][k].set(True)
@@ -1549,6 +1570,7 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
                                             "page": self.page,
                                             "genesis_mode": self.genesis_mode,
                                             "genesis_solo": self.genesis_solo.get(),
+                                            "box_solo": self.box_solo.get(),
                                             "box_units": self.genesis_selected("box"),
                                             "box_counts": self.genesis_count_map("box"),
                                             "farm_tab": self.farm_tab,

@@ -69,8 +69,15 @@ class BoxTab:
         """The box farm's picks from the live data: {unit: {"stages": quests}} like Genesis."""
         data = self.live
         self.box_units = live_data.units(data)
+        self.box_owners = box_farm.quest_owners(data)
         self.box_pics = live_data.portraits(data)
         self.genesis_data["box"] = {u: {"stages": qs} for u, qs in self.box_units.items()}
+
+    def box_quests(self, unit):
+        """A box unit's quests (with Solo stages only: without the ones shared with units that
+        aren't ticked)."""
+        return box_farm.unit_quests(self.live, unit, self.genesis_selected("box"),
+                                    self.box_solo.get(), self.box_units, self.box_owners)
 
     def box_image(self, code):
         if not code:
@@ -117,6 +124,12 @@ class BoxTab:
                                     padx=8, pady=3)
         self.box_refresh_btn = self.small_button(row, "Refresh", self.box_refresh, key="box.refresh")
         self.box_refresh_btn.pack(side="right", padx=(8, 0))
+        srow = tk.Frame(card, bg=PANEL)
+        srow.pack(fill="x", pady=(6, 0))
+        self.check(srow, "Solo stages only", self.box_solo, self.box_solo_changed,
+                   key="box.solo").pack(side="right")
+        self.box_star_note = self.label(srow, "* only shared stages, kept", size=8, color=MUTED,
+                                        key="box.star_note")
         self.box_warn = self.label(card, "", size=9, color=YELLOW, anchor="w", justify="left",
                                    wraplength=540, key=False)
         self.box_body = tk.Frame(card, bg=PANEL)
@@ -148,6 +161,7 @@ class BoxTab:
         for m in ("box", "hard"):
             self.genesis_vars[m], self.genesis_counts[m], self.genesis_spins[m] = {}, {}, {}
         self.genesis_star = {}
+        self.box_star = {}   # box units with only shared quests: a * with Solo stages only
         if not self.live.get("events"):
             self.label(self.box_body, t("box.empty", "No box events are live right now. When one "
                                         "is published it shows up here - on start, or press "
@@ -156,11 +170,16 @@ class BoxTab:
                        key=False).pack(anchor="w", pady=(8, 0))
         picked, counts = keep.get("box", (set(), {}))
         placed = set()
+        # a unit shows once: under the event it's a main unit of, else the first it drops in
+        home = {}
+        for eid, ev in self.live.get("events", {}).items():
+            for u in live_data.main_units(ev):
+                home.setdefault(u, eid)
         for eid, ev in self.live.get("events", {}).items():
             units = []
             for q in ev["quests"]:
                 for u in live_data.quest_units(q):
-                    if u not in placed and u not in units:
+                    if u not in placed and u not in units and home.get(u, eid) == eid:
                         units.append(u)
             placed |= set(units)
             if not units:
@@ -214,7 +233,7 @@ class BoxTab:
         """The quests (box) or stages (Genesis) a tile stands for, with their daily-counter keys."""
         if mode == "box":
             return [(box_farm.quest_key(q["event"], q), q.get("max") or 1)
-                    for q in self.box_units[unit]]
+                    for q in self.box_quests(unit)]
         import genesis_farm
         stages = genesis_farm.unit_stages(self.genesis_data["hard"], unit,
                                           self.genesis_selected("hard"), self.genesis_solo.get(),
@@ -270,6 +289,8 @@ class BoxTab:
         self.genesis_spins[mode][unit] = spin
         if mode == "hard" and self.genesis_shared_only(unit):
             self.genesis_star[unit] = name   # gets a * while Solo stages only is ticked
+        if mode == "box" and box_farm.shared_only(self.box_units, unit, self.box_owners):
+            self.box_star[unit] = name
         self.box_tiles[key] = {"tile": tile, "sub": sub, "name": name, "mode": mode,
                                "unit": unit}
         g["keys"].append(key)
@@ -278,7 +299,11 @@ class BoxTab:
     def archive_events(self, units):
         """The Event Archives events the units' quests are in."""
         arch = {eid for eid, ev in self.live.get("events", {}).items() if ev.get("list") == "archive"}
-        return {q["event"] for u in units for q in self.box_units.get(u, []) if q["event"] in arch}
+        units = list(units)
+        return {q["event"] for u in units
+                for q in box_farm.unit_quests(self.live, u, units, self.box_solo.get(),
+                                              self.box_units, self.box_owners)
+                if q["event"] in arch}
 
     def box_ticked(self, mode, unit, var):
         """A tile was ticked or unticked. Ticking a unit that needs one archive event too many
@@ -299,6 +324,14 @@ class BoxTab:
         elif not warn and self.box_warn.winfo_manager():
             self.box_warn.pack_forget()
         self.genesis_changed()
+        if mode == "box" and self.box_solo.get():
+            self.box_counts_refresh()   # a shared quest counts once all its units are ticked
+
+    def box_solo_changed(self):
+        """Solo stages only (box events): the counts, the stars and the note follow."""
+        self.save_settings()
+        self.genesis_changed()
+        self.box_counts_refresh()
 
     def archive_refresh(self):
         """The Archive pill: archive events still free (of ARCHIVE_MAX) for the ticked units."""
@@ -432,7 +465,7 @@ class BoxTab:
         self.genesis_mode = "box"
         self.save_settings()
         counts, gcounts = self.genesis_count_map("box"), self.genesis_count_map("hard")
-        solo = self.genesis_solo.get()
+        solo, bsolo = self.genesis_solo.get(), self.box_solo.get()
         name = ("Box + Genesis farm" if picks and gpicks else "Box farm" if picks
                 else "Genesis farm")
         self.genesis_stop, self.genesis_pause = threading.Event(), threading.Event()
@@ -450,7 +483,7 @@ class BoxTab:
         jobs = self.box_jobs(picks, gpicks)
 
         def job():
-            put(("gdone", self.run_queue(jobs, counts, gcounts, solo, common, name)))
+            put(("gdone", self.run_queue(jobs, counts, gcounts, solo, common, name, bsolo)))
 
         self.genesis_worker = threading.Thread(target=job, daemon=True)
         self.genesis_worker.start()
@@ -461,14 +494,14 @@ class BoxTab:
         file's order, then Genesis (its stages go chapter by chapter, each chapter opened once)."""
         jobs = []
         for eid, ev in self.live.get("events", {}).items():
-            here = [u for u in picks if any(q["event"] == eid for q in self.box_units.get(u, []))]
+            here = [u for u in picks if any(q["event"] == eid for q in self.box_quests(u))]
             if here:
                 jobs.append(("box", eid, here))
         if gpicks:
             jobs.append(("genesis", None, list(gpicks)))
         return jobs
 
-    def run_queue(self, jobs, counts, gcounts, solo, common, name):
+    def run_queue(self, jobs, counts, gcounts, solo, common, name, bsolo=False):
         """Run the jobs one after another (worker thread). A job that stays stuck after its
         grace periods is given up and the next one starts; Stop, a Leaves limit or an
         unexpected error end the whole run. Returns the reason shown at the end."""
@@ -489,7 +522,7 @@ class BoxTab:
                                          **common)
                     f.leaves_used = used   # "at most N per session" covers the whole run
                     f.mapper.free_unlock = self.archive_unlock.get()
-                    reason = f.run(units, counts)
+                    reason = f.run(units, counts, bsolo)
                 else:
                     f = genesis_farm.GenesisFarm(mode="hard", counter=box_farm.DayCounter(),
                                                  on_shards=lambda s: put(("gshards", merged(s))),
