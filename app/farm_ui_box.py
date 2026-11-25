@@ -4,6 +4,7 @@ Mixed into farm_ui.App: they use its helpers (label, small_button, card, q, log 
 Genesis farm's pick / count / start machinery, with "box" as a third mode next to "hard" and
 "extra". The Dev page is only shown on the developer's PC (Ctrl+Shift+D turns it on).
 """
+import json
 import tempfile
 import threading
 import time
@@ -164,7 +165,11 @@ class BoxTab:
             placed |= set(units)
             if not units:
                 continue
+            mains = [u for u in live_data.main_units(ev) if u in units]
+            # main units first; the others fold away under them
+            units = mains + [u for u in units if u not in mains]
             g = self.box_group(ev.get("name") or eid, eid)
+            g["mains"] = set(mains)
             if ev.get("list") == "archive":
                 tk.Label(g["head"], text=t("box.archive_tag", "Archive"), bg=ARCHIVE_BG,
                          fg=ARCHIVE_FG, font=(FONT, 8), padx=6).pack(side="left", padx=(0, 8),
@@ -197,7 +202,11 @@ class BoxTab:
         grid = tk.Frame(parent, bg=PANEL)
         for c in range(3):
             grid.columnconfigure(c, weight=1, uniform="box")
-        g = {"id": gid, "head": head, "grid": grid, "left": left, "keys": []}
+        fold = tk.Label(parent, text="", bg=PANEL, fg=MUTED, font=(FONT, 9), anchor="w",
+                        cursor="hand2")
+        fold.bind("<Button-1>", lambda _e: self.box_toggle_others(gid))
+        g = {"id": gid, "head": head, "grid": grid, "left": left, "keys": [], "mains": set(),
+             "fold": fold}
         self.box_groups.append(g)
         return g
 
@@ -233,8 +242,16 @@ class BoxTab:
         pic.pack(side="left", padx=(2, 6))
         text = tk.Frame(tile, bg=TILE)
         text.pack(side="left", fill="x", expand=True)
-        name = tk.Label(text, text=unit, bg=TILE, fg=FG, font=(FONT, 10), anchor="w")
-        name.pack(fill="x")
+        line = tk.Frame(text, bg=TILE)
+        line.pack(fill="x")
+        name = tk.Label(line, text=unit, bg=TILE, fg=FG, font=(FONT, 10), anchor="w")
+        name.pack(side="left")
+        if mode == "box" and unit in g["mains"]:
+            badge = tk.Label(line, text=t("box.main_unit", "Main unit"), bg="#4a3b17", fg=YELLOW,
+                             font=(FONT, 8), padx=5)
+            badge.pack(side="left", padx=(6, 0))
+            badge.bind("<Button-1>", lambda _e: toggle())
+        line.bind("<Button-1>", lambda _e: toggle())
         sub = tk.Label(text, text="", bg=TILE, fg=MUTED, font=(FONT, 8), anchor="w")
         sub.pack(fill="x")
         spin = tk.Spinbox(tile, from_=1, to=n, width=2, textvariable=cnt, wrap=False,
@@ -305,12 +322,26 @@ class BoxTab:
         return self._portrait_codes
 
     def box_filter(self):
-        """Show the tiles whose unit name matches the search (and their groups' headings)."""
+        """Show the tiles whose unit name matches the search (and their groups' headings). An
+        event with main units shows those (plus ticked ones) until its other units are opened;
+        a search shows every match."""
         if not hasattr(self, "box_groups"):
             return
         want = self.box_search.get().strip().lower()
+        opened = getattr(self, "box_others_open", set())
         for g in self.box_groups:
             shown = [k for k in g["keys"] if want in self.box_tiles[k]["unit"].lower()]
+            others = [k for k in g["keys"] if k not in g["mains"]] if g["mains"] else []
+            fold = bool(others) and not want
+            if fold and g["id"] not in opened:
+                ticked = lambda k: self.genesis_vars["box"][k].get()
+                shown = [k for k in shown if k in g["mains"] or ticked(k)]
+            hidden = [k for k in others if k not in shown]
+            g["fold"].config(text=(t("box.others_hide", "▾  Hide the other units")
+                                   if fold and not hidden else
+                                   t("box.others", "▸  {n} other units ({names})", n=len(hidden),
+                                     names=", ".join(self.box_tiles[k]["unit"] for k in hidden[:5])
+                                     + ("..." if len(hidden) > 5 else ""))))
             for k in g["keys"]:
                 self.box_tiles[k]["tile"].grid_forget()
             for i, k in enumerate(shown):
@@ -319,9 +350,20 @@ class BoxTab:
             if shown:
                 g["head"].pack(fill="x", pady=(10 if g["id"] != "genesis" else 0, 2))
                 g["grid"].pack(fill="x")
+                if fold:
+                    g["fold"].pack(fill="x", pady=(2, 0), after=g["grid"])
+                else:
+                    g["fold"].pack_forget()
             else:
                 g["head"].pack_forget()
                 g["grid"].pack_forget()
+                g["fold"].pack_forget()
+
+    def box_toggle_others(self, gid):
+        """Open or fold an event's units other than its main unit."""
+        opened = self.box_others_open = getattr(self, "box_others_open", set())
+        opened.symmetric_difference_update({gid})
+        self.box_filter()
 
     def box_counts_refresh(self):
         """What's left today on every tile and group heading, plus the "today" line."""
@@ -638,10 +680,49 @@ class DevPage:
         self.dev_busy = False
         self.dev_stop = threading.Event()
         page = scroll_area(page, BG)
-        # scan
+        # scan: one main button (the event's open map) and the events scanned or live below
         card = self.page_card(page, "Box event: scan")
-        grid = tk.Frame(card, bg=PANEL)
-        grid.pack(fill="x")
+        self.dev_sel = None          # the event open in the list (its name and units shown)
+        self.dev_row_btns = []       # the list's buttons (rebuilt with it)
+        self.dev_btns = []
+        self.dev_tab = tk.StringVar(value="Hard")
+        row = tk.Frame(card, bg=PANEL)
+        row.pack(fill="x")
+        self.dev_btns.append(self.button(row, "Scan the open map", BLUE, self.dev_scan_map))
+        self.dev_btns[-1].pack(side="left")
+        seg = tk.Frame(row, bg=PANEL)
+        seg.pack(side="left", padx=(10, 0))
+        self.dev_tab_btns = {}
+        for tab in ("Hard", "Extra", "Normal"):
+            b = self.small_button(seg, tab, lambda v=tab: self.dev_set_tab(v))
+            b.pack(side="left", padx=(0, 1))
+            self.dev_tab_btns[tab] = b
+        self.dev_stop_btn = self.small_button(row, "Stop scan", self.dev_stop.set)
+        self.dev_hint = self.label(card, "Open the event's map in the game first. Hard shows once "
+                                         "its Normal stages are cleared.", size=8, color=MUTED,
+                                   anchor="w")
+        self.dev_hint.pack(fill="x", pady=(6, 0))
+        # the last scan's result (packed under the hint once there is one)
+        self.dev_last = self.label(card, "", size=9, color=GREEN, anchor="w", key=False,
+                                   justify="left", wraplength=560)
+        card.bind("<Configure>", lambda e: self.dev_last.config(wraplength=max(300, e.width - 40)),
+                  add="+")
+        self.label(card, "Scanned events", size=9, color=MUTED, anchor="w").pack(
+            fill="x", pady=(12, 4))
+        self.dev_list = tk.Frame(card, bg=FIELD, padx=1, pady=1)   # FIELD: a hairline around
+        self.dev_list.pack(fill="x")
+        self.dev_name = tk.StringVar()
+        self.dev_name.trace_add("write", lambda *_: self.dev_name_changed())
+        self.dev_set_tab("Hard")
+        # the older list-style scans (Event Quest lists), folded away
+        fold = self.label(card, "▸  Older list-style scans (Read event list, Scan whole event, "
+                                "Scan the open list, Quest Details)", size=9, color=MUTED,
+                          anchor="w", cursor="hand2")
+        fold.pack(fill="x", pady=(12, 0))
+        old = tk.Frame(card, bg=PANEL)
+        fold.bind("<Button-1>", lambda _e: self.dev_toggle_old(fold, old))
+        grid = tk.Frame(old, bg=PANEL)
+        grid.pack(fill="x", pady=(8, 0))
         grid.columnconfigure(1, weight=1)
         self.dev_event = tk.StringVar()
         self.dev_choices = {}   # label -> event id
@@ -649,38 +730,25 @@ class DevPage:
         self.dev_event_menu = tk.OptionMenu(grid, self.dev_event, "")
         self.style_menu(self.dev_event_menu)
         self.dev_event_menu.grid(row=0, column=1, sticky="ew", padx=6)
-        self.dev_btns = [self.small_button(grid, "Read event list", self.dev_read_events)]
+        self.dev_btns.append(self.small_button(grid, "Read event list", self.dev_read_events))
         self.dev_btns[-1].grid(row=0, column=2)
-        self.dev_name, self.dev_place = tk.StringVar(), tk.StringVar()
-        for r, (text, var, hint) in enumerate((("Name for players", self.dev_name, ""),
-                                               ("Place (optional)", self.dev_place,
-                                                "e.g. Hard, if it has several lists")), 1):
-            self.label(grid, text, color=MUTED).grid(row=r, column=0, sticky="w", pady=(6, 0))
-            tk.Entry(grid, textvariable=var, bg=FIELD, fg=FG, relief="flat", insertbackground=FG,
-                     font=(FONT, 10)).grid(row=r, column=1, sticky="ew", padx=6, pady=(6, 0))
-            if hint:
-                self.label(grid, hint, size=8, color=MUTED).grid(row=r, column=2, sticky="w",
-                                                                pady=(6, 0))
-        self.dev_name.trace_add("write", lambda *_: self.dev_name_changed())
+        self.dev_place = tk.StringVar()
+        self.label(grid, "Place (optional)", color=MUTED).grid(row=1, column=0, sticky="w",
+                                                               pady=(6, 0))
+        tk.Entry(grid, textvariable=self.dev_place, bg=FIELD, fg=FG, relief="flat",
+                 insertbackground=FG, font=(FONT, 10)).grid(row=1, column=1, sticky="ew", padx=6,
+                                                            pady=(6, 0))
+        self.label(grid, "e.g. Hard, if it has several lists", size=8, color=MUTED).grid(
+            row=1, column=2, sticky="w", pady=(6, 0))
         self.dev_event.trace_add("write", lambda *_: self.dev_event_changed())
-        row = tk.Frame(card, bg=PANEL)
-        row.pack(fill="x", pady=(10, 0))
-        for text, cmd in (("Scan the open map", self.dev_scan_map),
-                          ("Scan whole event", self.dev_scan_event),
+        row = tk.Frame(old, bg=PANEL)
+        row.pack(fill="x", pady=(8, 0))
+        for text, cmd in (("Scan whole event", self.dev_scan_event),
                           ("Scan the open list", self.dev_scan_open),
                           ("Add the open Quest Details", self.dev_scan_detail)):
             b = self.small_button(row, text, cmd)
             b.pack(side="left", padx=(0, 6))
             self.dev_btns.append(b)
-        self.dev_stop_btn = self.small_button(row, "Stop scan", self.dev_stop.set)
-        self.dev_units = tk.Frame(card, bg=PANEL)
-        self.dev_units.pack(fill="x", pady=(8, 0))
-        row = tk.Frame(card, bg=PANEL)
-        row.pack(fill="x", pady=(6, 0))
-        self.dev_summary = self.label(row, "", size=9, color=MUTED)
-        self.dev_summary.pack(side="left")
-        self.small_button(row, "Clear this event's draft", self.dev_clear).pack(side="right")
-        self.small_button(row, "Show quests", self.dev_show_quests).pack(side="right", padx=6)
         # scripts
         card = self.page_card(page, "Scripts: push to everyone")
         grid = tk.Frame(card, bg=PANEL)
@@ -717,14 +785,8 @@ class DevPage:
         self.dev_live_label = self.label(row, "", size=9)
         self.dev_live_label.pack(side="left")
         self.small_button(row, "Refresh", self.box_refresh).pack(side="right")
-        row = tk.Frame(card, bg=PANEL)
-        row.pack(fill="x", pady=(8, 0))
-        self.dev_publish_btn = self.button(row, "Publish this event", GREEN, self.dev_publish)
-        self.dev_publish_btn.pack(side="left")
-        self.dev_btns.append(self.dev_publish_btn)
-        self.dev_btns.append(self.small_button(row, "Remove an event from live...",
-                                               self.dev_remove_event))
-        self.dev_btns[-1].pack(side="left", padx=8)
+        self.label(card, "Each event is published or taken off from its row under Box event: "
+                         "scan.", size=8, color=MUTED, anchor="w").pack(fill="x", pady=(4, 0))
         self.check(card, f"Limit Event Archives events to {ARCHIVE_MAX} on the Box events tab "
                          "(warn and refuse one more)", self.archive_limit,
                    self.archive_limit_changed).pack(fill="x", pady=(10, 0))
@@ -772,21 +834,42 @@ class DevPage:
             m.add_command(label=o, command=lambda v=o: var.set(v))
 
     # ---------- state ----------
+    LIST_NAMES = {"boss battle list": "Boss Battle Quest", "archive": "Event Archives",
+                  "genesis list": "Genesis", "event list": "Event Quest"}
+
     def dev_eid(self):
+        """The event picked in the older list-style scans' menu."""
         return self.dev_choices.get(self.dev_event.get())
 
-    def dev_draft_event(self, create=False):
-        eid = self.dev_eid()
+    def dev_draft_event(self, create=False, eid=None):
+        """(id, draft) of the event open in the list (or eid). create: start a draft - a copy
+        of what's live, if it's live."""
+        eid = eid or self.dev_sel
         if not eid:
             return None, None
         ev = self.dev_draft["events"].get(eid)
         if ev is None and create:
-            ev = self.dev_draft["events"][eid] = {"name": self.dev_name.get().strip(),
-                                                  "quests": []}
+            live = self.live.get("events", {}).get(eid)
+            ev = self.dev_draft["events"][eid] = (json.loads(json.dumps(live)) if live else
+                                                  {"name": "", "quests": []})
         return eid, ev
 
+    def dev_set_tab(self, tab):
+        self.dev_tab.set(tab)
+        for name, b in self.dev_tab_btns.items():
+            b.color = BLUE if name == tab else FIELD
+            b.config(bg=b.color, fg=DARK if name == tab else FG, activebackground=b.color)
+
+    def dev_toggle_old(self, fold, frame):
+        if frame.winfo_manager():
+            frame.pack_forget()
+            fold.config(text=fold["text"].replace("▾", "▸", 1))
+        else:
+            frame.pack(fill="x", after=fold)
+            fold.config(text=fold["text"].replace("▸", "▾", 1))
+
     def dev_refresh_choices(self):
-        """The event menu: events read from the game, plus drafts and live ones."""
+        """The older scans' event menu: events read from the game, plus drafts and live ones."""
         known = dict(live_data.dev_settings().get("events_seen") or {})
         for eid in list(self.dev_draft["events"]) + list(self.live.get("events", {})):
             known.setdefault(eid, "")
@@ -797,52 +880,64 @@ class DevPage:
             self.dev_event.set(next(iter(self.dev_choices)))
 
     def dev_event_changed(self):
-        eid, ev = self.dev_draft_event()
-        live = self.live.get("events", {}).get(eid or "", {})
-        self._dev_naming = True
-        self.dev_name.set((ev or {}).get("name") or live.get("name") or "")
-        self._dev_naming = False
+        pass   # the menu only says which event the older scans add to
+
+    def dev_select(self, eid):
+        """Open (or close) an event's row: its name and units."""
+        self.dev_sel = None if self.dev_sel == eid else eid
         self.dev_refresh()
 
     def dev_name_changed(self):
-        if getattr(self, "_dev_naming", False):
+        if getattr(self, "_dev_naming", False) or not self.dev_sel:
             return
-        eid, ev = self.dev_draft_event()
-        if ev is not None:
-            ev["name"] = self.dev_name.get().strip()
-            live_data.save_draft(self.dev_draft)
+        pill = getattr(self, "dev_pills", {}).get(self.dev_sel)
+        was_same = pill is not None and pill.cget("text") == "Live"
+        eid, ev = self.dev_draft_event(create=True)
+        ev["name"] = self.dev_name.get().strip()
+        live_data.save_draft(self.dev_draft)
+        if was_same != (self.dev_state(eid)[0] == "Live"):
+            # Publish comes (or goes): rebuild the row, keep typing where it was
+            self.dev_refresh_list()
+            self.dev_name_entry.focus_set()
+            self.dev_name_entry.icursor("end")
+        else:
+            self.dev_refresh_states()
+
+    @staticmethod
+    def dev_public(ev):
+        """An event as it's published (without the scan's notes)."""
+        return {**ev, "quests": [{k: v for k, v in q.items() if k not in ("error", "row", "note")}
+                                 for q in ev.get("quests", [])]}
+
+    def dev_state(self, eid):
+        """(text, bg, fg) of an event's state pill: draft only, live, or live with a newer draft."""
+        draft = self.dev_draft["events"].get(eid)
+        live = self.live.get("events", {}).get(eid)
+        if not live:
+            return "Draft, not live", "#4a3b17", YELLOW
+        same = lambda ev: {k: v for k, v in self.dev_public(ev).items() if k not in ("id", "added")}
+        if draft and same(draft) != same(live):   # publishing adds id and date
+            return "Live, draft changed", "#4a3b17", YELLOW
+        return "Live", "#1d3d1d", "#7ee07e"
+
+    def dev_events(self):
+        """Every event scanned or live: drafts first, then by name."""
+        live = self.live.get("events", {})
+        ids = list(dict.fromkeys(list(self.dev_draft["events"]) + list(live)))
+        name = lambda e: ((self.dev_draft["events"].get(e) or live.get(e) or {}).get("name")
+                          or e).casefold()
+        return sorted(ids, key=lambda e: (e not in self.dev_draft["events"], name(e)))
+
+    def dev_refresh_states(self):
+        """Just the state pills (while a name is typed, the list isn't rebuilt)."""
+        for eid, pill in getattr(self, "dev_pills", {}).items():
+            text, bg, fg = self.dev_state(eid)
+            pill.config(text=text, bg=bg, fg=fg)
 
     def dev_refresh(self):
-        if not hasattr(self, "dev_units"):
+        if not hasattr(self, "dev_list"):
             return
-        eid, ev = self.dev_draft_event()
-        for w in self.dev_units.winfo_children():
-            w.destroy()
-        quests = (ev or {}).get("quests", [])
-        one = {"format": 1, "events": {eid: ev}} if ev else {"format": 1, "events": {}}
-        units = live_data.units(one) if ev else {}
-        pics = live_data.portraits(one) if ev else {}
-        for i, (u, qs) in enumerate(units.items()):
-            tile = tk.Frame(self.dev_units, bg=TILE, padx=6, pady=4)
-            tile.grid(row=i // 3, column=i % 3, sticky="ew", padx=(0, 6), pady=3)
-            img = self.box_image(pics.get(u))
-            (tk.Label(tile, image=img, bg=TILE) if img else
-             tk.Label(tile, text="?", bg=FIELD, fg=MUTED, width=4, height=2)).pack(side="left")
-            box = tk.Frame(tile, bg=TILE)
-            box.pack(side="left", padx=6)
-            tk.Label(box, text=u, bg=TILE, fg=FG, font=(FONT, 10), anchor="w").pack(fill="x")
-            pick = tk.Label(box, text=(", ".join(q["title"] for q in qs)[:40] + " · change picture"
-                                       if img else "no picture - pick one"),
-                            bg=TILE, fg=MUTED if img else ORANGE, font=(FONT, 8), anchor="w",
-                            cursor="hand2")
-            pick.pack(fill="x")
-            pick.bind("<Button-1>", lambda _e, unit=u: self.dev_pick_portrait(unit))
-        for c in range(3):
-            self.dev_units.columnconfigure(c, weight=1, uniform="dev")
-        errors = sum(1 for q in quests if q.get("error"))
-        self.dev_summary.config(text=(f"{len(quests)} quests scanned, {len(units)} units"
-                                      + (f", {errors} without loot" if errors else ""))
-                                if ev else "Nothing scanned for this event yet.")
+        self.dev_refresh_list()
         live = self.live
         n_ev, n_sc = len(live.get("events", {})), len(live.get("scripts", {}))
         self.dev_live_label.config(text=f"Live: {n_ev} box event{'s' if n_ev != 1 else ''}, "
@@ -856,20 +951,159 @@ class DevPage:
             self.dev_script.set(farm.list_scripts()[0])
         self.dev_texts_label.config(text=f"{len(live.get('texts', {}))} of {len(texts.DEFAULTS)} "
                                          "texts changed from the built-in wording")
-        name = (ev or {}).get("name") or eid or "this event"
-        self.dev_publish_btn.config(text=f"Publish {name}"[:40])
+
+    def dev_refresh_list(self):
+        """The scanned / live events, one row each; the open one shows its name and units."""
+        for w in self.dev_list.winfo_children():
+            w.destroy()
+        self.dev_row_btns, self.dev_pills = [], {}
+        live = self.live.get("events", {})
+        events = self.dev_events()
+        if self.dev_sel not in events:
+            self.dev_sel = None
+        if not events:
+            tk.Label(self.dev_list, text=t("dev.no_events", "Nothing scanned yet: open a box "
+                                                          "event's map in the game and press "
+                                                          "Scan the open map."),
+                     bg=PANEL, fg=MUTED, font=(FONT, 9), anchor="w", padx=10, pady=10).pack(
+                fill="x")
+        for i, eid in enumerate(events):
+            draft = self.dev_draft["events"].get(eid)
+            ev = draft or live.get(eid) or {}
+            open_ = eid == self.dev_sel
+            bg = TILE if open_ else PANEL
+            row = tk.Frame(self.dev_list, bg=bg, padx=10, pady=8, cursor="hand2")
+            row.pack(fill="x", pady=(0 if i == 0 else 1, 0))
+            head = tk.Frame(row, bg=bg)
+            head.pack(fill="x")
+            left = tk.Frame(head, bg=bg)
+            left.pack(side="left", fill="x", expand=True)
+            top = tk.Frame(left, bg=bg)
+            top.pack(fill="x")
+            parts = [tk.Label(top, text=ev.get("name") or eid, bg=bg, fg=FG,
+                              font=(FONT, 10, "bold" if open_ else "normal"))]
+            parts[-1].pack(side="left")
+            where = ev.get("list")
+            if where:
+                archive = where == "archive"
+                parts.append(tk.Label(top, text=self.LIST_NAMES.get(where, where),
+                                      bg=ARCHIVE_BG if archive else FIELD,
+                                      fg=ARCHIVE_FG if archive else MUTED, font=(FONT, 8), padx=6))
+                parts[-1].pack(side="left", padx=(8, 0))
+            text, pbg, pfg = self.dev_state(eid)
+            changed = draft and text != "Live"   # a draft the same as live has nothing to do
+            pill = tk.Label(top, text=text, bg=pbg, fg=pfg, font=(FONT, 8), padx=6)
+            pill.pack(side="left", padx=(6, 0))
+            self.dev_pills[eid] = pill
+            quests = ev.get("quests", [])
+            units = live_data.units({"format": 1, "events": {eid: ev}})
+            tabs = sorted({q.get("tab") or "" for q in quests} - {""})
+            errors = sum(1 for q in quests if q.get("error"))
+            info = (f"{eid}  ·  {len(quests)} {'/'.join(tabs) + ' ' if tabs else ''}"
+                    f"stage{'s' if len(quests) != 1 else ''}  ·  {len(units)} "
+                    f"unit{'s' if len(units) != 1 else ''}"
+                    + (f"  ·  {errors} without loot" if errors else ""))
+            parts.append(tk.Label(left, text=info, bg=bg, fg=MUTED, font=(FONT, 8), anchor="w"))
+            parts[-1].pack(fill="x")
+            for w in [row, head, left, top] + parts:
+                w.bind("<Button-1>", lambda _e, e=eid: self.dev_select(e))
+            btns = tk.Frame(head, bg=bg)
+            btns.pack(side="right")
+            if changed:
+                b = self.button(btns, "Publish", GREEN, lambda e=eid: self.dev_publish(e))
+                b.config(font=(FONT, 9, "bold"), padx=10, pady=3)
+                b.pack(side="left")
+                self.dev_row_btns.append(b)
+            if eid in live:
+                b = self.small_button(btns, "Take off live", lambda e=eid: self.dev_remove_event(e))
+                b.pack(side="left", padx=(6, 0))
+                self.dev_row_btns.append(b)
+            if changed:
+                b = self.small_button(btns, "Remove draft", lambda e=eid: self.dev_clear(e))
+                b.pack(side="left", padx=(6, 0))
+                self.dev_row_btns.append(b)
+            if open_:
+                self.dev_row_open(row, eid, ev)
+        for b in self.dev_row_btns:
+            self.enable(b, not self.dev_busy)
+
+    def dev_set_main(self, eid, unit):
+        """Mark / unmark one of the event's main units (optional, any number): players see them
+        first with the other units folded away; none: every unit shows."""
+        eid, ev = self.dev_draft_event(create=True, eid=eid)
+        mains = live_data.main_units(ev)
+        mains = [u for u in mains if u != unit] if unit in mains else mains + [unit]
+        if mains:
+            ev["main"] = mains
+        else:
+            ev.pop("main", None)
+        live_data.save_draft(self.dev_draft)
+        self.dev_refresh_list()
+
+    def dev_row_open(self, row, eid, ev):
+        """The open row: the name players see, a tile per unit (click: pick its picture)."""
+        line = tk.Frame(row, bg=TILE)
+        line.pack(fill="x", pady=(8, 0))
+        tk.Label(line, text=t("dev.name_players", "Name for players"), bg=TILE, fg=MUTED,
+                 font=(FONT, 9)).pack(side="left")
+        self._dev_naming = True
+        self.dev_name.set(ev.get("name") or "")
+        self._dev_naming = False
+        self.dev_name_entry = tk.Entry(line, textvariable=self.dev_name, bg=FIELD, fg=FG,
+                                       relief="flat", insertbackground=FG, font=(FONT, 10))
+        self.dev_name_entry.pack(side="left", fill="x", expand=True, padx=8, ipady=2)
+        self.small_button(line, "Show quests", lambda: self.dev_show_quests(eid)).pack(
+            side="right")
+        grid = tk.Frame(row, bg=TILE)
+        grid.pack(fill="x", pady=(8, 0))
+        one = {"format": 1, "events": {eid: ev}}
+        units, pics = live_data.units(one), live_data.portraits(one)
+        mains = live_data.main_units(ev)
+        units = dict(sorted(units.items(), key=lambda kv: kv[0] not in mains))   # mains first
+        for i, (u, qs) in enumerate(units.items()):
+            tile = tk.Frame(grid, bg=PANEL, padx=6, pady=4)
+            tile.grid(row=i // 3, column=i % 3, sticky="ew", padx=(0, 6), pady=3)
+            img = self.box_image(pics.get(u))
+            (tk.Label(tile, image=img, bg=PANEL) if img else
+             tk.Label(tile, text="?", bg=FIELD, fg=MUTED, width=4, height=2)).pack(side="left")
+            box = tk.Frame(tile, bg=PANEL)
+            box.pack(side="left", padx=6)
+            tk.Label(box, text=u, bg=PANEL, fg=FG, font=(FONT, 10), anchor="w").pack(fill="x")
+            acts = tk.Frame(box, bg=PANEL)
+            acts.pack(fill="x")
+            main = u in live_data.main_units(ev)
+            star = tk.Label(acts, text="★ main" if main else "☆ main", bg=PANEL,
+                            fg=YELLOW if main else MUTED, font=(FONT, 8), cursor="hand2")
+            star.pack(side="left")
+            star.bind("<Button-1>", lambda _e, unit=u: self.dev_set_main(eid, unit))
+            tk.Label(acts, text="·", bg=PANEL, fg=MUTED, font=(FONT, 8)).pack(side="left",
+                                                                                  padx=3)
+            pick = tk.Label(acts, text=("picture" if img else "no picture - pick one"),
+                            bg=PANEL, fg=MUTED if img else ORANGE, font=(FONT, 8), anchor="w",
+                            cursor="hand2")
+            pick.pack(side="left")
+            pick.bind("<Button-1>", lambda _e, unit=u: self.dev_pick_portrait(unit, eid))
+        for c in range(3):
+            grid.columnconfigure(c, weight=1, uniform="dev")
+        mains = live_data.main_units(ev)
+        tk.Label(row, text=(f"Main units: {', '.join(mains)} - players see them first, the other "
+                            "units are folded away on the Box events tab." if mains else
+                            "Main units (optional): mark the units most players come for and the "
+                            "others are folded away on the Box events tab. None: every unit shows."),
+                 bg=TILE, fg=MUTED, font=(FONT, 8), anchor="w", justify="left",
+                 wraplength=560).pack(fill="x", pady=(6, 0))
 
     # ---------- scanning ----------
-    def dev_work(self, what, job, done=None):
+    def dev_work(self, what, job, done=None, failed=None):
         """Run a scan / publish on a worker thread; the Dev buttons are off meanwhile."""
         if self.dev_busy or self.running() or self.genesis_running():
             self.log("Wait for the farm or the scan that's running to finish first.", "warn")
             return
         self.dev_busy = True
         self.dev_stop.clear()
-        for b in self.dev_btns:
+        for b in self.dev_btns + self.dev_row_btns:
             self.enable(b, False)
-        self.dev_stop_btn.pack(side="left")
+        self.dev_stop_btn.pack(side="left", padx=(10, 0))
         self.set_state(what)
 
         def run():
@@ -890,6 +1124,8 @@ class DevPage:
                 self.set_state("Idle", "")
                 if err is not None:
                     self.log(f"{what}: {err}", "bad")
+                    if failed:
+                        failed(err)
                 elif done:
                     done(result)
                 self.dev_refresh()
@@ -914,10 +1150,9 @@ class DevPage:
                       lambda: sc.event_choices(lambda s: self.q.put(("log", f"  {s}"))), done)
 
     def dev_add_quests(self, quests):
+        """The older scans: add to the event picked in their menu (now open in the list)."""
         eid, ev = self.dev_draft_event(create=True)
         ev["quests"] = live_data.merge_quests(ev["quests"], quests)
-        if not ev.get("name"):
-            ev["name"] = self.dev_name.get().strip()
         live_data.save_draft(self.dev_draft)
         found = sorted({u for q in quests for u in live_data.quest_units(q)})
         self.log(f"Scanned {len(quests)} quests" + (f": {', '.join(found)}" if found else
@@ -928,6 +1163,7 @@ class DevPage:
             messagebox.showinfo("Dev", "Pick the event first (Read event list, with the game "
                                 "on Quest > Event).", parent=self.root)
             return False
+        self.dev_sel = self.dev_eid()   # what's scanned lands in that event's row
         return True
 
     def dev_scan_event(self):
@@ -960,13 +1196,18 @@ class DevPage:
         self.dev_work("Reading the open Quest Details",
                       lambda: [{**quest, "loot": sc.scan_open_detail()}], self.dev_add_quests)
 
+    def dev_show_last(self, text, color):
+        self.dev_last.config(text=text, fg=color)
+        if not self.dev_last.winfo_manager():
+            self.dev_last.pack(fill="x", pady=(4, 0), after=self.dev_hint)
+
     def dev_scan_map(self):
         """A Genesis-style event (box events): with its map (or page) open in the game, read
-        every stage of the tab (Hard unless Place says otherwise), then go Back to learn which
-        list it's opened from. The event is named by its own id - no need to pick it first."""
+        every stage of the tab picked beside the button, then go Back to learn which list it's
+        opened from. The event is named by its own id - no need to pick it first."""
         import genesis_farm
         import map_scan
-        tab = self.dev_place.get().strip() or "Hard"
+        tab = self.dev_tab.get() or "Hard"
         log = lambda s: self.q.put(("log", f"  {s}"))
 
         def job():
@@ -980,40 +1221,50 @@ class DevPage:
 
         def done(result):
             event, quests, origin = result
-            ev = self.dev_draft["events"].setdefault(event, {"quests": []})
+            ev = self.dev_draft["events"].get(event)
+            if ev is None:   # a live event scanned again starts from what's live
+                _eid, ev = self.dev_draft_event(create=True, eid=event)
             ev.update({"kind": "map", "chapter": event, "list": origin["list"]})
-            ev["name"] = self.dev_name.get().strip() or ev.get("name") or origin.get("name") \
-                or event
+            ev["name"] = ev.get("name") or origin.get("name") or event
             ev["quests"] = live_data.merge_quests(ev["quests"], quests)
             live_data.save_draft(self.dev_draft)
-            label = f"{event}  -  {ev['name']}"
-            self.dev_choices[label] = event
-            self.set_menu(self.dev_event_menu, self.dev_event, list(self.dev_choices))
-            self.dev_event.set(label)
+            self.dev_sel = event
+            self.dev_refresh_choices()
             found = sorted({u for q in quests for u in live_data.quest_units(q)})
             self.log(f"Scanned {len(quests)} {tab} stages of {ev['name']}"
                      + (f": {', '.join(found)}" if found else " (no unit shards in their loot)"),
                      "good")
+            where = self.LIST_NAMES.get(origin.get("list"), origin.get("list"))
             if not origin.get("list") or not origin.get("found"):
                 self.log("Couldn't tell which list this event is opened from - the farm won't "
                          "find its way there. Open it from Quest > Event > Boss Battle Quest, the "
                          "Event Archives' Boss Battle Quest tab or the Genesis list, and scan "
                          "again.", "warn")
+                self.dev_show_last(f"{ev['name']}: {len(quests)} {tab} stages, {len(found)} "
+                                   "units - but not where it's opened from (scan it again from "
+                                   "its list)", YELLOW)
             else:
-                self.log(f"  It's opened from the {origin['list']}: the farm goes there by itself.",
-                         "muted")
-        self.dev_work(f"Scanning the open map ({tab})", job, done)
+                self.log(f"  It's opened from {where}: the farm goes there by itself.", "muted")
+                self.dev_show_last(f"✔  {ev['name']}: {len(quests)} {tab} stages, "
+                                   f"{len(found)} units, opened from {where}", GREEN)
 
-    def dev_clear(self):
-        eid, ev = self.dev_draft_event()
-        if ev and messagebox.askyesno("Dev", f"Forget what was scanned for {eid}?",
-                                      parent=self.root):
+        def failed(err):
+            self.dev_show_last(f"✖  {err}", RED)
+        self.dev_work(f"Scanning the open map ({tab})", job, done, failed)
+
+    def dev_clear(self, eid):
+        ev = self.dev_draft["events"].get(eid)
+        live = eid in self.live.get("events", {})
+        if ev and messagebox.askyesno(
+                "Dev", f"Forget what was scanned for {ev.get('name') or eid}?"
+                + ("\n\nWhat's live stays." if live else ""), parent=self.root):
             self.dev_draft["events"].pop(eid, None)
             live_data.save_draft(self.dev_draft)
             self.dev_refresh()
 
-    def dev_show_quests(self):
-        eid, ev = self.dev_draft_event()
+    def dev_show_quests(self, eid=None):
+        eid, ev = self.dev_draft_event(eid=eid)
+        ev = ev or self.live.get("events", {}).get(eid or "")
         if not ev:
             return
         win = tk.Toplevel(self.root, bg=PANEL)
@@ -1029,9 +1280,9 @@ class DevPage:
             box.insert("end", "    " + ", ".join(i["name"] for i in q.get("loot", [])) + "\n")
         box.config(state="disabled")
 
-    def dev_pick_portrait(self, unit):
-        """A searchable grid of every portrait; the pick goes into the draft event."""
-        eid, ev = self.dev_draft_event()
+    def dev_pick_portrait(self, unit, eid=None):
+        """A searchable grid of every portrait; the pick goes into the event's draft."""
+        eid, ev = self.dev_draft_event(create=True, eid=eid)
         if not ev:
             return
         win = tk.Toplevel(self.root, bg=PANEL, padx=10, pady=10)
@@ -1093,41 +1344,41 @@ class DevPage:
         self.save_settings()
         self.log(f"Published. Everyone gets it on their next start or Check now. {url}", "good")
 
-    def dev_publish(self):
-        eid, ev = self.dev_draft_event()
+    def dev_publish(self, eid):
+        eid, ev = self.dev_draft_event(eid=eid)
         token = self.dev_need_token()
-        if not token or not self.dev_need_event():
+        if not token:
             return
         if not ev or not ev.get("quests"):
             messagebox.showinfo("Dev", "Scan the event first.", parent=self.root)
             return
-        name = self.dev_name.get().strip() or ev.get("name") or eid
+        name = ev.get("name") or eid
         units = live_data.units({"format": 1, "events": {eid: ev}})
         no_loot = [q["title"] for q in ev["quests"] if not q.get("loot")]
+        where = self.LIST_NAMES.get(ev.get("list"), ev.get("list") or "?")
         if not messagebox.askyesno(
                 "Publish", f"Publish '{name}' to everyone?\n\n{len(ev['quests'])} quests, "
-                f"{len(units)} units: {', '.join(units) or 'none'}"
+                f"{len(units)} units: {', '.join(units) or 'none'}\nOpened from: {where}"
                 + (f"\n\nNo loot was read for: {', '.join(no_loot)}" if no_loot else "")
                 + "\n\nIt replaces what's live for this event.", parent=self.root):
             return
-        event = {**ev, "name": name}
-        event["quests"] = [{k: v for k, v in q.items() if k not in ("error", "row", "note")}
-                           for q in ev["quests"]]
-        self.dev_work("Publishing", lambda: live_data.publish_events(token, {eid: event}),
-                      self.dev_published)
+        event = self.dev_public({**ev, "name": name})
 
-    def dev_remove_event(self):
+        def done(result):
+            self.dev_draft["events"].pop(eid, None)   # it's live now: the row shows that
+            live_data.save_draft(self.dev_draft)
+            self.dev_published(result)
+        self.dev_work("Publishing", lambda: live_data.publish_events(token, {eid: event}), done)
+
+    def dev_remove_event(self, eid):
         token = self.dev_need_token()
-        events = self.live.get("events", {})
-        if not token:
+        ev = self.live.get("events", {}).get(eid)
+        if not token or not ev:
             return
-        if not events:
-            messagebox.showinfo("Dev", "No box events are live.", parent=self.root)
-            return
-        eid = self.dev_ask_choice("Remove from live", "Which event should go?",
-                                  {f"{ev.get('name') or k} ({k})": k for k, ev in events.items()})
-        if eid and messagebox.askyesno("Remove", f"Take {eid} off for everyone?",
-                                       parent=self.root):
+        if messagebox.askyesno("Take off live", f"Take {ev.get('name') or eid} ({eid}) off for "
+                                                "everyone?" + ("\n\nYour draft of it stays."
+                                                              if eid in self.dev_draft["events"]
+                                                              else ""), parent=self.root):
             self.dev_work("Publishing", lambda: live_data.publish_events(token, remove=[eid]),
                           self.dev_published)
 

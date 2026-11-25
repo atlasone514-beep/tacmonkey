@@ -163,6 +163,11 @@ Event, goes into each event, and skips the quests that drop those units, with th
 refill (Leaves), popups, grace period and pause as the Genesis farm. Needs the mod. The search box
 filters units by name. Portraits are only pictures; nothing is found by them.
 
+**Main units:** an event can have main units (marked on the Dev page, optional, any number). They
+show first with a *Main unit* badge, and the event's other units are folded under "N other units"
+(click to open; a search or a ticked unit shows them anyway). Events without main units show
+every unit.
+
 The Genesis Hard units have their own section below, **Genesis (Hard)** (with *Solo stages
 only*). One **Start** runs a queue: each box event with ticked units as its own job, one after
 another, then Genesis, chapter by chapter (each chapter opened once). A job that stays stuck
@@ -217,19 +222,24 @@ fine-grained GitHub token with *Contents: read and write* on this repository onl
 `dev.json`, never shared).
 
 - **Box event: Scan the open map.** Box events are laid out like Genesis (a page with QUEST, a
-  map with a Normal / Hard switch, one node per stage). Open the event's map in the game and press
-  **Scan the open map**: it switches to Hard (or what *Place* says), reads every stage from the
-  map's own data (title, attempts, loot through the magnifier; never OK), then goes Back to learn
-  which list the event is opened from. The farm later finds its way there with the menu map, opens
-  the event, and taps each stage's node (found on the map by its quest id).
-- **Box event: list-style events.** With the game on Quest > Event: **Read event list**, pick the event, give
+  map with a Normal / Hard switch, one node per stage). Open the event's map in the game, pick
+  Hard / Extra / Normal beside the button and press **Scan the open map**: it switches the map,
+  reads every stage from the map's own data (title, attempts, loot through the magnifier; never
+  OK), then goes Back to learn which list the event is opened from (Boss Battle Quest or the Event
+  Archives). The farm later finds its way there with the menu map, opens the event, and taps each
+  stage's node (found on the map by its quest id). Hard only shows once the event's Normal stages
+  are cleared.
+- **Scanned events:** every draft and live event, one row each, with where it's opened from and
+  its state (*Draft, not live* / *Live* / *Live, draft changed*). Each row has its own **Publish**,
+  **Take off live** and **Remove draft**. Click a row for the name players see, the unit pictures
+  and the main units (☆ main on a unit; optional, any number).
+- **Box event: list-style events** (folded under *Older list-style scans*). With the game on Quest > Event: **Read event list**, pick the event, give
   it a name for players, then **Scan whole event** (goes in, reads every quest and its Loot, comes
   back), **Scan the open list** (the quest list you have open; put e.g. `Hard` in *Place* if the
   event has more than one list) or **Add the open Quest Details** (a quest's magnifier you opened
   yourself). Scans of a few places add up in a draft (`box_draft.json`). Nothing is pressed that
   spends AP or attempts. Each unit's portrait is guessed from its shard's id; click one to pick
-  another. **Publish** puts the event in the live file for everyone; **Remove an event from live**
-  takes one out.
+  another. The event then has its row under *Scanned events*, published from there.
 - **Scripts: push to everyone.** Pick a script, write what's new, **Push script**. Every TACMonkey
   then asks once: **Add it** (added as a new script, nothing of theirs is changed), **Not now**
   (asks on the next start) or **Never for this one**. A new push of the same script asks again.

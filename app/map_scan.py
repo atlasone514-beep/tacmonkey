@@ -260,6 +260,10 @@ class MapScanner:
         if not self.on_map() and not (self.on_top() and self.open_map()):
             raise RuntimeError("open a box event's map (its QUEST) in the game first")
         if tab and not self.set_tab(tab):
+            if not any(e["path"].endswith(DIFF_END) for e in self.f.elements()):
+                # no Normal / Hard switch at all: the game shows it once Normal is cleared
+                raise RuntimeError(f"{tab} isn't open on this map yet - clear its Normal stages in "
+                                   "the game first (or pick Normal to scan those)")
             raise RuntimeError(f"this map has no {tab} switch")
         self.f.sleep(1.0)
         event = self.chapter_id()
