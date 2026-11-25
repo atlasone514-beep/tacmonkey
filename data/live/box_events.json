@@ -1,0 +1,513 @@
+{
+ "format": 1,
+ "updated": "2026-11-25 14:38",
+ "events": {
+  "ADVANCE_ORION_CC": {
+   "quests": [
+    {
+     "title": "A Roar and a Thunderclap - Hard (Hard Stage 1)",
+     "name": "Hard Stage 1",
+     "iname": "QE_EV_ADVANCE_ORION_CC_HA_01",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_ORION_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ORION_ARMOR",
+       "name": "Armor of the Monarch Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_LANG01",
+       "name": "Thunderwolf's Gauntlet Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SPE_FLAGSPEAR",
+       "name": "Promised Holy Banner Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHIELD",
+       "name": "Lion Monarch Shield Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_NECRO",
+       "name": "Necronomicon Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_TURBAN",
+       "name": "Turban Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ROD",
+       "name": "Skull Rod Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_ORION_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_ORION",
+       "name": "Orion Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_LANGHAO",
+       "name": "Langhao Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_SPD_GEAR",
+       "name": "Harmonic Cogs",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_HOURGLASS",
+       "name": "Rainbow Hourglass Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURO",
+       "name": "Stamp of Certain Delivery Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_MACHINEWING",
+       "name": "Mechanical Wing Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURCOAT",
+       "name": "Sacred Fur Coat Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_LANGHAO_01",
+       "name": "Thunderwolf Spear Shard",
+       "type": "ArtifactPiece"
+      }
+     ],
+     "spot": [
+      0.18,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "A Roar and a Thunderclap - Hard (Hard Stage 2)",
+     "name": "Hard Stage 2",
+     "iname": "QE_EV_ADVANCE_ORION_CC_HA_02",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_ORION_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ORION_ARMOR",
+       "name": "Armor of the Monarch Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_LANG01",
+       "name": "Thunderwolf's Gauntlet Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_WOR_AX",
+       "name": "Gigant Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ARMOR",
+       "name": "Flame Emperor Armor Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_COAT",
+       "name": "Noble Coat Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CAPE",
+       "name": "Magic Cape Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_SMALL",
+       "name": "Picmy Figurine Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_ADVANCE_ORION_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_ORION",
+       "name": "Orion Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_LANGHAO",
+       "name": "Langhao Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_SPD_GEAR",
+       "name": "Harmonic Cogs",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_HOURGLASS",
+       "name": "Rainbow Hourglass Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURO",
+       "name": "Stamp of Certain Delivery Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_MACHINEWING",
+       "name": "Mechanical Wing Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURCOAT",
+       "name": "Sacred Fur Coat Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_LANGHAO_01",
+       "name": "Thunderwolf Spear Shard",
+       "type": "ArtifactPiece"
+      }
+     ],
+     "spot": [
+      0.33,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "A Roar and a Thunderclap - Hard (Hard Stage 3)",
+     "name": "Hard Stage 3",
+     "iname": "QE_EV_ADVANCE_ORION_CC_HA_03",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_ORION_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ORION_ARMOR",
+       "name": "Armor of the Monarch Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_LANG01",
+       "name": "Thunderwolf's Gauntlet Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SPE_FLAGSPEAR",
+       "name": "Promised Holy Banner Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_WATCH",
+       "name": "Old Pocket Watch Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+       "name": "Black Belt Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_HOURGLASS",
+       "name": "Rainbow Hourglass Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_ORION_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_AF_ARMS_LANGHAO_01",
+       "name": "Thunderwolf Spear Shard",
+       "type": "ArtifactPiece"
+      },
+      {
+       "iname": "IT_PI_ORION",
+       "name": "Orion Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_LANGHAO",
+       "name": "Langhao Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_SPD_GEAR",
+       "name": "Harmonic Cogs",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURO",
+       "name": "Stamp of Certain Delivery Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_MACHINEWING",
+       "name": "Mechanical Wing Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURCOAT",
+       "name": "Sacred Fur Coat Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.45,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "A Roar and a Thunderclap - Hard (Hard Stage 4)",
+     "name": "Hard Stage 4",
+     "iname": "QE_EV_ADVANCE_ORION_CC_HA_04",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_ORION_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ORION_ARMOR",
+       "name": "Armor of the Monarch Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_LANG01",
+       "name": "Thunderwolf's Gauntlet Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_DRAGON",
+       "name": "Dragon Sphere Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_MACHINEWING",
+       "name": "Mechanical Wing Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+       "name": "Compass Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+       "name": "Shinobi Shoes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_ORION_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_ORION",
+       "name": "Orion Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_LANGHAO",
+       "name": "Langhao Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_SPD_GEAR",
+       "name": "Harmonic Cogs",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_HOURGLASS",
+       "name": "Rainbow Hourglass Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURO",
+       "name": "Stamp of Certain Delivery Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURCOAT",
+       "name": "Sacred Fur Coat Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_LANGHAO_01",
+       "name": "Thunderwolf Spear Shard",
+       "type": "ArtifactPiece"
+      }
+     ],
+     "spot": [
+      0.6,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "A Roar and a Thunderclap - Hard (Hard Stage 5)",
+     "name": "Hard Stage 5",
+     "iname": "QE_EV_ADVANCE_ORION_CC_HA_05",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_ORION_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ORION_ARMOR",
+       "name": "Armor of the Monarch Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_LANG01",
+       "name": "Thunderwolf's Gauntlet Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SPE_FLAGSPEAR",
+       "name": "Promised Holy Banner Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURCOAT",
+       "name": "Sacred Fur Coat Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_STAFF",
+       "name": "Star Staff Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURO",
+       "name": "Stamp of Certain Delivery Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_ORION_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_ORION",
+       "name": "Orion Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_LANGHAO",
+       "name": "Langhao Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_SPD_GEAR",
+       "name": "Harmonic Cogs",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_HOURGLASS",
+       "name": "Rainbow Hourglass Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_MACHINEWING",
+       "name": "Mechanical Wing Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_LANGHAO_01",
+       "name": "Thunderwolf Spear Shard",
+       "type": "ArtifactPiece"
+      }
+     ],
+     "spot": [
+      0.72,
+      0.39
+     ],
+     "max": 3
+    }
+   ],
+   "kind": "map",
+   "chapter": "ADVANCE_ORION_CC",
+   "list": "boss battle list",
+   "name": "A Roar and a Thunderclap",
+   "id": "ADVANCE_ORION_CC",
+   "added": "2026-11-25"
+  }
+ },
+ "scripts": {},
+ "texts": {}
+}
