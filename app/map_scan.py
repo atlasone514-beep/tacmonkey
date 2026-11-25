@@ -18,6 +18,7 @@ DIFF_END = "difficulty/button1"
 POPUP_OK = (0.5, 0.641)
 INFO = (0.710, 0.398)          # the stage popup's magnifier
 OUTSIDE = (0.12, 0.75)
+BANNER = (0.5, 0.15)           # the map's banner with the event's name
 NOTICE_OK = (0.5, 0.672)
 ATTEMPTS = re.compile(r"(\d+)\s*/\s*(\d+)")
 MODE_PIC = {"Normal": "btn_scenario_normal", "Hard": "btn_scenario_hard",
@@ -40,7 +41,8 @@ def event_names(name=None, quests=()):
     ("Qilin & Standing Alone - Hard 1" -> "Qilin & Standing Alone")."""
     out = [name] if name else []
     for q in quests:
-        t = (q.get("title") or "").split(" - ")[0].strip()
+        # "Qilin & Standing Alone - Hard 1", "Love Won't Tear Us Apart Again [Hard] (Hard Stage 1)"
+        t = re.split(r" - |\s+\[", q.get("title") or "")[0].strip()
         if t and t not in out:
             out.append(t)
     return out
@@ -76,6 +78,7 @@ class MapScanner:
         self.f = f
         self.log = log or (lambda m: None)
         self.locked = None   # find_entry: a wanted Event Archives entry that's still locked
+        self.map_name = None   # scan: the event's name from the map's banner
         # unlock a locked archive event with the day's free unlock (never items): the box farm
         # turns it on from the setting
         self.free_unlock = False
@@ -206,12 +209,20 @@ class MapScanner:
         return (int(used[0]), int(most[0])) if used and most else None
 
     def open_stage(self, node, spot):
-        """Tap a node; True once the stage popup naming it is up."""
+        """Tap a node; True once the stage popup naming it is up. Brackets don't count: the
+        popup's text comes back without its closing "]" ("... [Hard" for "... [Hard]")."""
         self.f.tap(spot)
         want = node["name"].split()[-1] if node.get("name") else ""
-        return bool(self.f.wait_for(
-            lambda: (node["title"] and node["title"] in self.popup_title()) or
-            (want and re.search(rf"\b{want}\s*$", self.popup_title())), 8))
+        flat = lambda s: " ".join(re.sub(r"[\[\]]", " ", s or "").split())
+        # a repeated title got the stage's name added by the scan ("... - Hard (Hard Stage 2)"):
+        # the popup shows the game's own title
+        base = re.sub(r"\s+(\([^()]*\)|#\d+)$", "", node.get("title") or "")
+
+        def up():
+            title = self.popup_title()
+            return ((base and flat(base) in flat(title)) or
+                    (want and re.search(rf"\b{re.escape(want)}\s*$", title)))
+        return bool(self.f.wait_for(up, 8))
 
     def popup_up(self):
         here = self.f.probe(OUTSIDE)
@@ -253,6 +264,15 @@ class MapScanner:
             self.f.sleep(1.0)
         return loot
 
+    def banner_name(self):
+        """The event's name from the map's banner ("Scavengers of Time and Space" over "HARD"),
+        or None. Stage titles name the event in different ways ("X - Hard 1", "X [Hard]",
+        "X Hard Stage 1"); the banner is the name the lists show."""
+        for t in self.f.texts(self.f.inspect(BANNER)):
+            if t.strip() and t.strip().upper() not in ("NORMAL", "HARD", "EXTRA", "EX"):
+                return t.strip()
+        return None
+
     # ---------- a whole map ----------
     def scan(self, tab="Hard", progress=None):
         """Every stage of the open map's tab: title, attempts, loot. Presses only the nodes, the
@@ -267,6 +287,7 @@ class MapScanner:
             raise RuntimeError(f"this map has no {tab} switch")
         self.f.sleep(1.0)
         event = self.chapter_id()
+        self.map_name = self.banner_name()
         nodes = self.nodes(tab)
         if not nodes:
             raise RuntimeError("couldn't read the map's stages")
@@ -279,12 +300,18 @@ class MapScanner:
             q = {"title": titles[i - 1], "name": n["name"], "iname": n["iname"],
                  "tab": tab, "kind": "map", "loot": []}
             spot = spots.get(n["iname"])
+            opened = bool(spot) and self.open_stage(n, spot)
+            if not opened:   # the map may have moved under the popups: look again, once
+                self.close_popups()
+                spots = self.node_spots()
+                spot = spots.get(n["iname"])
+                opened = bool(spot) and self.open_stage(n, spot)
             if not spot:
                 q["error"] = "node not found on the map (scrolled off?)"
                 out.append(q)
                 continue
             q["spot"] = list(spot)
-            if not self.open_stage(n, spot):
+            if not opened:
                 q["error"] = "stage popup didn't open"
                 self.close_popups()
                 out.append(q)

@@ -1216,7 +1216,8 @@ class DevPage:
             event, quests = ms.scan(tab, log)
             if not event:
                 raise RuntimeError("couldn't read the event's id from its map")
-            origin = ms.learn_origin(event, f.navigator, map_scan.event_names(None, quests))
+            origin = ms.learn_origin(event, f.navigator, map_scan.event_names(ms.map_name, quests))
+            origin["banner"] = ms.map_name
             return event, quests, origin
 
         def done(result):
@@ -1225,7 +1226,7 @@ class DevPage:
             if ev is None:   # a live event scanned again starts from what's live
                 _eid, ev = self.dev_draft_event(create=True, eid=event)
             ev.update({"kind": "map", "chapter": event, "list": origin["list"]})
-            ev["name"] = ev.get("name") or origin.get("name") or event
+            ev["name"] = ev.get("name") or origin.get("banner") or origin.get("name") or event
             ev["quests"] = live_data.merge_quests(ev["quests"], quests)
             live_data.save_draft(self.dev_draft)
             self.dev_sel = event
