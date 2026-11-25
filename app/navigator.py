@@ -22,6 +22,7 @@ MAP_FILES = (farm.RES_DIR / "screen_map.json",
 # the screens the farms need, on top of what the menu walk recorded; "parent" is the screen
 # its Back goes to. Steps are path ends to press ("@x,y" = a spot, for screens without names).
 QUEST = "HomeBG/HomeBGUI/CanvasBoundsPanel/quest/event"
+ARCHIVE_BOSS_TAB = "EventQuestLibrary(Clone)/CanvasBoundsPanel/window/tab/tab_event4"
 ROUTES = {
     "title": {"marker": "SRPG_TITLE", "open": None, "back": None,
               "forward": "SRPG_TITLE/2D/CanvasBoundsPanel/UI/Play", "parent": "home"},
@@ -46,6 +47,14 @@ ROUTES = {
     "boss battle map": {"marker": "AdvanceQuestEventMap", "open": None,
                         "back": "AdvanceQuestEventMap(Clone)/Button/left/back",
                         "parent": "boss battle event"},
+    # Event Archives (Quest > Event > 4th button): past events, unlocked for a while (a free
+    # unlock or gems - the farm never unlocks). It always opens on Encounter Event, so the route
+    # ends on the Boss Battle Quest tab; its events open the same page / map as the list above.
+    "archive": {"marker": "EventQuestLibrary",
+                "open": [QUEST, "QuestList/default/button2/image",
+                         "QuestList/event/button4/image", ARCHIVE_BOSS_TAB],
+                "back": "EventQuestLibrary(Clone)/CanvasBoundsPanel/window/button/back",
+                "parent": "home"},
     "genesis list": {"marker": "GenesisQuestSelector",
                      "open": [QUEST, "QuestList/default/button1/image",
                               "QuestList/story/list/viewport/content/button3/image"],
