@@ -1844,6 +1844,445 @@
    "list": "archive",
    "id": "ADVANCE_DIE_FROHLICHE",
    "added": "2026-11-25"
+  },
+  "ADVANCE_TSP_01": {
+   "name": "Scavengers of Time and Space",
+   "quests": [
+    {
+     "title": "Scavengers of Time and Space Hard Stage 1",
+     "name": "Hard Stage 1",
+     "iname": "QE_EV_ADVANCE_TSP_01_HA_01",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_TSP_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_TSP_RIMU01",
+       "name": "A Ruler's Outfit Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_GEM_MARACAS",
+       "name": "Maracas",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_CHOKER",
+       "name": "Elemental Belt Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_AX",
+       "name": "Great Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_TSP_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_TSP_RIMURU",
+       "name": "Rimuru Tempest Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_WOR_AX",
+       "name": "Gigant Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ONM_SOUBI",
+       "name": "Hidden Scroll Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_MACHINEWING",
+       "name": "Mechanical Wing Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.18,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "Scavengers of Time and Space Hard Stage 2",
+     "name": "Hard Stage 2",
+     "iname": "QE_EV_ADVANCE_TSP_01_HA_02",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_TSP_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_TSP_MILL01",
+       "name": "A Dragon's Outfit Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_EARRING",
+       "name": "Earrings Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_LUK_TRUMP",
+       "name": "Arcana Card",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_TSP_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_TSP_MILLIM",
+       "name": "Milim Nava Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_STRB",
+       "name": "Rakshasa's Faulds Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_DRAGON",
+       "name": "Dragon Sphere Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ARMOR",
+       "name": "Flame Emperor Armor Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURCOAT",
+       "name": "Sacred Fur Coat Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+       "name": "Compass Diagram Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.33,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "Scavengers of Time and Space Hard Stage 3",
+     "name": "Hard Stage 3",
+     "iname": "QE_EV_ADVANCE_TSP_01_HA_03",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_TSP_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_TSP_BENI01",
+       "name": "A Samurai General's Outfit Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_CRI_DAGGER",
+       "name": "Dagger",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURO",
+       "name": "Stamp of Certain Delivery Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_MACHINEWING",
+       "name": "Mechanical Wing Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_TSP_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_TSP_BENIMARU",
+       "name": "Benimaru Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MFEN_SWORD",
+       "name": "White Serpent Blade Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ZUKIN",
+       "name": "Master Ninja's Hood Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.45,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "Scavengers of Time and Space Hard Stage 4",
+     "name": "Hard Stage 4",
+     "iname": "QE_EV_ADVANCE_TSP_01_HA_04",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_TSP_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_TSP_RIMU01",
+       "name": "A Ruler's Outfit Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_MND_CHARM",
+       "name": "Charm",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_HOURGLASS",
+       "name": "Rainbow Hourglass Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_PARKA",
+       "name": "Magus Hood Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_PI_TSP_RIMURU",
+       "name": "Rimuru Tempest Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_WOR_AX",
+       "name": "Gigant Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ONM_SOUBI",
+       "name": "Hidden Scroll Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_MACHINEWING",
+       "name": "Mechanical Wing Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_TSP_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.6,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "Scavengers of Time and Space Hard Stage 5",
+     "name": "Hard Stage 5",
+     "iname": "QE_EV_ADVANCE_TSP_01_HA_05",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_TSP_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_TSP_MILL01",
+       "name": "A Dragon's Outfit Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_GETA",
+       "name": "Single-Tooth Geta Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CAPE",
+       "name": "Magic Cape Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURCOAT",
+       "name": "Sacred Fur Coat Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_TSP_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_TSP_MILLIM",
+       "name": "Milim Nava Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_STRB",
+       "name": "Rakshasa's Faulds Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_DRAGON",
+       "name": "Dragon Sphere Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ARMOR",
+       "name": "Flame Emperor Armor Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+       "name": "Compass Diagram Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.63,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "Scavengers of Time and Space Hard Stage 6",
+     "name": "Hard Stage 6",
+     "iname": "QE_EV_ADVANCE_TSP_01_HA_06",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_TSP_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_TSP_BENI01",
+       "name": "A Samurai General's Outfit Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_GEM_SPOON",
+       "name": "Silver Spoon",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ROD",
+       "name": "Skull Rod Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_PI_TSP_BENIMARU",
+       "name": "Benimaru Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MFEN_SWORD",
+       "name": "White Serpent Blade Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ZUKIN",
+       "name": "Master Ninja's Hood Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_MACHINEWING",
+       "name": "Mechanical Wing Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_TSP_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.7827,
+      0.5591
+     ],
+     "max": 3
+    }
+   ],
+   "kind": "map",
+   "chapter": "ADVANCE_TSP_01",
+   "list": "archive",
+   "id": "ADVANCE_TSP_01",
+   "added": "2026-11-25"
   }
  },
  "scripts": {},
