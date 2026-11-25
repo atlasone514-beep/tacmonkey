@@ -20,6 +20,7 @@ import farm
 import genesis_farm
 import live_data
 import event_scan
+import map_scan
 from event_scan import EventScanner, clean, parse_quest_text, QUEST_LIST, EVENT_SCREEN
 
 DONE_FILE = farm.APP_DIR / "box_done.json"
@@ -118,7 +119,9 @@ class BoxFarm(genesis_farm.GenesisFarm):
         self.data = data or live_data.load()
         self.counter = counter or DayCounter()
         self.nav = EventScanner(log=self.log, stop=self.stop)
-        self.here = None   # (event id, tab) whose quest list is open
+        self.mapper = map_scan.MapScanner(self, log=self.log)   # Genesis-style event maps
+        self.here = None   # (event id, tab) whose quest list / map is open
+        self.spots = {}    # quest id -> node spot on the open map
 
     # ---------- finding the quest ----------
     def open_quest_list(self, eid, tab):
@@ -132,7 +135,16 @@ class BoxFarm(genesis_farm.GenesisFarm):
         self.here = (eid, tab)
 
     def go_event_list(self):
-        """Back to Quest > Event from the team screen, a popup, the quest list or home."""
+        """To Quest > Event from any screen the menu map knows (navigator.py); if that fails,
+        the old way (team screen, a popup, the quest list or home)."""
+        if self.nav.on_event_list():
+            return
+        try:
+            self.navigator.go("event list")
+            if self.wait_for(self.nav.on_event_list, 6):
+                return
+        except RuntimeError as e:
+            self.log(f"  (menu map: {e} - trying the usual way)")
         for _ in range(10):
             if self.nav.on_event_list():
                 return
@@ -180,6 +192,8 @@ class BoxFarm(genesis_farm.GenesisFarm):
 
     # ---------- one quest ----------
     def farm_quest(self, eid, q):
+        if q.get("kind") == "map":
+            return self.farm_map_quest(eid, q)
         key = quest_key(eid, q)
         name = q["title"] + (f" ({q['tab']})" if q.get("tab") else "")
         self.open_quest_list(eid, q.get("tab"))
@@ -225,6 +239,67 @@ class BoxFarm(genesis_farm.GenesisFarm):
         if self.on_team():
             self.tap(genesis_farm.TEAM_BACK)
             self.wait_for(self.nav.on_quest_list, 10)
+
+    def farm_map_quest(self, eid, q):
+        """A stage of a Genesis-style event: its map (opened through the list it was scanned
+        in), its node, the popup's attempts, OK, skip, back to the map."""
+        ev = self.data["events"][eid]
+        key, name, ms = quest_key(eid, q), q["title"], self.mapper
+        if self.here != (eid, q.get("tab")) or not ms.on_map():
+            self.here = None
+            ms.open_event(ev.get("chapter") or eid, ev.get("list") or "event list",
+                          self.navigator)
+            if q.get("tab") and not ms.set_tab(q["tab"]):
+                raise RuntimeError(f"{name}: couldn't switch the map to {q['tab']}")
+            self.sleep(1.0)
+            self.spots = ms.node_spots()
+            self.here = (eid, q.get("tab"))
+        node = {"iname": q.get("iname", ""), "title": q["title"], "name": q.get("name", "")}
+        spot = self.spots.get(node["iname"]) or (tuple(q["spot"]) if q.get("spot") else None)
+        if not spot or not ms.open_stage(node, spot):
+            ms.close_popups()
+            self.spots = ms.node_spots()   # the map may have moved: look again
+            spot = self.spots.get(node["iname"])
+            if not spot or not ms.open_stage(node, spot):
+                ms.close_popups()
+                raise RuntimeError(f"{name}: stage popup didn't open")
+        att = ms.popup_attempts()
+        most = (att[1] if att else q.get("max")) or 1
+        if att and att[0] >= att[1]:
+            self.counter.note(key, att[0], att[1])
+            self.log(f"  {name}: {att[0]}/{att[1]} done today - skipped")
+            ms.close_popups()
+            return
+        self.skips = most - (att[0] if att else 0)
+        self.tap(map_scan.POPUP_OK)
+        if not self.wait_for(self.on_team, 12):
+            ms.close_popups()
+            raise RuntimeError(f"{name}: team screen didn't open")
+        self.sleep(1.0)
+        got, skipped = self.skip_stage(name)
+        self.counter.note(key, most, most)
+        self.done_quest(name, got, skipped)
+        self.tap(genesis_farm.TEAM_BACK)
+        start = time.time()
+        while time.time() - start < 15 * self.lag:
+            self.sleep(1.2)
+            ms.close_popups()
+            if ms.on_map():
+                return
+            if self.on_team():
+                self.tap(genesis_farm.TEAM_BACK)
+        raise RuntimeError(f"{name}: didn't get back to the map")
+
+    def done_quest(self, name, got, skipped):
+        if skipped:
+            txt = ", ".join(f"{u} x{n}" for u, n in got.items()) or "no shards this time"
+            self.log(f"  {name}: done - {txt}")
+            for u, n in got.items():
+                self.shards[u] = self.shards.get(u, 0) + n
+            self.on_shards(dict(self.shards))
+            self.status(f"{name} done - {self.shard_summary()}")
+        else:
+            self.log(f"  {name}: can't skip - no attempt left, or not cleared by hand yet")
 
     # ---------- run ----------
     def run(self, units, counts=None, solo=False):

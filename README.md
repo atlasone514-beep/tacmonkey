@@ -148,7 +148,8 @@ screen** to see whether the images match on their window.
 
 ## Box events
 
-The **Box events** page has three tabs along the top: **Box events**, **Genesis** and **Ex**.
+The **Box events** page has two tabs along the top: **Box events** (box event and Genesis units)
+and **Genesis Ex** (the Extra stages, by chapter).
 
 **Box events tab:** every box event that's live, with a tile per unit whose Soul Shards its
 quests drop (portrait, name, quests, how many are left today). Tick units (the number beside a
@@ -157,10 +158,21 @@ Event, goes into each event, and skips the quests that drop those units, with th
 refill (Leaves), popups, grace period and pause as the Genesis farm. Needs the mod. The search box
 filters units by name. Portraits are only pictures; nothing is found by them.
 
+The Genesis Hard units have their own section below, **Genesis (Hard)** (with *Solo stages
+only*). One **Start** runs a queue: each box event with ticked units as its own job, one after
+another, then Genesis, chapter by chapter (each chapter opened once). A job that stays stuck
+after its grace periods is given up and the next one starts (the end says which). Stop and pause
+cover the whole queue, and the Leaves limits count across it.
+
+**Finding the way:** between jobs (and after a stop, or with the game left on any menu) the farm
+uses a map of the game's menus (`data/screen_map.json` plus the Event and Genesis screens in
+`app/navigator.py`): it recognises the screen, presses Back until it's on the way, then the menu
+buttons. Only Back and menu buttons are pressed.
+
 **Daily counter:** quests done today are remembered until the game's reset at 00:00 GMT (the tab
 shows how long until then). After a stop, Start goes straight to the quests that are left. Before
 pressing a quest the farm reads its row's "used / max", so quests played by hand count too and
-nothing is spent twice.
+nothing is spent twice. Genesis Hard stages are counted the same way.
 
 **Where the events come from:** a file on GitHub (`data/live/box_events.json`) that TACMonkey
 downloads on start with the update check (or **Refresh** / **Check now**). Publishing a new box
@@ -189,7 +201,13 @@ The farm reads the screen through the mod, so it doesn't need button images.
 fine-grained GitHub token with *Contents: read and write* on this repository only (also kept in
 `dev.json`, never shared).
 
-- **Box event: scan.** With the game on Quest > Event: **Read event list**, pick the event, give
+- **Box event: Scan the open map.** Box events are laid out like Genesis (a page with QUEST, a
+  map with a Normal / Hard switch, one node per stage). Open the event's map in the game and press
+  **Scan the open map**: it switches to Hard (or what *Place* says), reads every stage from the
+  map's own data (title, attempts, loot through the magnifier; never OK), then goes Back to learn
+  which list the event is opened from. The farm later finds its way there with the menu map, opens
+  the event, and taps each stage's node (found on the map by its quest id).
+- **Box event: list-style events.** With the game on Quest > Event: **Read event list**, pick the event, give
   it a name for players, then **Scan whole event** (goes in, reads every quest and its Loot, comes
   back), **Scan the open list** (the quest list you have open; put e.g. `Hard` in *Place* if the
   event has more than one list) or **Add the open Quest Details** (a quest's magnifier you opened
@@ -210,8 +228,8 @@ loot into `event_scan.json` (`--survey` for quest rows only).
 
 ## Genesis farm
 
-Needs the mod. Start from the home screen or anywhere in Genesis (the **Genesis** tab of the Box
-events page).
+Needs the mod. Start from the home screen or anywhere in Genesis. Hard units are picked on the
+**Box events** tab (under Genesis (Hard)); Extra chapters on the **Genesis Ex** tab.
 
 - **Units (Hard):** tick the units whose shards you want. The number that appears beside a
   ticked unit is how many of its stages to farm, newest chapter first. Each stage is skipped

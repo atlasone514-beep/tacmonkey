@@ -120,22 +120,35 @@ class BoxTab:
         self.box_today.pack(anchor="w")
         self.genesis_info["box"] = self.label(card, "", size=9, color=MUTED, anchor="w")
         self.genesis_info["box"].pack(anchor="w", pady=(2, 0))
+        gcard = self.page_card(page, "Genesis (Hard) - units", key="genesis.title")
+        self.genesis_body = tk.Frame(gcard, bg=PANEL)
+        self.genesis_body.pack(fill="x")
+        self.genesis_info["hard"] = self.label(gcard, "", size=9, color=MUTED, anchor="w")
+        self.genesis_info["hard"].pack(anchor="w", pady=(8, 0))
         self.live_hooks = getattr(self, "live_hooks", []) + [self.box_rebuild]
         self.box_rebuild()
         self.box_tick_clock()
 
     def box_rebuild(self):
-        """Draw the events and unit tiles again (new live data)."""
-        picked = set(self.genesis_selected("box")) if self.genesis_vars.get("box") else set()
-        counts = self.genesis_count_map("box") if self.genesis_vars.get("box") else {}
+        """Draw the groups and unit tiles again: one per live box event, then Genesis."""
+        keep = {m: (set(self.genesis_selected(m)), self.genesis_count_map(m))
+                for m in ("box", "hard") if self.genesis_vars.get(m)}
         self.box_load_data()
-        for w in self.box_body.winfo_children():
+        for w in self.box_body.winfo_children() + self.genesis_body.winfo_children():
             w.destroy()
         self.box_tiles, self.box_groups = {}, []
-        self.genesis_vars["box"], self.genesis_counts["box"], self.genesis_spins["box"] = {}, {}, {}
-        data = self.live
+        for m in ("box", "hard"):
+            self.genesis_vars[m], self.genesis_counts[m], self.genesis_spins[m] = {}, {}, {}
+        self.genesis_star = {}
+        if not self.live.get("events"):
+            self.label(self.box_body, t("box.empty", "No box events are live right now. When one "
+                                        "is published it shows up here - on start, or press "
+                                        "Refresh."),
+                       size=9, color=MUTED, wraplength=540, justify="left",
+                       key=False).pack(anchor="w", pady=(8, 0))
+        picked, counts = keep.get("box", (set(), {}))
         placed = set()
-        for eid, ev in data.get("events", {}).items():
+        for eid, ev in self.live.get("events", {}).items():
             units = []
             for q in ev["quests"]:
                 for u in live_data.quest_units(q):
@@ -144,38 +157,64 @@ class BoxTab:
             placed |= set(units)
             if not units:
                 continue
-            head = tk.Frame(self.box_body, bg=PANEL)
-            title = self.label(head, ev.get("name") or eid, size=10, bold=True)
-            title.pack(side="left")
-            left = self.label(head, "", size=9, color=MUTED)
-            left.pack(side="right")
-            grid = tk.Frame(self.box_body, bg=PANEL)
-            for c in range(3):
-                grid.columnconfigure(c, weight=1, uniform="box")
-            self.box_groups.append({"eid": eid, "head": head, "grid": grid, "left": left,
-                                    "units": units})
+            g = self.box_group(ev.get("name") or eid, eid)
             for u in units:
-                self.box_tile(grid, u, u in picked, counts.get(u))
-        if not self.box_groups:
-            self.label(self.box_body, t("box.empty", "No box events are live right now. When one "
-                                        "is published it shows up here - on start, or press "
-                                        "Refresh."),
-                       size=9, color=MUTED, wraplength=540, justify="left").pack(anchor="w",
-                                                                                pady=(8, 0))
+                self.box_tile(g, "box", u, u in picked, counts.get(u))
+        # Genesis Hard: the same tiles, farmed after the box quests by the same Start
+        gdata = self.genesis_data.get("hard", {})
+        if gdata:
+            picked, counts = keep.get("hard", (set(), {}))
+            g = self.box_group("", "genesis", self.genesis_body)
+            self.check(g["head"], "Solo stages only", self.genesis_solo,
+                       self.genesis_changed).pack(side="right")
+            self.genesis_star_note = self.label(g["head"], "* only shared stages, kept",
+                                                size=8, color=MUTED)
+            for u in sorted(gdata, key=str.lower):
+                self.box_tile(g, "hard", u, u in picked, counts.get(u))
         self.box_filter()
         self.box_counts_refresh()
         self.genesis_changed()
 
-    def box_tile(self, grid, unit, on, count):
-        n = len(self.box_units[unit])
+    def box_group(self, title, gid, parent=None):
+        parent = parent or self.box_body
+        head = tk.Frame(parent, bg=PANEL)
+        if title:
+            self.label(head, title, size=10, bold=True, key=False).pack(side="left",
+                                                                       padx=(0, 10))
+        left = self.label(head, "", size=9, color=MUTED, key=False)
+        left.pack(side="left")
+        grid = tk.Frame(parent, bg=PANEL)
+        for c in range(3):
+            grid.columnconfigure(c, weight=1, uniform="box")
+        g = {"id": gid, "head": head, "grid": grid, "left": left, "keys": []}
+        self.box_groups.append(g)
+        return g
+
+    def unit_quests(self, mode, unit):
+        """The quests (box) or stages (Genesis) a tile stands for, with their daily-counter keys."""
+        if mode == "box":
+            return [(box_farm.quest_key(q["event"], q), q.get("max") or 1)
+                    for q in self.box_units[unit]]
+        import genesis_farm
+        stages = genesis_farm.unit_stages(self.genesis_data["hard"], unit,
+                                          self.genesis_selected("hard"), self.genesis_solo.get(),
+                                          self.genesis_owners)
+        return [(f"genesis|{s['stage']}", genesis_farm.SKIPS) for s in stages]
+
+    def box_tile(self, g, mode, unit, on, count):
+        key = unit if mode == "box" else (mode, unit)
+        n = len(self.genesis_data[mode][unit]["stages"])
         var = tk.BooleanVar(value=on)
         cnt = tk.IntVar(value=min(count or n, n))
-        tile = tk.Frame(grid, bg=TILE, highlightthickness=1, highlightbackground=TILE,
+        tile = tk.Frame(g["grid"], bg=TILE, highlightthickness=1, highlightbackground=TILE,
                         padx=6, pady=4, cursor="hand2")
         cb = tk.Checkbutton(tile, variable=var, command=self.genesis_changed, bg=TILE,
                             activebackground=TILE, selectcolor=FIELD, highlightthickness=0, bd=0)
         cb.pack(side="left")
-        img = self.box_image(self.box_pics.get(unit))
+        code = (self.box_pics.get(unit) if mode == "box" else
+                live_data.guess_portrait(self.genesis_data["hard"][unit].get("item", ""),
+                                         self.portrait_list()))
+        img = self.box_image(code)
         pic = tk.Label(tile, bg=TILE, image=img, width=40, height=40) if img else \
             tk.Label(tile, bg=FIELD, fg=MUTED, text=unit[:2].upper(), width=4, height=2,
                      font=(FONT, 9, "bold"))
@@ -197,52 +236,75 @@ class BoxTab:
             self.genesis_changed()
         for w in (tile, pic, text, name, sub):
             w.bind("<Button-1>", toggle)
-        self.genesis_vars["box"][unit] = var
-        self.genesis_counts["box"][unit] = cnt
-        self.genesis_spins["box"][unit] = spin
-        self.box_tiles[unit] = {"tile": tile, "sub": sub, "name": name, "grid": grid}
+        self.genesis_vars[mode][unit] = var
+        self.genesis_counts[mode][unit] = cnt
+        self.genesis_spins[mode][unit] = spin
+        if mode == "hard" and self.genesis_shared_only(unit):
+            self.genesis_star[unit] = name   # gets a * while Solo stages only is ticked
+        self.box_tiles[key] = {"tile": tile, "sub": sub, "name": name, "mode": mode,
+                               "unit": unit}
+        g["keys"].append(key)
+
+    def portrait_list(self):
+        if not hasattr(self, "_portrait_codes"):
+            self._portrait_codes = live_data.portrait_codes()
+        return self._portrait_codes
 
     def box_filter(self):
-        """Show the tiles whose unit name matches the search (and their events' headings)."""
+        """Show the tiles whose unit name matches the search (and their groups' headings)."""
         if not hasattr(self, "box_groups"):
             return
         want = self.box_search.get().strip().lower()
         for g in self.box_groups:
-            shown = [u for u in g["units"] if want in u.lower()]
-            for u in g["units"]:
-                self.box_tiles[u]["tile"].grid_forget()
-            for i, u in enumerate(shown):
-                self.box_tiles[u]["tile"].grid(row=i // 3, column=i % 3, sticky="ew",
+            shown = [k for k in g["keys"] if want in self.box_tiles[k]["unit"].lower()]
+            for k in g["keys"]:
+                self.box_tiles[k]["tile"].grid_forget()
+            for i, k in enumerate(shown):
+                self.box_tiles[k]["tile"].grid(row=i // 3, column=i % 3, sticky="ew",
                                                padx=(0, 6), pady=3)
             if shown:
-                g["head"].pack(fill="x", pady=(10, 2))
+                g["head"].pack(fill="x", pady=(10 if g["id"] != "genesis" else 0, 2))
                 g["grid"].pack(fill="x")
             else:
                 g["head"].pack_forget()
                 g["grid"].pack_forget()
 
     def box_counts_refresh(self):
-        """Quests left today on every tile and event heading, plus the "today" line."""
+        """What's left today on every tile and group heading, plus the "today" line."""
         if not hasattr(self, "box_groups"):
             return
         c = self.box_counter
         c.roll()
-        for unit, w in self.box_tiles.items():
-            qs = self.box_units[unit]
-            left = sum(1 for q in qs if not c.finished(box_farm.quest_key(q["event"], q),
-                                                       q.get("max") or 1))
-            done = left == 0
+        for key, w in self.box_tiles.items():
+            qs = self.unit_quests(w["mode"], w["unit"])
+            left = sum(1 for k, most in qs if not c.finished(k, most))
+            done = bool(qs) and left == 0
+            word = "quest" if w["mode"] == "box" else "stage"
             w["sub"].config(text=t("box.done_today", "done for today") if done else
-                            t("box.tile", "{quests} quest{s} · {left} left",
-                              quests=len(qs), s="" if len(qs) == 1 else "s", left=left),
+                            t("box.tile", "{quests} {word}{s} · {left} left", quests=len(qs),
+                              word=word, s="" if len(qs) == 1 else "s", left=left),
                             fg=GREEN if done else MUTED)
             w["name"].config(fg=MUTED if done else FG)
         for g in self.box_groups:
-            left, total = box_farm.left_today(self.live, c, g["eid"])
-            g["left"].config(text=t("box.event_left", "{left} of {total} quests left today",
-                                    left=left, total=total))
+            if g["id"] == "genesis":
+                keys = [f"genesis|{s}" for s in self.genesis_owners]
+                left = sum(1 for k in keys if not c.finished(k, 3))
+                g["left"].config(text=t("box.genesis_left", "{left} of {total} stages left today",
+                                        left=left, total=len(keys)))
+            else:
+                left, total = box_farm.left_today(self.live, c, g["id"])
+                ticked = sum(1 for k in g["keys"] if self.genesis_vars["box"][k].get())
+                g["left"].config(text=t("box.event_left", "{left} of {total} quests left today",
+                                        left=left, total=total)
+                                 + (t("box.event_ticked", " · {n} ticked", n=ticked)
+                                    if ticked else ""))
         done = [q["title"] for eid, ev in self.live.get("events", {}).items() for q in ev["quests"]
                 if c.done.get(box_farm.quest_key(eid, q))]
+        gdone = sorted((k.split("|", 1)[1] for k in c.done if k.startswith("genesis|")),
+                       key=lambda s: [int(x) for x in s.split("-")] if s.replace("-", "").isdigit()
+                       else [0])
+        if gdone:
+            done.append(t("box.today_genesis", "Genesis {stages}", stages=", ".join(gdone)))
         self.box_today.config(text=t("box.today", "Today: {done}", done=", ".join(done))
                               if done else t("box.today_none", "Nothing done today yet."))
 
@@ -264,14 +326,99 @@ class BoxTab:
             self.q.put(("grab_done", lambda: self.enable(self.box_refresh_btn, True)))
         threading.Thread(target=job, daemon=True).start()
 
-    def box_farm_job(self, picks, counts):
-        """The worker for Start on the Box events tab (called from genesis_go)."""
-        return box_farm.BoxFarm(
-            data=self.live, counter=box_farm.DayCounter(),
-            log=lambda m: self.q.put(("log", m)), stop=self.genesis_stop,
-            pause=self.genesis_pause, leaves=self.leaf_settings(),
-            status=lambda s: self.q.put(("gstatus", s)),
-            on_shards=lambda s: self.q.put(("gshards", s)))
+    def box_go(self):
+        """Start on the Box events tab: the ticked box quests, then the ticked Genesis stages,
+        with one stop / pause and the Leaves limits counted across both."""
+        picks, gpicks = self.genesis_selected("box"), self.genesis_selected("hard")
+        if not (picks or gpicks) or self.running() or self.genesis_running():
+            return
+        import genesis_farm
+        self.genesis_mode = "box"
+        self.save_settings()
+        counts, gcounts = self.genesis_count_map("box"), self.genesis_count_map("hard")
+        solo = self.genesis_solo.get()
+        name = ("Box + Genesis farm" if picks and gpicks else "Box farm" if picks
+                else "Genesis farm")
+        self.genesis_stop, self.genesis_pause = threading.Event(), threading.Event()
+        leaves = self.leaf_settings()
+        self.genesis_name = name
+        self.last_shards = {}
+        what = ", ".join(picks + gpicks)
+        self.set_state(name, what)
+        self.log(f"--- {name}: {what} ---", "muted")
+        put = self.q.put
+        common = dict(log=lambda m: put(("log", m)), stop=self.genesis_stop,
+                      pause=self.genesis_pause, leaves=leaves,
+                      status=lambda s: put(("gstatus", s)))
+
+        jobs = self.box_jobs(picks, gpicks)
+
+        def job():
+            put(("gdone", self.run_queue(jobs, counts, gcounts, solo, common, name)))
+
+        self.genesis_worker = threading.Thread(target=job, daemon=True)
+        self.genesis_worker.start()
+        self.update_buttons()
+
+    def box_jobs(self, picks, gpicks):
+        """[(kind, event id, units)]: each box event with ticked units on its own, in the live
+        file's order, then Genesis (its stages go chapter by chapter, each chapter opened once)."""
+        jobs = []
+        for eid, ev in self.live.get("events", {}).items():
+            here = [u for u in picks if any(q["event"] == eid for q in self.box_units.get(u, []))]
+            if here:
+                jobs.append(("box", eid, here))
+        if gpicks:
+            jobs.append(("genesis", None, list(gpicks)))
+        return jobs
+
+    def run_queue(self, jobs, counts, gcounts, solo, common, name):
+        """Run the jobs one after another (worker thread). A job that stays stuck after its
+        grace periods is given up and the next one starts; Stop, a Leaves limit or an
+        unexpected error end the whole run. Returns the reason shown at the end."""
+        import genesis_farm
+        put = self.q.put
+        used, got, done, failed = 0, {}, [], []
+        merged = lambda s: {**got, **{u: got.get(u, 0) + n for u, n in s.items()}}
+        for kind, eid, units in jobs:
+            title = (self.live["events"][eid].get("name") or eid) if kind == "box" else "Genesis"
+            put(("log", f"=== {title}: {', '.join(units)} ===", "info"))
+            put(("gstatus", f"{title} ({len(done) + len(failed) + 1} of {len(jobs)})"))
+            f = None
+            try:
+                if kind == "box":
+                    data = {"format": 1, "events": {eid: self.live["events"][eid]}}
+                    f = box_farm.BoxFarm(data=data, counter=box_farm.DayCounter(),
+                                         on_shards=lambda s: put(("gshards", merged(s))),
+                                         **common)
+                    f.leaves_used = used   # "at most N per session" covers the whole run
+                    reason = f.run(units, counts)
+                else:
+                    f = genesis_farm.GenesisFarm(mode="hard", counter=box_farm.DayCounter(),
+                                                 on_shards=lambda s: put(("gshards", merged(s))),
+                                                 **common)
+                    f.leaves_used = used
+                    reason = f.run(units, gcounts, solo)
+            except RuntimeError as e:   # stuck even after the grace periods: next job
+                failed.append(title)
+                put(("log", f"{title}: given up ({e}) - going on with the next one", "warn"))
+                farm.log_error(f"{name}, {title}")
+                used = f.leaves_used if f is not None else used
+                continue
+            except Exception as e:
+                saved = farm.log_error(name)
+                put(("log", f"{name} error: {e!r}" + (f" (details saved in {saved})" if saved
+                                                      else ""), "bad"))
+                return f"{name} error: {e!r}"
+            used = f.leaves_used
+            for u, n in f.shards.items():
+                got[u] = got.get(u, 0) + n
+            if reason != "Finished.":
+                return reason   # Stopped, or a Leaves limit
+            done.append(title)
+        if failed:
+            return f"Finished, but gave up on {', '.join(failed)} (see the log)."
+        return "Finished."
 
 
 class VcrPage:
@@ -463,7 +610,8 @@ class DevPage:
         self.dev_event.trace_add("write", lambda *_: self.dev_event_changed())
         row = tk.Frame(card, bg=PANEL)
         row.pack(fill="x", pady=(10, 0))
-        for text, cmd in (("Scan whole event", self.dev_scan_event),
+        for text, cmd in (("Scan the open map", self.dev_scan_map),
+                          ("Scan whole event", self.dev_scan_event),
                           ("Scan the open list", self.dev_scan_open),
                           ("Add the open Quest Details", self.dev_scan_detail)):
             b = self.small_button(row, text, cmd)
@@ -743,6 +891,49 @@ class DevPage:
         quest = {"title": title.strip(), **({"tab": place} if place else {})}
         self.dev_work("Reading the open Quest Details",
                       lambda: [{**quest, "loot": sc.scan_open_detail()}], self.dev_add_quests)
+
+    def dev_scan_map(self):
+        """A Genesis-style event (box events): with its map (or page) open in the game, read
+        every stage of the tab (Hard unless Place says otherwise), then go Back to learn which
+        list it's opened from. The event is named by its own id - no need to pick it first."""
+        import genesis_farm
+        import map_scan
+        tab = self.dev_place.get().strip() or "Hard"
+        log = lambda s: self.q.put(("log", f"  {s}"))
+
+        def job():
+            f = genesis_farm.GenesisFarm(log=log, stop=self.dev_stop)
+            ms = map_scan.MapScanner(f, log=log)
+            event, quests = ms.scan(tab, log)
+            if not event:
+                raise RuntimeError("couldn't read the event's id from its map")
+            origin = ms.learn_origin(event, f.navigator)
+            return event, quests, origin
+
+        def done(result):
+            event, quests, origin = result
+            ev = self.dev_draft["events"].setdefault(event, {"quests": []})
+            ev.update({"kind": "map", "chapter": event, "list": origin["list"]})
+            ev["name"] = self.dev_name.get().strip() or ev.get("name") or origin.get("name") \
+                or event
+            ev["quests"] = live_data.merge_quests(ev["quests"], quests)
+            live_data.save_draft(self.dev_draft)
+            label = f"{event}  -  {ev['name']}"
+            self.dev_choices[label] = event
+            self.set_menu(self.dev_event_menu, self.dev_event, list(self.dev_choices))
+            self.dev_event.set(label)
+            found = sorted({u for q in quests for u in live_data.quest_units(q)})
+            self.log(f"Scanned {len(quests)} {tab} stages of {ev['name']}"
+                     + (f": {', '.join(found)}" if found else " (no unit shards in their loot)"),
+                     "good")
+            if not origin.get("list") or not origin.get("found"):
+                self.log("Couldn't tell which list this event is opened from - the farm won't "
+                         "find its way there. Open it from Quest > Event > Boss Battle Quest "
+                         "(or the Genesis list) and scan again.", "warn")
+            else:
+                self.log(f"  It's opened from the {origin['list']}: the farm goes there by itself.",
+                         "muted")
+        self.dev_work(f"Scanning the open map ({tab})", job, done)
 
     def dev_clear(self):
         eid, ev = self.dev_draft_event()
