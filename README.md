@@ -166,7 +166,13 @@ filters units by name. Portraits are only pictures; nothing is found by them.
 **Main units:** an event can have main units (marked on the Dev page, optional, any number). They
 show first with a *Main unit* badge, and the event's other units are folded under "N other units"
 (click to open; a search or a ticked unit shows them anyway). Events without main units show
-every unit.
+every unit. A unit that drops in several events shows once: under the event it's a main unit of,
+else the first one.
+
+**Solo stages only** (under the search, for box events; Genesis has its own): a quest that also
+drops another unit's Soul Shard is left out, unless every unit on it is ticked. A unit with only
+shared quests keeps them all and gets a `*`. The tiles' counts, the Archive counter and the farm
+follow it (Qilin's Eins: only Hard 5).
 
 The Genesis Hard units have their own section below, **Genesis (Hard)** (with *Solo stages
 only*). One **Start** runs a queue: each box event with ticked units as its own job, one after

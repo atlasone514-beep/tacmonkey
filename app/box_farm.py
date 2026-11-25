@@ -86,13 +86,45 @@ class DayCounter:
 
 
 # ---------- what to farm ----------
-def plan(data, units, counts=None):
+def quest_owners(data):
+    """{(event id, tab, title): {units whose Soul Shard the quest drops}}."""
+    out = {}
+    for eid, ev in data.get("events", {}).items():
+        for q in ev.get("quests", []):
+            out[(eid, q.get("tab"), q["title"])] = set(live_data.quest_units(q))
+    return out
+
+
+def shared_only(by_unit, unit, owners):
+    """A unit whose every quest also drops another unit's shard."""
+    return all(len(owners.get((q["event"], q.get("tab"), q["title"]), ())) > 1
+               for q in by_unit.get(unit, []))
+
+
+def unit_quests(data, unit, picks=(), solo=False, by_unit=None, owners=None):
+    """A unit's quests in order. solo (Solo stages only): leave out quests that drop another
+    unit's shard too, unless every unit on it is picked; a unit with only shared quests keeps
+    them all - like Genesis."""
+    by_unit = by_unit if by_unit is not None else live_data.units(data)
+    qs = by_unit.get(unit, [])
+    if not solo:
+        return qs
+    owners = owners if owners is not None else quest_owners(data)
+    if shared_only(by_unit, unit, owners):
+        return qs
+    picked = set(picks) | {unit}
+    return [q for q in qs if owners.get((q["event"], q.get("tab"), q["title"]), {unit}) <= picked]
+
+
+def plan(data, units, counts=None, solo=False):
     """[(event id, quest)] for the picked units, each unit's first counts[unit] quests (all if
-    no count), a quest shared by units once, in the live file's order (event by event)."""
+    no count), a quest shared by units once, in the live file's order (event by event).
+    solo: leave out shared quests (see unit_quests)."""
     by_unit = live_data.units(data)
+    owners = quest_owners(data) if solo else None
     wanted = set()
     for u in units:
-        qs = by_unit.get(u, [])
+        qs = unit_quests(data, u, units, solo, by_unit, owners)
         n = (counts or {}).get(u)
         if isinstance(n, int) and 0 < n < len(qs):
             qs = qs[:n]
@@ -303,7 +335,7 @@ class BoxFarm(genesis_farm.GenesisFarm):
 
     # ---------- run ----------
     def run(self, units, counts=None, solo=False):
-        order = plan(self.data, units, counts)
+        order = plan(self.data, units, counts, solo)
         todo = [(e, q) for e, q in order
                 if not self.counter.finished(quest_key(e, q), q.get("max") or 1)]
         names = lambda lst: ", ".join(q["title"] for _, q in lst)
