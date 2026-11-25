@@ -1,6 +1,6 @@
 {
  "format": 1,
- "updated": "2026-11-25 20:31",
+ "updated": "2026-11-25 21:13",
  "events": {
   "ADVANCE_ORION_CC": {
    "quests": [
@@ -2288,6 +2288,679 @@
    "chapter": "ADVANCE_TSP_01",
    "list": "archive",
    "id": "ADVANCE_TSP_01",
+   "added": "2026-11-25"
+  },
+  "ADVANCE_ALSO_SPRACH_05": {
+   "name": "My Funeral",
+   "quests": [
+    {
+     "title": "My Funeral (Hard Stage 1)",
+     "name": "Hard Stage 1",
+     "iname": "QE_EV_ADVANCE_ALSO_SPRACH_05_HA_01",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_05_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_NAJU01",
+       "name": "Fang Pelvic Band Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ZENN_SCARF",
+       "name": "Vagabond Scarf Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_KNIFE",
+       "name": "Ogre Knife Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+       "name": "Silver Bell Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_MACHINEWING",
+       "name": "Mechanical Wing Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURCOAT",
+       "name": "Sacred Fur Coat Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_NAJU_01",
+       "name": "Twin Sharp Blades Einsam Shard",
+       "type": "ArtifactPiece"
+      },
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_05_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_ACHAD",
+       "name": "Acht Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_VIER",
+       "name": "Vier Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NOIN",
+       "name": "Neun Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_FURY",
+       "name": "Füry Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZYVA",
+       "name": "Sieba Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZENN",
+       "name": "Zehn Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_THOL",
+       "name": "Sol Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZWEI",
+       "name": "Zwei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_DREI",
+       "name": "Drei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_EINZ",
+       "name": "Eins Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NAJU",
+       "name": "Na Zhu Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_JAVELIN",
+       "name": "Javelin Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_AX",
+       "name": "Great Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ARMOR",
+       "name": "Flame Emperor Armor Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.18,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "My Funeral (Hard Stage 2)",
+     "name": "Hard Stage 2",
+     "iname": "QE_EV_ADVANCE_ALSO_SPRACH_05_HA_02",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_05_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_NAJU01",
+       "name": "Fang Pelvic Band Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ZENN_SCARF",
+       "name": "Vagabond Scarf Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_BROOM",
+       "name": "Broom Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_JAVELIN",
+       "name": "Javelin Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+       "name": "Compass Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_JAMADHAR",
+       "name": "Jamadhar Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_NAJU_01",
+       "name": "Twin Sharp Blades Einsam Shard",
+       "type": "ArtifactPiece"
+      },
+      {
+       "iname": "IT_PI_ACHAD",
+       "name": "Acht Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_VIER",
+       "name": "Vier Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NOIN",
+       "name": "Neun Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_FURY",
+       "name": "Füry Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZYVA",
+       "name": "Sieba Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZENN",
+       "name": "Zehn Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_THOL",
+       "name": "Sol Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZWEI",
+       "name": "Zwei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_DREI",
+       "name": "Drei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_EINZ",
+       "name": "Eins Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NAJU",
+       "name": "Na Zhu Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+       "name": "Silver Bell Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_AX",
+       "name": "Great Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ARMOR",
+       "name": "Flame Emperor Armor Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_05_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.33,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "My Funeral (Hard Stage 3)",
+     "name": "Hard Stage 3",
+     "iname": "QE_EV_ADVANCE_ALSO_SPRACH_05_HA_03",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_05_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_NAJU01",
+       "name": "Fang Pelvic Band Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ZENN_SCARF",
+       "name": "Vagabond Scarf Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_EARRING",
+       "name": "Earrings Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURO",
+       "name": "Stamp of Certain Delivery Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MND_CAP",
+       "name": "Mage's Hat Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MFEN_SWORD",
+       "name": "White Serpent Blade Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_NAJU_01",
+       "name": "Twin Sharp Blades Einsam Shard",
+       "type": "ArtifactPiece"
+      },
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_05_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_ACHAD",
+       "name": "Acht Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_VIER",
+       "name": "Vier Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NOIN",
+       "name": "Neun Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_FURY",
+       "name": "Füry Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZYVA",
+       "name": "Sieba Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZENN",
+       "name": "Zehn Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_THOL",
+       "name": "Sol Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZWEI",
+       "name": "Zwei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_DREI",
+       "name": "Drei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_EINZ",
+       "name": "Eins Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NAJU",
+       "name": "Na Zhu Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+       "name": "Silver Bell Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_JAVELIN",
+       "name": "Javelin Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_AX",
+       "name": "Great Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ARMOR",
+       "name": "Flame Emperor Armor Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.45,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "My Funeral (Hard Stage 4)",
+     "name": "Hard Stage 4",
+     "iname": "QE_EV_ADVANCE_ALSO_SPRACH_05_HA_04",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_05_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_NAJU01",
+       "name": "Fang Pelvic Band Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ZENN_SCARF",
+       "name": "Vagabond Scarf Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_SPD_GEAR",
+       "name": "Harmonic Cogs",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MIRROR",
+       "name": "Crystal Mirror Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_STAFF",
+       "name": "Star Staff Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_JAMADHAR",
+       "name": "Jamadhar Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_NAJU_01",
+       "name": "Twin Sharp Blades Einsam Shard",
+       "type": "ArtifactPiece"
+      },
+      {
+       "iname": "IT_PI_ACHAD",
+       "name": "Acht Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_VIER",
+       "name": "Vier Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NOIN",
+       "name": "Neun Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_FURY",
+       "name": "Füry Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZYVA",
+       "name": "Sieba Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZENN",
+       "name": "Zehn Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_THOL",
+       "name": "Sol Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZWEI",
+       "name": "Zwei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_DREI",
+       "name": "Drei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_EINZ",
+       "name": "Eins Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NAJU",
+       "name": "Na Zhu Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+       "name": "Silver Bell Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_JAVELIN",
+       "name": "Javelin Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_AX",
+       "name": "Great Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ARMOR",
+       "name": "Flame Emperor Armor Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_05_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.6,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "My Funeral (Hard Stage 5)",
+     "name": "Hard Stage 5",
+     "iname": "QE_EV_ADVANCE_ALSO_SPRACH_05_HA_05",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_05_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_NAJU01",
+       "name": "Fang Pelvic Band Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ZENN_SCARF",
+       "name": "Vagabond Scarf Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_GEM_SPOON",
+       "name": "Silver Spoon",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_TURBAN",
+       "name": "Turban Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_TWOSWORDS",
+       "name": "Orichalcum Blades Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MFEN_SWORD",
+       "name": "White Serpent Blade Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_NAJU_01",
+       "name": "Twin Sharp Blades Einsam Shard",
+       "type": "ArtifactPiece"
+      },
+      {
+       "iname": "IT_PI_NAJU",
+       "name": "Na Zhu Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+       "name": "Silver Bell Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_JAVELIN",
+       "name": "Javelin Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_AX",
+       "name": "Great Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ARMOR",
+       "name": "Flame Emperor Armor Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_05_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.75,
+      0.39
+     ],
+     "max": 3
+    }
+   ],
+   "kind": "map",
+   "chapter": "ADVANCE_ALSO_SPRACH_05",
+   "list": "archive",
+   "main": [
+    "Na Zhu"
+   ],
+   "id": "ADVANCE_ALSO_SPRACH_05",
    "added": "2026-11-25"
   }
  },
