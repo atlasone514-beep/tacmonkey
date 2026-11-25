@@ -1,6 +1,6 @@
 {
  "format": 1,
- "updated": "2026-11-25 20:18",
+ "updated": "2026-11-25 20:22",
  "events": {
   "ADVANCE_ORION_CC": {
    "quests": [
@@ -505,6 +505,639 @@
    "list": "boss battle list",
    "name": "A Roar and a Thunderclap",
    "id": "ADVANCE_ORION_CC",
+   "added": "2026-11-25"
+  },
+  "ADVANCE_ALSO_SPRACH_06": {
+   "name": "Love Won't Tear Us Apart Again",
+   "quests": [
+    {
+     "title": "Love Won't Tear Us Apart Again [Hard] (Hard Stage 1)",
+     "name": "Hard Stage 1",
+     "iname": "QE_EV_ADVANCE_ALSO_SPRACH_06_HA_01",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_06_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ZEX01",
+       "name": "Performer's Mask Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ACHA_SGUARD",
+       "name": "Arms Storage Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_CRI_DAGGER",
+       "name": "Dagger",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHELM",
+       "name": "Cross Helmet Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GLASSPEN",
+       "name": "Glass Pen Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_06_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_ACHAD",
+       "name": "Acht Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_VIER",
+       "name": "Vier Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NOIN",
+       "name": "Neun Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_FURY",
+       "name": "Füry Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZYVA",
+       "name": "Sieba Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZENN",
+       "name": "Zehn Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_THOL",
+       "name": "Sol Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZWEI",
+       "name": "Zwei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_DREI",
+       "name": "Drei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_EINZ",
+       "name": "Eins Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZEX",
+       "name": "Zechs Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_CIRCLET",
+       "name": "Circlet Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_WATCH",
+       "name": "Old Pocket Watch Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.18,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "Love Won't Tear Us Apart Again [Hard] (Hard Stage 2)",
+     "name": "Hard Stage 2",
+     "iname": "QE_EV_ADVANCE_ALSO_SPRACH_06_HA_02",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_06_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ZEX01",
+       "name": "Performer's Mask Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ACHA_SGUARD",
+       "name": "Arms Storage Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_HP_PILOTHAT",
+       "name": "Pilot Helmet",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CAPE",
+       "name": "Magic Cape Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+       "name": "Black Belt Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ZUKIN",
+       "name": "Master Ninja's Hood Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_06_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_ACHAD",
+       "name": "Acht Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_VIER",
+       "name": "Vier Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NOIN",
+       "name": "Neun Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_FURY",
+       "name": "Füry Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZYVA",
+       "name": "Sieba Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZENN",
+       "name": "Zehn Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_THOL",
+       "name": "Sol Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZWEI",
+       "name": "Zwei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_DREI",
+       "name": "Drei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_EINZ",
+       "name": "Eins Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZEX",
+       "name": "Zechs Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_CIRCLET",
+       "name": "Circlet Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHELM",
+       "name": "Cross Helmet Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GLASSPEN",
+       "name": "Glass Pen Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_WATCH",
+       "name": "Old Pocket Watch Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.33,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "Love Won't Tear Us Apart Again [Hard] (Hard Stage 3)",
+     "name": "Hard Stage 3",
+     "iname": "QE_EV_ADVANCE_ALSO_SPRACH_06_HA_03",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_06_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ZEX01",
+       "name": "Performer's Mask Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ACHA_SGUARD",
+       "name": "Arms Storage Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_MAG_WAND",
+       "name": "Wand",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_CIRCLET",
+       "name": "Circlet Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_COAT",
+       "name": "Noble Coat Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_DRAGON",
+       "name": "Dragon Sphere Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_PI_ACHAD",
+       "name": "Acht Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_VIER",
+       "name": "Vier Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NOIN",
+       "name": "Neun Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_FURY",
+       "name": "Füry Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZYVA",
+       "name": "Sieba Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZENN",
+       "name": "Zehn Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_THOL",
+       "name": "Sol Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZWEI",
+       "name": "Zwei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_DREI",
+       "name": "Drei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_EINZ",
+       "name": "Eins Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZEX",
+       "name": "Zechs Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHELM",
+       "name": "Cross Helmet Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GLASSPEN",
+       "name": "Glass Pen Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_WATCH",
+       "name": "Old Pocket Watch Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_06_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.45,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "Love Won't Tear Us Apart Again [Hard] (Hard Stage 4)",
+     "name": "Hard Stage 4",
+     "iname": "QE_EV_ADVANCE_ALSO_SPRACH_06_HA_04",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_06_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ZEX01",
+       "name": "Performer's Mask Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ACHA_SGUARD",
+       "name": "Arms Storage Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_ATK_MACE",
+       "name": "Mace",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GOGGLES",
+       "name": "Goggles Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ZUKIN",
+       "name": "Master Ninja's Hood Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_PI_ACHAD",
+       "name": "Acht Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_VIER",
+       "name": "Vier Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_NOIN",
+       "name": "Neun Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_FURY",
+       "name": "Füry Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZYVA",
+       "name": "Sieba Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZENN",
+       "name": "Zehn Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_THOL",
+       "name": "Sol Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZWEI",
+       "name": "Zwei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_DREI",
+       "name": "Drei Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_EINZ",
+       "name": "Eins Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_ZEX",
+       "name": "Zechs Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_CIRCLET",
+       "name": "Circlet Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHELM",
+       "name": "Cross Helmet Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GLASSPEN",
+       "name": "Glass Pen Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_WATCH",
+       "name": "Old Pocket Watch Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_06_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.6,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "Love Won't Tear Us Apart Again [Hard] (Hard Stage 5)",
+     "name": "Hard Stage 5",
+     "iname": "QE_EV_ADVANCE_ALSO_SPRACH_06_HA_05",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_06_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ZEX01",
+       "name": "Performer's Mask Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ACHA_SGUARD",
+       "name": "Arms Storage Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_PEN",
+       "name": "Mage's Fountain Pen Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+       "name": "Shinobi Shoes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SCOPE",
+       "name": "Wonder Scope Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_DRAGON",
+       "name": "Dragon Sphere Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_PI_ZEX",
+       "name": "Zechs Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_CIRCLET",
+       "name": "Circlet Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHELM",
+       "name": "Cross Helmet Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GLASSPEN",
+       "name": "Glass Pen Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_WATCH",
+       "name": "Old Pocket Watch Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_ALSO_SPRACH_06_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.72,
+      0.39
+     ],
+     "max": 3
+    }
+   ],
+   "kind": "map",
+   "chapter": "ADVANCE_ALSO_SPRACH_06",
+   "list": "archive",
+   "main": [
+    "Zechs"
+   ],
+   "id": "ADVANCE_ALSO_SPRACH_06",
    "added": "2026-11-25"
   }
  },
