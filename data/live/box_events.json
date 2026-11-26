@@ -1,6 +1,6 @@
 {
  "format": 1,
- "updated": "2026-11-25 21:43",
+ "updated": "2026-11-27 01:56",
  "events": {
   "ADVANCE_ORION_CC": {
    "quests": [
@@ -3806,7 +3806,10 @@
    "chapter": "ADVANCE_REN_CC",
    "list": "boss battle list",
    "id": "ADVANCE_REN_CC",
-   "added": "2026-11-25"
+   "added": "2026-11-25",
+   "main": [
+    "Natsume"
+   ]
   }
  },
  "scripts": {},
