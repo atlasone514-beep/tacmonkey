@@ -4853,6 +4853,544 @@
    "list": "archive",
    "id": "ADVANCE_MT3_01",
    "added": "2026-11-27"
+  },
+  "ADVANCE_MABEL_EVENT": {
+   "name": "Steel Crash Revenge",
+   "quests": [
+    {
+     "title": "Steel Crash Revenge - Hard Stage 1",
+     "name": "Hard Stage 1",
+     "iname": "QE_EV_ADVANCE_MABEL_EVENT_HA_01",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_MABEL_EVENT_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MABE01",
+       "name": "Trigger Gloves Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_ATK_WOODENSWORD",
+       "name": "Wooden Sword",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MIRROR",
+       "name": "Crystal Mirror Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_STAFF",
+       "name": "Star Staff Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ARMOR",
+       "name": "Flame Emperor Armor Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_MABEL_EVENT_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_MABEL",
+       "name": "Mabel's Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_HUGO",
+       "name": "Hugo Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_VIVI",
+       "name": "Vivi Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_MEGISTOS",
+       "name": "Megistos Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_AMIS",
+       "name": "Amis Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_CHOKER",
+       "name": "Elemental Belt Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+       "name": "Shinobi Shoes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_AX",
+       "name": "Great Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURCOAT",
+       "name": "Sacred Fur Coat Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_TWOSWORDS",
+       "name": "Orichalcum Blades Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_MABEL_01",
+       "name": "Magitech Hammer Domus Shard",
+       "type": "ArtifactPiece"
+      }
+     ],
+     "spot": [
+      0.18,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "Steel Crash Revenge - Hard Stage 2",
+     "name": "Hard Stage 2",
+     "iname": "QE_EV_ADVANCE_MABEL_EVENT_HA_02",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_MABEL_EVENT_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MABE01",
+       "name": "Trigger Gloves Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_GROVE",
+       "name": "Gloves Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURO",
+       "name": "Stamp of Certain Delivery Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MND_CAP",
+       "name": "Mage's Hat Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURCOAT",
+       "name": "Sacred Fur Coat Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_MABEL_EVENT_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_MABEL",
+       "name": "Mabel's Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_HUGO",
+       "name": "Hugo Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_VIVI",
+       "name": "Vivi Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_MEGISTOS",
+       "name": "Megistos Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_AMIS",
+       "name": "Amis Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_CHOKER",
+       "name": "Elemental Belt Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+       "name": "Shinobi Shoes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_STAFF",
+       "name": "Star Staff Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_AX",
+       "name": "Great Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_TWOSWORDS",
+       "name": "Orichalcum Blades Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_MABEL_01",
+       "name": "Magitech Hammer Domus Shard",
+       "type": "ArtifactPiece"
+      }
+     ],
+     "spot": [
+      0.33,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "Steel Crash Revenge - Hard Stage 3",
+     "name": "Hard Stage 3",
+     "iname": "QE_EV_ADVANCE_MABEL_EVENT_HA_03",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_MABEL_EVENT_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MABE01",
+       "name": "Trigger Gloves Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_SPD_FEATHER",
+       "name": "Blue Feather",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_JAVELIN",
+       "name": "Javelin Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+       "name": "Compass Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_TWOSWORDS",
+       "name": "Orichalcum Blades Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_MABEL_EVENT_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_MABEL",
+       "name": "Mabel's Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_HUGO",
+       "name": "Hugo Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_VIVI",
+       "name": "Vivi Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_MEGISTOS",
+       "name": "Megistos Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_AMIS",
+       "name": "Amis Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_CHOKER",
+       "name": "Elemental Belt Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+       "name": "Shinobi Shoes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_STAFF",
+       "name": "Star Staff Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_AX",
+       "name": "Great Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURCOAT",
+       "name": "Sacred Fur Coat Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_MABEL_01",
+       "name": "Magitech Hammer Domus Shard",
+       "type": "ArtifactPiece"
+      }
+     ],
+     "spot": [
+      0.45,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "Steel Crash Revenge - Hard Stage 4",
+     "name": "Hard Stage 4",
+     "iname": "QE_EV_ADVANCE_MABEL_EVENT_HA_04",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_MABEL_EVENT_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MABE01",
+       "name": "Trigger Gloves Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_KNIFE",
+       "name": "Ogre Knife Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+       "name": "Silver Bell Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_MACHINEWING",
+       "name": "Mechanical Wing Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MOU_GAROMANTLE",
+       "name": "Hungry Wolf Cape Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_MABEL_EVENT_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_MABEL",
+       "name": "Mabel's Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_HUGO",
+       "name": "Hugo Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_VIVI",
+       "name": "Vivi Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_MEGISTOS",
+       "name": "Megistos Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_AMIS",
+       "name": "Amis Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_CHOKER",
+       "name": "Elemental Belt Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+       "name": "Shinobi Shoes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_STAFF",
+       "name": "Star Staff Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_AX",
+       "name": "Great Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURCOAT",
+       "name": "Sacred Fur Coat Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_TWOSWORDS",
+       "name": "Orichalcum Blades Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_MABEL_01",
+       "name": "Magitech Hammer Domus Shard",
+       "type": "ArtifactPiece"
+      }
+     ],
+     "spot": [
+      0.6,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "Steel Crash Revenge - Hard Stage 5",
+     "name": "Hard Stage 5",
+     "iname": "QE_EV_ADVANCE_MABEL_EVENT_HA_05",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_MABEL_EVENT_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MABE01",
+       "name": "Trigger Gloves Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_BROOM",
+       "name": "Broom Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_CHOKER",
+       "name": "Elemental Belt Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_VAL_WING",
+       "name": "Valkyrie Headdress Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_MABEL_EVENT_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_MABEL",
+       "name": "Mabel's Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_HUGO",
+       "name": "Hugo Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_VIVI",
+       "name": "Vivi Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_MEGISTOS",
+       "name": "Megistos Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_AMIS",
+       "name": "Amis Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+       "name": "Shinobi Shoes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_STAFF",
+       "name": "Star Staff Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_AX",
+       "name": "Great Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURCOAT",
+       "name": "Sacred Fur Coat Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_TWOSWORDS",
+       "name": "Orichalcum Blades Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_MABEL_01",
+       "name": "Magitech Hammer Domus Shard",
+       "type": "ArtifactPiece"
+      }
+     ],
+     "spot": [
+      0.72,
+      0.39
+     ],
+     "max": 3
+    }
+   ],
+   "kind": "map",
+   "chapter": "ADVANCE_MABEL_EVENT",
+   "list": "boss battle list",
+   "main": [
+    "Mabel's"
+   ],
+   "id": "ADVANCE_MABEL_EVENT",
+   "added": "2026-11-27"
   }
  },
  "scripts": {},
