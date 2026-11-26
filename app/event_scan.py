@@ -28,7 +28,8 @@ EVENT_LIST, QUEST_LIST = "ChapterList", "QuestList"
 EVENT_SCREEN = "EventQuestSelector/CanvasBoundsPanel/"   # on the event screen's Back buttons
 LIST_ENTRY = re.compile(r"ChapterList/contents/viewport/list/([^/]+)\(Clone\)")
 OUTSIDE = (0.12, 0.75)              # an empty spot: closes Quest Details
-LOOT_RE = re.compile(r"[<,{]iname=([^,>]+),name=([^,>]+),type=([^,>]+)")
+# a name may hold a tag from the game's text: "Ais Wallenstein Soul Shard <br>"
+LOOT_RE = re.compile(r"[<,{]iname=([^,>]+),name=((?:[^,<>]|<[^>]*>)*),type=([^,>]+)")
 
 
 class Stop(Exception):
@@ -36,7 +37,7 @@ class Stop(Exception):
 
 
 def clean(t):
-    return t.replace("\xa0", " ").strip()
+    return re.sub(r"<[^>]*>", "", t).replace("\xa0", " ").strip()   # "<br>" from the game's text
 
 
 def parse_quest_text(text):

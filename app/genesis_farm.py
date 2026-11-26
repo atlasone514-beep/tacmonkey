@@ -37,6 +37,11 @@ LAG_MAX = 3.0
 SLOW_REPLY = 1.5            # s: a mod reply slower than this is a sign the game is lagging
 GRACE_WAIT = 10             # s
 GRACE_TRIES = 3
+# Waits poll the game instead of sleeping a fixed time: a mod reply takes ~20 ms, so every wait
+# ends as soon as the screen has changed. SETTLE is a short pause after a screen change, for the
+# game's slide-in animation (a press during it can be ignored - the farms check and press again).
+POLL = 0.12
+SETTLE = 0.25
 
 # window fractions (same at any window size)
 LIST_X, SLOTS = 0.777, (0.365, 0.599, 0.834)    # Genesis chapter list entries
@@ -216,8 +221,9 @@ class GenesisFarm:
         if self.stop.wait(s):
             raise Stop()
 
-    def wait_for(self, fn, timeout=12.0, every=0.4):
-        """fn() until it's truthy, for up to timeout s - stretched while the game is slow."""
+    def wait_for(self, fn, timeout=12.0, every=POLL):
+        """fn() until it's truthy, for up to timeout s - stretched while the game is slow.
+        Asked often (a mod reply takes ~20 ms): the farm moves on as soon as the game has."""
         end = time.time() + timeout * self.lag
         while time.time() < end:
             v = fn()
@@ -225,6 +231,61 @@ class GenesisFarm:
                 return v
             self.sleep(every)
         return None
+
+    def steady(self, match, timeout=4.0, hold=4):
+        """The on-screen element `match(e)` picks, once it has held still (same place and size)
+        for `hold` looks in a row, ~0.08 s apart - the game slides and scales buttons in, and a
+        press on a moving one can hit its neighbour - or None."""
+        seen = []
+
+        def still():
+            e = next((e for e in self.elements() if e["top"] and e["on"] and match(e)), None)
+            if not e:
+                seen.clear()
+                return None
+            box = (round(e["x"], 3), round(e["y"], 3), round(e.get("w") or 0, 3),
+                   round(e.get("h") or 0, 3))
+            if seen and seen[-1] != box:
+                seen.clear()
+            seen.append(box)
+            return e if len(seen) >= hold else None
+        return self.wait_for(still, timeout, every=0.08)
+
+    def settled(self, timeout=4.0, hold=0.3):
+        """Wait until nothing on screen has moved, appeared or changed state for `hold` s (a
+        screen loads its buttons in waves, and ignores presses until it's done). The elements
+        then, or the last ones looked at if it never settled within timeout."""
+        # what's on top only: behind-the-scenes decoration (the quest menu's light streaks)
+        # never stops moving
+        sig = lambda els: tuple((e["path"], e["on"], round(e["x"], 3), round(e["y"], 3),
+                                 round(e.get("w") or 0, 3)) for e in els if e["top"])
+        end = time.time() + timeout * self.lag
+        els = self.elements()
+        last, since = sig(els), time.time()
+        while time.time() < end:
+            self.sleep(0.08)
+            els = self.elements()
+            s = sig(els)
+            if s != last:
+                last, since = s, time.time()
+            elif time.time() - since >= hold:
+                break
+        return els
+
+    def gone(self, el, timeout=3.0):
+        """Wait until a pressed element has left the screen (the press took).
+        True if it did."""
+        def away():
+            return not any(e["path"] == el["path"] and abs(e["x"] - el["x"]) < 0.01
+                           and abs(e["y"] - el["y"]) < 0.01 for e in self.elements())
+        return bool(self.wait_for(away, timeout))
+
+    def state_left(self, state, timeout=3.0):
+        """Wait until screen_state() isn't `state` any more. The new state, or None."""
+        def moved():
+            s = self.screen_state()[0]
+            return s if s != state else None
+        return self.wait_for(moved, timeout)
 
     def find(self, path_end=None, text=None, usable=True):
         """First on-screen element whose path ends with path_end / whose text starts with text."""
@@ -304,7 +365,8 @@ class GenesisFarm:
         name, answer, btn = hit
         self.press(btn)
         self.log(f"  {name} popped up - {answer}")
-        self.sleep(1.5)
+        self.gone(btn, 3)
+        self.sleep(SETTLE)
         return True
 
     dismiss_peddler = dismiss_popup   # its old name
@@ -315,13 +377,15 @@ class GenesisFarm:
             if any(obj in here for _, obj, _, _ in farm.KNOWN_POPUPS):
                 if not self.dismiss_popup():
                     return
+                continue
             elif "Win_Btn_Decide" in here:          # a game notice: its OK closes it
                 self.tap(NOTICE_OK)
             elif "GenesisQuestConfirm" in here or "QuestDetail" in here:
                 self.tap(OUTSIDE)
             else:
                 return
-            self.sleep(1.3)
+            self.wait_for(lambda: self.probe(OUTSIDE) != here, 2.5)
+            self.sleep(SETTLE)
 
     def notice(self):
         """The text of a game notice (e.g. "Clear ... EX 1 to unlock."), or None."""
@@ -337,26 +401,20 @@ class GenesisFarm:
     def open_chapter(self, iname):
         self.go_genesis()
         self.send(f"scroll {LIST_X} {SLOTS[1]} 1")
-        self.sleep(1.0)
+        self.sleep(0.4)
         for _ in range(9):
             for y in SLOTS:
                 if self.chapter_in_slot(y) == iname:
                     self.tap((LIST_X, y))
                     if not self.wait_for(lambda: "GenesisQuestEventTop" in self.probe(QUEST_BTN), 15):
                         raise RuntimeError(f"{iname}: chapter page didn't open")
-                    for _ in range(6):
-                        self.sleep(1.5)
-                        if self.on_map():
-                            break
-                        if "GenesisQuestEventTop" in self.probe(QUEST_BTN):
-                            self.tap(QUEST_BTN)
-                        if self.wait_for(self.on_map, 5):
-                            break
-                    else:
+                    # its QUEST grows in and ignores an early press (map_scan.open_map waits)
+                    import map_scan
+                    if not map_scan.MapScanner(self).open_map():
                         raise RuntimeError(f"{iname}: quest map didn't open")
                     return self.set_mode()
             self.tap(DOWN)
-            self.sleep(1.2)
+            self.sleep(0.6)
         raise RuntimeError(f"{iname}: not in the Genesis chapter list")
 
     def set_mode(self):
@@ -367,7 +425,10 @@ class GenesisFarm:
                 return True
             if "btn_scenario_" in pics:
                 self.tap(DIFF)
-            self.sleep(1.5)
+                self.wait_for(lambda: self.inspect(DIFF) != pics, 2.5)
+                self.sleep(SETTLE)   # the nodes redraw
+            else:
+                self.sleep(0.5)
         raise RuntimeError(f"couldn't switch the map to {self.label}")
 
     def popup_title(self):
@@ -438,11 +499,11 @@ class GenesisFarm:
             if ok:
                 self.press(ok)
                 presses += 1
-                self.sleep(1.0)
+                self.gone(ok, 2.0)
             elif presses or time.time() >= end:
                 break
             else:
-                self.sleep(0.4)
+                self.sleep(0.25)
         return presses > 0
 
     def leaf_summary(self):
@@ -552,8 +613,9 @@ class GenesisFarm:
         got = {}
         did_skip = False
         refill_fails = 0
+        counted = None   # the rewards screen's OK whose shards are already counted
         start = time.time()
-        for _ in range(120):   # ~50 s, stretched while the game is slow
+        for _ in range(400):   # ~50 s, stretched while the game is slow
             if time.time() - start > 50 * self.lag:
                 break
             state, els = self.screen_state()
@@ -564,7 +626,8 @@ class GenesisFarm:
                 if did_skip:
                     return got, did_skip     # one 3x skip per stage
                 self.press(btn)
-                self.sleep(1.5)
+                self.state_left("team", 2.5)   # ignored (still sliding in)? pressed again
+                self.sleep(SETTLE)
             elif state == "skipdialog":
                 n = self.slider_value()
                 if n is not None and n < self.skips:
@@ -574,12 +637,13 @@ class GenesisFarm:
                 if not ok:
                     raise RuntimeError("skip dialog has no OK button")
                 self.press(ok)
-                self.log(f"  {key}: skipping {n}x")
+                if not did_skip:
+                    self.log(f"  {key}: skipping {n}x")
                 did_skip = True
-                self.sleep(2.0)
+                self.state_left("skipdialog", 3)
             elif state == "popup":
                 if not self.dismiss_popup(els):
-                    self.sleep(1.0)
+                    self.sleep(0.5)
             elif state == "apwindow":
                 try:
                     self.replenish_ap()
@@ -589,22 +653,35 @@ class GenesisFarm:
                     if refill_fails >= 3:
                         raise
                     self.log(f"  AP refill didn't finish ({e}) - trying again")
-                    self.sleep(1.5)
+                    self.sleep(1.0)
             elif state == "result":
                 okb = next((e for e in els if e["path"].endswith("btn_ok")), None)
+                if okb and counted is None:
+                    # seen the moment it opens now: let its rewards fill in before reading them
+                    els = self.settled(2.0)
+                    okb = next((e for e in els if e["path"].endswith("btn_ok")), None)
                 if okb:
-                    for unit, n in self.reward_shards(els):
-                        got[unit] = got.get(unit, 0) + n
+                    # an OK press the game ignored (still animating) leaves the same screen:
+                    # its shards were counted already
+                    spot = (okb["path"], round(okb["x"], 2), round(okb["y"], 2))
+                    if counted != spot:
+                        for unit, n in self.reward_shards(els):
+                            got[unit] = got.get(unit, 0) + n
+                        counted = spot
                     self.press(okb)
+                    if self.gone(okb, 2.5):
+                        counted = None
                 else:
                     skip = next((e for e in els if e["path"].endswith("itemskip")), None)
                     if skip:
                         self.press(skip)
-                self.sleep(1.5)
+                        self.gone(skip, 2.0)
+                    else:
+                        self.sleep(0.3)
             elif self.close_success(0):   # a refill's success popup was left up
                 self.log("  Closed the \"AP successfully replenished\" popup")
             else:
-                self.sleep(1.0)
+                self.sleep(0.25)
         raise RuntimeError(f"{key}: stuck after skipping")
 
     def reward_shards(self, els):
@@ -616,9 +693,9 @@ class GenesisFarm:
         reply = self.send(f"items {node['x']:.3f} {node['y']:.3f}", timeout=10)
         out = []
         for chunk in reply.split(" ||| ")[1:]:
-            m = re.search(r"name=([^,>]+) Soul Shard,type=UnitPiece", chunk)
+            m = re.search(r"name=([^,<>]+) Soul Shard\s*(?:<[^>]*>\s*)*,type=UnitPiece", chunk)
             if not m and self.mode == "extra":
-                m = re.search(r"name=([^,>]+ Diagram Piece),type=ItemPiecePiece", chunk)
+                m = re.search(r"name=([^,<>]+ Diagram Piece)\s*(?:<[^>]*>\s*)*,type=ItemPiecePiece", chunk)
             if m:
                 # labels read e.g. "*", "3", "(Owned: 49)" - the count sits right before "(Owned"
                 t = self.texts(chunk)
@@ -656,7 +733,7 @@ class GenesisFarm:
             self.close_popups()
             self.log(f"  {key}: team screen didn't open - skipped")
             return
-        self.sleep(1.0)
+        self.sleep(SETTLE)
         got, skipped = self.skip_stage(key)
         self.note_done(st, att[1] if att else SKIPS)   # skipped, or no attempts left
         if not skipped:
@@ -669,20 +746,28 @@ class GenesisFarm:
                 self.shards[u] = self.shards.get(u, 0) + n
             self.on_shards(dict(self.shards))
             self.status(f"{key} done - {self.shard_summary()}")
-        self.tap(TEAM_BACK)   # goes back to the stage popup
-        start = time.time()
-        for _ in range(40):
-            if time.time() - start > 15 * self.lag:
-                raise RuntimeError(f"{key}: didn't get back to the map")
-            self.sleep(1.2)
-            self.close_popups()
-            if self.on_map():
-                break
+        self.back_to_map(key, self.on_map, self.close_popups)
+
+    def back_to_map(self, key, on_map, close_popups):
+        """From the team screen after a skip: its Back (to the stage popup), the popup closed,
+        until the map shows. Back is pressed again only if the team screen stays a while: an
+        extra press once it's gone would hit the map's own Back."""
+        self.tap(TEAM_BACK)
+        last = time.time()
+        end = last + 15 * self.lag
+        while time.time() < end:
             if self.on_team():
-                self.tap(TEAM_BACK)
-        else:
-            raise RuntimeError(f"{key}: didn't get back to the map")
-        self.sleep(0.8)
+                if time.time() - last > 3 * self.lag:
+                    self.tap(TEAM_BACK)
+                    last = time.time()
+                self.sleep(POLL)
+                continue
+            close_popups()
+            if on_map():
+                self.sleep(SETTLE)
+                return
+            self.sleep(0.2)
+        raise RuntimeError(f"{key}: didn't get back to the map")
 
     @staticmethod
     def day_key(st):

@@ -880,6 +880,7 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
         self.genesis_keys_prev = (False, False)   # F8, F9 last poll
         self.genesis_solo = tk.BooleanVar(value=False)
         self.box_solo = tk.BooleanVar(value=False)   # Box events: Solo stages only
+        self.box_order = []   # Box events: the player's clearing order ([] = the developer's)
         self.genesis_mode = "hard"
         self.genesis_name = "Genesis farm"
         self.genesis_data, self.genesis_vars, self.genesis_counts = {}, {}, {}
@@ -1532,6 +1533,11 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
                         min(max(n, 1), len(self.genesis_data[mode][k]["stages"])))
         self.genesis_solo.set(bool(s.get("genesis_solo", False)))
         self.box_solo.set(bool(s.get("box_solo", False)))
+        self.box_order = s.get("box_order") if live_data.good_order(s.get("box_order")) else []
+        if self.box_order:
+            self.box_rebuild()   # the events listed in the player's order
+        else:
+            self.box_order_menu()
         for k in s.get("box_units", []):
             if k in self.genesis_vars["box"]:
                 self.genesis_vars["box"][k].set(True)
@@ -1571,6 +1577,7 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
                                             "genesis_mode": self.genesis_mode,
                                             "genesis_solo": self.genesis_solo.get(),
                                             "box_solo": self.box_solo.get(),
+                                            "box_order": self.box_order,
                                             "box_units": self.genesis_selected("box"),
                                             "box_counts": self.genesis_count_map("box"),
                                             "farm_tab": self.farm_tab,
