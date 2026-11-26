@@ -4288,6 +4288,571 @@
    ],
    "id": "ADVANCE_TERESA_PRISCILA_CC",
    "added": "2026-11-27"
+  },
+  "ADVANCE_MT3_01": {
+   "name": "Nocturne Played in the Desert",
+   "quests": [
+    {
+     "title": "Nocturne Played in the Desert - Hard (Hard Stage 1)",
+     "name": "Hard Stage 1",
+     "iname": "QE_EV_ADVANCE_MT3_01_HA_01",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_MT3_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_HITO01",
+       "name": "Demi-fiend's Shorts Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_TITA01",
+       "name": "Titania's Dress Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_EVIL_FROST01",
+       "name": "Jack Frost's Outfit Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_KU01",
+       "name": "Cu Chulainn's Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_CERBE01",
+       "name": "Cerberus's Scale Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_MAG_BRANCH",
+       "name": "Branch",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MAS",
+       "name": "Drunkard's Masu Cup Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+       "name": "Black Belt Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_THOR01",
+       "name": "Thor's Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_TRUM01",
+       "name": "Trumpeter's Hat Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_PI_MT3_HITOSYURA",
+       "name": "Demi-fiend's Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ROD",
+       "name": "Skull Rod Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHELM",
+       "name": "Cross Helmet Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+       "name": "Knight Chess Piece Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GEARROD",
+       "name": "Gear Rod Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_MT3_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.18,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "Nocturne Played in the Desert - Hard (Hard Stage 2)",
+     "name": "Hard Stage 2",
+     "iname": "QE_EV_ADVANCE_MT3_01_HA_02",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_MT3_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_HITO01",
+       "name": "Demi-fiend's Shorts Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_TITA01",
+       "name": "Titania's Dress Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_EVIL_FROST01",
+       "name": "Jack Frost's Outfit Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_KU01",
+       "name": "Cu Chulainn's Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_CERBE01",
+       "name": "Cerberus's Scale Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_RABBIT",
+       "name": "Rabbit's Foot Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SHINOBI",
+       "name": "Shinobi Shoes Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_COAT",
+       "name": "Noble Coat Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ROBE",
+       "name": "Saint's Robe Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_THOR01",
+       "name": "Thor's Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_TRUM01",
+       "name": "Trumpeter's Hat Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_MT3_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_MT3_TITANIA",
+       "name": "Titania's Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ROD",
+       "name": "Skull Rod Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHELM",
+       "name": "Cross Helmet Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+       "name": "Knight Chess Piece Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GEARROD",
+       "name": "Gear Rod Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.33,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "Nocturne Played in the Desert - Hard (Hard Stage 3)",
+     "name": "Hard Stage 3",
+     "iname": "QE_EV_ADVANCE_MT3_01_HA_03",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_MT3_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_HITO01",
+       "name": "Demi-fiend's Shorts Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_TITA01",
+       "name": "Titania's Dress Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_EVIL_FROST01",
+       "name": "Jack Frost's Outfit Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_KU01",
+       "name": "Cu Chulainn's Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_CERBE01",
+       "name": "Cerberus's Scale Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_CRI_DAGGER",
+       "name": "Dagger",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GOGGLES",
+       "name": "Goggles Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_WATCH",
+       "name": "Old Pocket Watch Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_THOR01",
+       "name": "Thor's Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_TRUM01",
+       "name": "Trumpeter's Hat Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_MT3_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_MT3_EVIL_FROST",
+       "name": "Black Frost's Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ROD",
+       "name": "Skull Rod Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHELM",
+       "name": "Cross Helmet Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+       "name": "Knight Chess Piece Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GEARROD",
+       "name": "Gear Rod Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.45,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "Nocturne Played in the Desert - Hard (Hard Stage 4)",
+     "name": "Hard Stage 4",
+     "iname": "QE_EV_ADVANCE_MT3_01_HA_04",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_MT3_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_HITO01",
+       "name": "Demi-fiend's Shorts Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_TITA01",
+       "name": "Titania's Dress Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_EVIL_FROST01",
+       "name": "Jack Frost's Outfit Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_KU01",
+       "name": "Cu Chulainn's Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_CERBE01",
+       "name": "Cerberus's Scale Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_HP_PILOTHAT",
+       "name": "Pilot Helmet",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHELM",
+       "name": "Cross Helmet Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_WATCH",
+       "name": "Old Pocket Watch Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_THOR01",
+       "name": "Thor's Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_TRUM01",
+       "name": "Trumpeter's Hat Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_PI_MT3_KU_CHULAINN",
+       "name": "Cu Chulainn's Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ROD",
+       "name": "Skull Rod Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+       "name": "Knight Chess Piece Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GEARROD",
+       "name": "Gear Rod Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_MT3_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.6,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "Nocturne Played in the Desert - Hard (Hard Stage 5)",
+     "name": "Hard Stage 5",
+     "iname": "QE_EV_ADVANCE_MT3_01_HA_05",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_MT3_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_HITO01",
+       "name": "Demi-fiend's Shorts Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_TITA01",
+       "name": "Titania's Dress Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_EVIL_FROST01",
+       "name": "Jack Frost's Outfit Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_KU01",
+       "name": "Cu Chulainn's Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_CERBE01",
+       "name": "Cerberus's Scale Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_MAG_WAND",
+       "name": "Wand",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CAPE",
+       "name": "Magic Cape Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BELT",
+       "name": "Black Belt Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_RADIO",
+       "name": "Alchemic Radio Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_THOR01",
+       "name": "Thor's Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MT3_TRUM01",
+       "name": "Trumpeter's Hat Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_MT3_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_MT3_CERBERUS",
+       "name": "Cerberus's Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ROD",
+       "name": "Skull Rod Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHELM",
+       "name": "Cross Helmet Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_CHESS",
+       "name": "Knight Chess Piece Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GEARROD",
+       "name": "Gear Rod Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.72,
+      0.39
+     ],
+     "max": 3
+    }
+   ],
+   "kind": "map",
+   "chapter": "ADVANCE_MT3_01",
+   "list": "archive",
+   "id": "ADVANCE_MT3_01",
+   "added": "2026-11-27"
   }
  },
  "scripts": {},
