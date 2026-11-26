@@ -5391,6 +5391,529 @@
    ],
    "id": "ADVANCE_MABEL_EVENT",
    "added": "2026-11-27"
+  },
+  "ADVANCE_MAGNUS_CC": {
+   "name": "Wild Card HERO",
+   "quests": [
+    {
+     "title": "Wild Card HERO - Hard 1",
+     "name": "Hard Stage 1",
+     "iname": "QE_EV_ADVANCE_MAGNUS_CC_HA_01",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_MAGNUS_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_RYUI01",
+       "name": "Magical Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_RYUI_01",
+       "name": "Magical Machinery Ohm Shard",
+       "type": "ArtifactPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SABER",
+       "name": "Saber Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ZUKIN",
+       "name": "Master Ninja's Hood Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_MAGNUS_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_MAGNUS",
+       "name": "Magnus Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_WILHELM",
+       "name": "Wilhelm Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_KAYA",
+       "name": "Kaya Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_OTHIMA",
+       "name": "Othima Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_MONZEIN",
+       "name": "Monzein Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_RYUI",
+       "name": "Ryui Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+       "name": "Silver Bell Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_JAVELIN",
+       "name": "Javelin Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_AX",
+       "name": "Great Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.18,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "Wild Card HERO - Hard 2",
+     "name": "Hard Stage 2",
+     "iname": "QE_EV_ADVANCE_MAGNUS_CC_HA_02",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_MAGNUS_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_RYUI01",
+       "name": "Magical Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_RYUI_01",
+       "name": "Magical Machinery Ohm Shard",
+       "type": "ArtifactPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHELM",
+       "name": "Cross Helmet Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ARMOR",
+       "name": "Flame Emperor Armor Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BOILER",
+       "name": "Power Boiler Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_MAGNUS_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_MAGNUS",
+       "name": "Magnus Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_WILHELM",
+       "name": "Wilhelm Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_KAYA",
+       "name": "Kaya Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_OTHIMA",
+       "name": "Othima Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_MONZEIN",
+       "name": "Monzein Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_RYUI",
+       "name": "Ryui Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+       "name": "Silver Bell Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_JAVELIN",
+       "name": "Javelin Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_AX",
+       "name": "Great Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.33,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "Wild Card HERO - Hard 3",
+     "name": "Hard Stage 3",
+     "iname": "QE_EV_ADVANCE_MAGNUS_CC_HA_03",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_MAGNUS_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_RYUI01",
+       "name": "Magical Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_RYUI_01",
+       "name": "Magical Machinery Ohm Shard",
+       "type": "ArtifactPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_CIRCLET",
+       "name": "Circlet Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_TWOSWORDS",
+       "name": "Orichalcum Blades Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_COWBOY",
+       "name": "Gunner's Hat Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_MAGNUS_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_MAGNUS",
+       "name": "Magnus Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_WILHELM",
+       "name": "Wilhelm Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_KAYA",
+       "name": "Kaya Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_OTHIMA",
+       "name": "Othima Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_MONZEIN",
+       "name": "Monzein Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_RYUI",
+       "name": "Ryui Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+       "name": "Silver Bell Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_JAVELIN",
+       "name": "Javelin Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_AX",
+       "name": "Great Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.45,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "Wild Card HERO - Hard 4",
+     "name": "Hard Stage 4",
+     "iname": "QE_EV_ADVANCE_MAGNUS_CC_HA_04",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_MAGNUS_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_RYUI01",
+       "name": "Magical Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_RYUI_01",
+       "name": "Magical Machinery Ohm Shard",
+       "type": "ArtifactPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURO",
+       "name": "Stamp of Certain Delivery Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_ARMOR",
+       "name": "Flame Emperor Armor Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BOILER",
+       "name": "Power Boiler Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_MAGNUS_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_MAGNUS",
+       "name": "Magnus Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_WILHELM",
+       "name": "Wilhelm Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_KAYA",
+       "name": "Kaya Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_OTHIMA",
+       "name": "Othima Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_MONZEIN",
+       "name": "Monzein Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_RYUI",
+       "name": "Ryui Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+       "name": "Silver Bell Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_JAVELIN",
+       "name": "Javelin Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_AX",
+       "name": "Great Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.6,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "Wild Card HERO - Hard 5",
+     "name": "Hard Stage 5",
+     "iname": "QE_EV_ADVANCE_MAGNUS_CC_HA_05",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_MAGNUS_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_RYUI01",
+       "name": "Magical Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_AF_ARMS_RYUI_01",
+       "name": "Magical Machinery Ohm Shard",
+       "type": "ArtifactPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHELM",
+       "name": "Cross Helmet Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MAJ_GUNHOLDER",
+       "name": "Handy Holster Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_MAGNUS_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_MAGNUS",
+       "name": "Magnus Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_WILHELM",
+       "name": "Wilhelm Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_KAYA",
+       "name": "Kaya Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_OTHIMA",
+       "name": "Othima Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_MONZEIN",
+       "name": "Monzein Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_RYUI",
+       "name": "Ryui Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+       "name": "Silver Bell Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_JAVELIN",
+       "name": "Javelin Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_AX",
+       "name": "Great Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.72,
+      0.39
+     ],
+     "max": 3
+    }
+   ],
+   "kind": "map",
+   "chapter": "ADVANCE_MAGNUS_CC",
+   "list": "boss battle list",
+   "main": [
+    "Ryui"
+   ],
+   "id": "ADVANCE_MAGNUS_CC",
+   "added": "2026-11-27"
   }
  },
  "scripts": {},
