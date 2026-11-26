@@ -3810,6 +3810,484 @@
    "main": [
     "Natsume"
    ]
+  },
+  "ADVANCE_TERESA_PRISCILA_CC": {
+   "name": "Flowers Bloom at Dawn",
+   "quests": [
+    {
+     "title": "Flowers Bloom at Dawn Hard Stage 1",
+     "name": "Hard Stage 1",
+     "iname": "QE_EV_ADVANCE_TERESA_PRISCILA_CC_HA_01",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_TERESA_PRISCILA_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_KALM01",
+       "name": "Serene Glove Shard",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_SPD_FEATHER",
+       "name": "Blue Feather",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_TURBAN",
+       "name": "Turban Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_AX",
+       "name": "Great Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_WOR_AX",
+       "name": "Gigant Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_PI_KALMIA",
+       "name": "Kalmia Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_TERESA",
+       "name": "Theresa Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_PRISCILA",
+       "name": "Priscilla Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SABER",
+       "name": "Saber Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURO",
+       "name": "Stamp of Certain Delivery Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_TERESA_PRISCILA_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.18,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "Flowers Bloom at Dawn Hard Stage 2",
+     "name": "Hard Stage 2",
+     "iname": "QE_EV_ADVANCE_TERESA_PRISCILA_CC_HA_02",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_TERESA_PRISCILA_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_KALM01",
+       "name": "Serene Glove Shard",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_GROVE",
+       "name": "Gloves Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MIRROR",
+       "name": "Crystal Mirror Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_STAFF",
+       "name": "Star Staff Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_CRANE",
+       "name": "Prayer Crane Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_PI_KALMIA",
+       "name": "Kalmia Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_TERESA",
+       "name": "Theresa Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_PRISCILA",
+       "name": "Priscilla Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SABER",
+       "name": "Saber Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURO",
+       "name": "Stamp of Certain Delivery Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_WOR_AX",
+       "name": "Gigant Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_TERESA_PRISCILA_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.33,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "Flowers Bloom at Dawn Hard Stage 3",
+     "name": "Hard Stage 3",
+     "iname": "QE_EV_ADVANCE_TERESA_PRISCILA_CC_HA_03",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_TERESA_PRISCILA_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_KALM01",
+       "name": "Serene Glove Shard",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_SPD_GEAR",
+       "name": "Harmonic Cogs",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_JAVELIN",
+       "name": "Javelin Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MND_CAP",
+       "name": "Mage's Hat Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_MOU_GAROMANTLE",
+       "name": "Hungry Wolf Cape Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_TERESA_PRISCILA_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_KALMIA",
+       "name": "Kalmia Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_TERESA",
+       "name": "Theresa Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_PRISCILA",
+       "name": "Priscilla Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SABER",
+       "name": "Saber Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURO",
+       "name": "Stamp of Certain Delivery Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_WOR_AX",
+       "name": "Gigant Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.45,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "Flowers Bloom at Dawn Hard Stage 4",
+     "name": "Hard Stage 4",
+     "iname": "QE_EV_ADVANCE_TERESA_PRISCILA_CC_HA_04",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_TERESA_PRISCILA_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_KALM01",
+       "name": "Serene Glove Shard",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_EARRING",
+       "name": "Earrings Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BELL",
+       "name": "Silver Bell Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_COMPASS",
+       "name": "Compass Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ONM_SOUBI",
+       "name": "Hidden Scroll Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_PI_KALMIA",
+       "name": "Kalmia Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_TERESA",
+       "name": "Theresa Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_PRISCILA",
+       "name": "Priscilla Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SABER",
+       "name": "Saber Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURO",
+       "name": "Stamp of Certain Delivery Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_WOR_AX",
+       "name": "Gigant Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_TERESA_PRISCILA_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      }
+     ],
+     "spot": [
+      0.6,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "Flowers Bloom at Dawn Hard Stage 5",
+     "name": "Hard Stage 5",
+     "iname": "QE_EV_ADVANCE_TERESA_PRISCILA_CC_HA_05",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_TERESA_PRISCILA_CC_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_KALM01",
+       "name": "Serene Glove Shard",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_BROOM",
+       "name": "Broom Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_CHOKER",
+       "name": "Elemental Belt Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_MACHINEWING",
+       "name": "Mechanical Wing Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_HOLYARMOR",
+       "name": "Brilliant Wings Armor Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_TERESA_PRISCILA_CC_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_KALMIA",
+       "name": "Kalmia Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_TERESA",
+       "name": "Theresa Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_PRISCILA",
+       "name": "Priscilla Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SABER",
+       "name": "Saber Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_FURO",
+       "name": "Stamp of Certain Delivery Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_LANCE",
+       "name": "Great Lance Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_CHIKUONKI",
+       "name": "Gramophone Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SWORD",
+       "name": "Sacred Lion Blade Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_WOR_AX",
+       "name": "Gigant Axe Diagram Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.72,
+      0.39
+     ],
+     "max": 3
+    }
+   ],
+   "kind": "map",
+   "chapter": "ADVANCE_TERESA_PRISCILA_CC",
+   "list": "boss battle list",
+   "main": [
+    "Kalmia"
+   ],
+   "id": "ADVANCE_TERESA_PRISCILA_CC",
+   "added": "2026-11-27"
   }
  },
  "scripts": {},
