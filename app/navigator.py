@@ -92,6 +92,8 @@ class Navigator:
         self.f = f
         self.log = log or (lambda m: None)
         self.screens, self.dialogs = load_map()
+        self.spots = {}   # route step -> where its button ended up the last time it was pressed
+        self.off_since = {}   # route step -> since when it's been held still somewhere else
 
     # ---------- where am I ----------
     def where(self, els=None):
@@ -134,13 +136,46 @@ class Navigator:
             x, y = (float(v) for v in step[1:].split(","))
             self.f.tap((x, y))
             return True
-        els = els if els is not None else self.f.elements()
-        btn = next((e for e in els if e.get("top") and e.get("on") and e["path"].endswith(step)),
-                   None)
+        if els is None:
+            # a screen sliding in moves (and grows) its buttons, and some wait a moment before
+            # they move: press once it has held still - where it was the last time, if it was
+            # pressed before (for a while somewhere else: the layout changed, take that)
+            if not self.find_step(step):
+                return False
+            btn = self.find_step(step, self.f.settled(3.0))
+            if not btn:
+                return False
+            known = self.spots.get(step)
+            if known and (abs(btn["x"] - known[0]) > 0.01 or abs(btn["y"] - known[1]) > 0.01):
+                since = self.off_since.setdefault(step, time.time())
+                if time.time() - since < 2.0:
+                    return False
+            self.off_since.pop(step, None)
+        else:
+            btn = self.find_step(step, els)
         if not btn:
             return False
         self.f.press(btn, step)
+        self.pressed = (step, btn["x"], btn["y"])
         return True
+
+    def took(self):
+        """The last route press worked: remember where its button was."""
+        step, x, y = getattr(self, "pressed", (None, 0, 0))
+        if step:
+            self.spots[step] = (x, y)
+
+    def find_step(self, step, els=None):
+        els = els if els is not None else self.f.elements()
+        return next((e for e in els if e.get("top") and e.get("on") and e["path"].endswith(step)),
+                    None)
+
+    def moved_on(self, here, timeout=4.0):
+        """After a press on screen `here`: wait until another screen (or a dialog) shows, then
+        a moment for its animation."""
+        # (mid-way no screen is known: wait for the next one, not just "another")
+        self.f.wait_for(lambda: self.where() not in (here, None), timeout)
+        self.f.sleep(0.25)
 
     def back(self, screen, els):
         """Leave a screen (its Back, or a generic one). True if something was pressed."""
@@ -163,47 +198,72 @@ class Navigator:
         if want is None:
             raise RuntimeError(f"no route to {target}")
         unknown = 0
-        for _ in range(tries):
+        for turn in range(tries):
             els = self.f.elements()
             d = self.dialog(els)
             if d:
                 name, btn = d
                 if btn:
                     self.f.press(btn, name)
-                    self.f.sleep(1.2)
+                    self.f.wait_for(lambda: not self.dialog(self.f.elements()), 3)
+                    self.f.sleep(0.25)
                     continue
             if self.f.dismiss_popup(els):
                 continue
             here = self.where(els)
             if here == target:
                 return here
+            if here is None and self.f.wait_for(lambda: self.where() is not None, 1.5):
+                continue   # it was between two screens
             if here is None:
                 unknown += 1
                 if unknown > 3:
                     raise RuntimeError("the game is on a screen the farm doesn't know - "
                                        "go to the home screen and press Start again")
                 self.back(None, els)
-                self.f.sleep(2.0)
+                self.moved_on(None, 2.5)
                 continue
             unknown = 0
             have = self.route(here) or []
             if here == "home" or (have == want[:len(have)] and "<" not in "".join(have)):
-                if self.forward(want[len(have):]):
+                if self.forward(want[len(have):], target):
+                    continue
+            # a Back pressed while the screen is still coming in is ignored: let it settle
+            # (not the screen the game was already on)
+            if turn:
+                els = self.f.settled(3.0)
+                if self.where(els) != here:
                     continue
             if not self.back(here, els):
                 raise RuntimeError(f"can't leave {here}")
-            self.f.sleep(2.0)
+            self.moved_on(here)
         raise RuntimeError(f"couldn't get to {target}")
 
-    def forward(self, steps):
-        """Press the route's next buttons, each once it shows. True if any was pressed."""
+    def forward(self, steps, target=None):
+        """Press the route's next buttons, each once it shows (and has stopped moving). True if
+        any was pressed."""
         pressed = False
-        for step in steps:
+        for i, step in enumerate(steps):
             if step.startswith("<"):
                 return pressed   # a screen the farm opens itself (an event, a chapter)
             ok = self.f.wait_for(lambda: self.press_step(step), 8)
             if not ok:
                 return pressed
             pressed = True
-            self.f.sleep(2.0)
+            nxt = steps[i + 1] if i + 1 < len(steps) and not steps[i + 1].startswith("<") else None
+            if nxt:   # until the press took: its button gone or the next one up
+                for _ in range(3):
+                    if self.f.wait_for(lambda: self.find_step(nxt) or not self.find_step(step), 1.0):
+                        self.took()
+                        break
+                    # ignored (its screen was still animating in): press it again
+                    if not self.press_step(step):
+                        break
+            else:     # the last one: until the target shows (its screen can take a while)
+                if target:
+                    if self.f.wait_for(lambda: self.where() == target, 5):
+                        self.took()
+                else:
+                    self.f.wait_for(lambda: not self.find_step(step), 3)
+                self.f.sleep(0.5 if self.find_step(step) else 0.25)   # a tab: its list redraws
         return pressed

@@ -14,7 +14,8 @@ developer's own token (dev.json, never shared); nobody else needs one.
      "scripts": {"rima_event_farm": {"name": "Rima event farm", "version": 2, "note": "...",
                                      "path": "data/live/scripts/rima_event_farm.tacscript",
                                      "sha256": "...", "size": 12345}},
-     "texts": {"box.help": "..."}}          # wording changed on the Dev page (see texts.py)
+     "texts": {"box.help": "..."},          # wording changed on the Dev page (see texts.py)
+     "order": ["event", "archive", "genesis"]}   # clearing order set on the Dev page
 Portraits are only pictures beside the names (app/portraits/<code>.png); nothing is found by them.
 """
 import hashlib
@@ -45,6 +46,10 @@ TEXT_KEY = re.compile(r"[a-z0-9_.]{1,80}")
 SCRIPTS_DIR = "data/live/scripts"
 MAX_SCRIPT = 8_000_000
 MAX_TEXT = 4000
+# the kinds a box run clears, group by group: Boss Battle Quest (and Event list) boxes, Event
+# Archives boxes, Genesis. ORDER is used until the Dev page publishes one.
+KINDS = ("event", "archive", "genesis")
+ORDER = ["event", "archive", "genesis"]
 
 
 class LiveError(Exception):
@@ -96,7 +101,27 @@ def validate(data):
             isinstance(k, str) and TEXT_KEY.fullmatch(k) and isinstance(v, str)
             and len(v) <= MAX_TEXT for k, v in texts.items()):
         raise LiveError("bad text list")
+    if "order" in data and not good_order(data["order"]):
+        data.pop("order")   # not one of the orders: the built-in one is used
     return data
+
+
+def good_order(order):
+    return isinstance(order, list) and sorted(order) == sorted(KINDS)
+
+
+def event_kind(ev):
+    """Which group a box event is cleared with: "archive" or "event"."""
+    return "archive" if ev.get("list") == "archive" else "event"
+
+
+def clear_order(data, mine=None):
+    """The kinds in the order a run clears them: the player's own pick, else the published
+    one, else ORDER."""
+    for o in (mine, data.get("order")):
+        if good_order(o):
+            return list(o)
+    return list(ORDER)
 
 
 def units(data):
@@ -398,6 +423,16 @@ def publish_texts(token, texts, repo=REPOS[0]):
     data, sha = remote(token, repo)
     url = publish({**data, "texts": dict(texts)}, token,
                   f"Texts: {len(texts)} changed from the built-in wording", sha, repo)
+    return url, load()
+
+
+def publish_order(token, order, repo=REPOS[0]):
+    """Set everyone's clearing order (players can still pick their own)."""
+    if not good_order(order):
+        raise LiveError("not a clearing order")
+    data, sha = remote(token, repo)
+    url = publish({**data, "order": list(order)}, token,
+                  f"Clearing order: {' > '.join(order)}", sha, repo)
     return url, load()
 
 

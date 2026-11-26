@@ -280,17 +280,20 @@ class BoxFarm(genesis_farm.GenesisFarm):
         if self.here != (eid, q.get("tab")) or not ms.on_map():
             self.here = None
             ms.open_event(ev.get("chapter") or eid, ev.get("list") or "event list",
-                          self.navigator, map_scan.event_names(ev.get("name"), ev["quests"]))
+                          self.navigator, map_scan.event_names(ev.get("name"), ev["quests"])
+                          # what the Event Archives call it, when that's another name
+                          + ([ev["archive_name"]] if ev.get("archive_name") else []))
             if q.get("tab") and not ms.set_tab(q["tab"]):
                 raise RuntimeError(f"{name}: couldn't switch the map to {q['tab']}")
-            self.sleep(1.0)
-            self.spots = ms.node_spots()
+            self.spots = {}   # looked for only if a node isn't where the scan saw it
             self.here = (eid, q.get("tab"))
         node = {"iname": q.get("iname", ""), "title": q["title"], "name": q.get("name", "")}
+        # the node where it was last seen (this run, else the scan's spot): the popup names the
+        # stage, so a wrong spot is noticed; then the map is searched (it may have moved)
         spot = self.spots.get(node["iname"]) or (tuple(q["spot"]) if q.get("spot") else None)
-        if not spot or not ms.open_stage(node, spot):
+        if not spot or not ms.open_stage(node, spot, wait=2.5):
             ms.close_popups()
-            self.spots = ms.node_spots()   # the map may have moved: look again
+            self.spots = ms.node_spots(step=0.045)
             spot = self.spots.get(node["iname"])
             if not spot or not ms.open_stage(node, spot):
                 ms.close_popups()
@@ -307,20 +310,11 @@ class BoxFarm(genesis_farm.GenesisFarm):
         if not self.wait_for(self.on_team, 12):
             ms.close_popups()
             raise RuntimeError(f"{name}: team screen didn't open")
-        self.sleep(1.0)
+        self.sleep(genesis_farm.SETTLE)
         got, skipped = self.skip_stage(name)
         self.counter.note(key, most, most)
         self.done_quest(name, got, skipped)
-        self.tap(genesis_farm.TEAM_BACK)
-        start = time.time()
-        while time.time() - start < 15 * self.lag:
-            self.sleep(1.2)
-            ms.close_popups()
-            if ms.on_map():
-                return
-            if self.on_team():
-                self.tap(genesis_farm.TEAM_BACK)
-        raise RuntimeError(f"{name}: didn't get back to the map")
+        self.back_to_map(name, ms.on_map, ms.close_popups)
 
     def done_quest(self, name, got, skipped):
         if skipped:
@@ -342,14 +336,24 @@ class BoxFarm(genesis_farm.GenesisFarm):
         self.log(f"Box farm: {', '.join(units)} -> {len(order)} quests"
                  + (f", {len(order) - len(todo)} already done today" if len(todo) < len(order) else "")
                  + (f": {names(todo)}" if todo else ""))
+        off = {}   # events that can't be opened this run (ended / locked): their quests skipped
         try:
             for eid, q in todo:
+                if eid in off:
+                    continue
                 if self.wait_if_paused():
                     self.here = None
                 st = {"stage": q["title"]}
                 while True:
                     try:
                         self.farm_quest(eid, q)
+                        break
+                    except map_scan.Unavailable as e:   # waiting won't open it
+                        self.here = None
+                        off[eid] = str(e)
+                        left = sum(1 for e2, _ in todo if e2 == eid)
+                        self.log(f"  {e} - skipping its {left} quest{'s' if left != 1 else ''} "
+                                 "this run")
                         break
                     except RuntimeError as e:
                         self.here = None

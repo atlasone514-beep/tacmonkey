@@ -4,6 +4,7 @@ Mixed into farm_ui.App: they use its helpers (label, small_button, card, q, log 
 Genesis farm's pick / count / start machinery, with "box" as a third mode next to "hard" and
 "extra". The Dev page is only shown on the developer's PC (Ctrl+Shift+D turns it on).
 """
+import itertools
 import json
 import tempfile
 import threading
@@ -126,6 +127,12 @@ class BoxTab:
         self.box_refresh_btn.pack(side="right", padx=(8, 0))
         srow = tk.Frame(card, bg=PANEL)
         srow.pack(fill="x", pady=(6, 0))
+        self.label(srow, "Clear in this order", size=9, color=MUTED, key="box.order").pack(
+            side="left")
+        self.box_order_var = tk.StringVar()
+        self.box_order_btn = tk.OptionMenu(srow, self.box_order_var, "")
+        self.style_menu(self.box_order_btn)
+        self.box_order_btn.pack(side="left", padx=(6, 0))
         self.check(srow, "Solo stages only", self.box_solo, self.box_solo_changed,
                    key="box.solo").pack(side="right")
         self.box_star_note = self.label(srow, "* only shared stages, kept", size=8, color=MUTED,
@@ -150,8 +157,47 @@ class BoxTab:
         self.box_rebuild()
         self.box_tick_clock()
 
+    # ---------- clearing order ----------
+    KIND_NAMES = {"event": "Events", "archive": "Archive", "genesis": "Genesis"}
+
+    def order_text(self, order):
+        return " › ".join(t(f"box.kind_{k}", self.KIND_NAMES[k]) for k in order)
+
+    def box_order_now(self):
+        return live_data.clear_order(self.live, getattr(self, "box_order", None))
+
+    def box_events_in_order(self):
+        """[(event id, event)] grouped by kind in the clearing order (the file's order inside a
+        group)."""
+        order = self.box_order_now()
+        evs = list(self.live.get("events", {}).items())
+        return sorted(evs, key=lambda kv: order.index(live_data.event_kind(kv[1])))
+
+    def box_order_menu(self):
+        """The Box page's clearing order menu: the developer's order, then every order."""
+        if not hasattr(self, "box_order_btn"):
+            return
+        dev = t("box.order_dev", "Developer's order: {order}",
+                order=self.order_text(live_data.clear_order(self.live)))
+        m = self.box_order_btn["menu"]
+        m.delete(0, "end")
+        m.add_command(label=dev, command=lambda: self.box_order_pick([]))
+        for o in itertools.permutations(live_data.KINDS):
+            m.add_command(label=self.order_text(o),
+                          command=lambda o=list(o): self.box_order_pick(o))
+        self.box_order_var.set(self.order_text(self.box_order) if self.box_order else dev)
+
+    def box_order_pick(self, order):
+        if self.running() or self.genesis_running():
+            self.box_order_menu()   # a run already has its order: change it once it's done
+            return
+        self.box_order = order
+        self.save_settings()
+        self.box_rebuild()   # the events listed in the new order
+
     def box_rebuild(self):
-        """Draw the groups and unit tiles again: one per live box event, then Genesis."""
+        """Draw the groups and unit tiles again: one per live box event (in the clearing
+        order), then Genesis."""
         keep = {m: (set(self.genesis_selected(m)), self.genesis_count_map(m))
                 for m in ("box", "hard") if self.genesis_vars.get(m)}
         self.box_load_data()
@@ -175,7 +221,7 @@ class BoxTab:
         for eid, ev in self.live.get("events", {}).items():
             for u in live_data.main_units(ev):
                 home.setdefault(u, eid)
-        for eid, ev in self.live.get("events", {}).items():
+        for eid, ev in self.box_events_in_order():
             units = []
             for q in ev["quests"]:
                 for u in live_data.quest_units(q):
@@ -209,6 +255,7 @@ class BoxTab:
         self.box_filter()
         self.box_counts_refresh()
         self.genesis_changed()
+        self.box_order_menu()
 
     def box_group(self, title, gid, parent=None):
         parent = parent or self.box_body
@@ -475,6 +522,7 @@ class BoxTab:
         what = ", ".join(picks + gpicks)
         self.set_state(name, what)
         self.log(f"--- {name}: {what} ---", "muted")
+        self.log(f"Clearing order: {self.order_text(self.box_order_now())}", "muted")
         put = self.q.put
         common = dict(log=lambda m: put(("log", m)), stop=self.genesis_stop,
                       pause=self.genesis_pause, leaves=leaves,
@@ -490,16 +538,20 @@ class BoxTab:
         self.update_buttons()
 
     def box_jobs(self, picks, gpicks):
-        """[(kind, event id, units)]: each box event with ticked units on its own, in the live
-        file's order, then Genesis (its stages go chapter by chapter, each chapter opened once)."""
+        """[(kind, event id, units)]: each box event with ticked units on its own, then Genesis
+        (its stages go chapter by chapter, each chapter opened once), grouped in the clearing
+        order: e.g. every Boss Battle Quest event, then every Event Archives one, then Genesis."""
         jobs = []
-        for eid, ev in self.live.get("events", {}).items():
+        for eid, ev in self.box_events_in_order():
             here = [u for u in picks if any(q["event"] == eid for q in self.box_quests(u))]
             if here:
                 jobs.append(("box", eid, here))
         if gpicks:
             jobs.append(("genesis", None, list(gpicks)))
-        return jobs
+        order = self.box_order_now()
+        rank = lambda j: order.index("genesis" if j[0] == "genesis"
+                                     else live_data.event_kind(self.live["events"][j[1]]))
+        return sorted(jobs, key=rank)
 
     def run_queue(self, jobs, counts, gcounts, solo, common, name, bsolo=False):
         """Run the jobs one after another (worker thread). A job that stays stuck after its
@@ -820,6 +872,23 @@ class DevPage:
         self.small_button(row, "Refresh", self.box_refresh).pack(side="right")
         self.label(card, "Each event is published or taken off from its row under Box event: "
                          "scan.", size=8, color=MUTED, anchor="w").pack(fill="x", pady=(4, 0))
+        self.label(card, "Everyone's clearing order (players can pick their own on the Box "
+                         "events tab)", size=9, color=MUTED, anchor="w").pack(fill="x",
+                                                                            pady=(10, 4))
+        row = tk.Frame(card, bg=PANEL)
+        row.pack(fill="x")
+        self.dev_order = live_data.clear_order(self.live)
+        self.dev_order_sel = None
+        self.dev_order_chips = tk.Frame(row, bg=PANEL)
+        self.dev_order_chips.pack(side="left")
+        self.small_button(row, "◂", lambda: self.dev_order_move(-1)).pack(side="left",
+                                                                                padx=(8, 1))
+        self.small_button(row, "▸", lambda: self.dev_order_move(1)).pack(side="left")
+        self.dev_btns.append(self.small_button(row, "Publish order", self.dev_publish_order))
+        self.dev_btns[-1].pack(side="right")
+        self.dev_order_live = self.label(card, "", size=8, color=MUTED, anchor="w", key=False)
+        self.dev_order_live.pack(fill="x", pady=(4, 0))
+        self.dev_order_draw()
         self.check(card, f"Limit Event Archives events to {ARCHIVE_MAX} on the Box events tab "
                          "(warn and refuse one more)", self.archive_limit,
                    self.archive_limit_changed).pack(fill="x", pady=(10, 0))
@@ -842,9 +911,56 @@ class DevPage:
         link.pack(anchor="w", pady=(4, 0))
         link.bind("<Button-1>", lambda _e: webbrowser.open(
             "https://github.com/settings/personal-access-tokens/new"))
-        self.live_hooks = getattr(self, "live_hooks", []) + [self.dev_refresh]
+        self.live_hooks = getattr(self, "live_hooks", []) + [self.dev_refresh, self.dev_order_draw]
         self.dev_refresh_choices()
         self.dev_refresh()
+
+    def dev_order_draw(self):
+        """Everyone's clearing order as chips: click one, then move it with the arrows."""
+        for w in self.dev_order_chips.winfo_children():
+            w.destroy()
+        for i, k in enumerate(self.dev_order):
+            sel = k == self.dev_order_sel
+            bg, fg = ((BLUE, DARK) if sel else (ARCHIVE_BG, ARCHIVE_FG) if k == "archive"
+                      else (FIELD, FG))
+            chip = tk.Label(self.dev_order_chips, text=f"{i + 1}  {self.KIND_NAMES[k]}", bg=bg,
+                            fg=fg, font=(FONT, 9), padx=10, pady=3, cursor="hand2")
+            chip.pack(side="left", padx=(0, 4))
+            chip.bind("<Button-1>", lambda _e, k=k: self.dev_order_select(k))
+        live = live_data.clear_order(self.live)
+        same = live == self.dev_order
+        self.dev_order_live.config(
+            text=f"Live: {self.order_text(live)}"
+            + ("" if self.live.get("order") else " (the built-in order - none published yet)")
+            + ("" if same else "  ·  yours isn't published yet"),
+            fg=MUTED if same else YELLOW)
+
+    def dev_order_select(self, kind):
+        self.dev_order_sel = None if self.dev_order_sel == kind else kind
+        self.dev_order_draw()
+
+    def dev_order_move(self, step):
+        k = self.dev_order_sel
+        if k is None:
+            return
+        i = self.dev_order.index(k)
+        j = min(max(i + step, 0), len(self.dev_order) - 1)
+        self.dev_order[i], self.dev_order[j] = self.dev_order[j], self.dev_order[i]
+        self.dev_order_draw()
+
+    def dev_publish_order(self):
+        token = self.dev_need_token()
+        if not token:
+            return
+        order = list(self.dev_order)
+        if self.live.get("order") == order:
+            messagebox.showinfo("Dev", "That order is already live.", parent=self.root)
+            return
+        if messagebox.askyesno("Publish", f"Make {self.order_text(order)} everyone's clearing "
+                                          "order?\n\nPlayers who picked their own keep theirs.",
+                               parent=self.root):
+            self.dev_work("Publishing", lambda: live_data.publish_order(token, order),
+                          self.dev_published)
 
     def archive_limit_changed(self):
         if self.archive_limit.get() and len(self.archive_events(self.genesis_selected("box")))                 > ARCHIVE_MAX:
@@ -1260,6 +1376,10 @@ class DevPage:
                 _eid, ev = self.dev_draft_event(create=True, eid=event)
             ev.update({"kind": "map", "chapter": event, "list": origin["list"]})
             ev["name"] = ev.get("name") or origin.get("banner") or origin.get("name") or event
+            known = {map_scan.norm_name(n) for n in map_scan.event_names(ev["name"], quests)}
+            if origin.get("list") == "archive" and origin.get("name") and \
+                    map_scan.norm_name(origin["name"]) not in known:
+                ev["archive_name"] = origin["name"]   # the archive's name for it: the farm looks for it
             ev["quests"] = live_data.merge_quests(ev["quests"], quests)
             live_data.save_draft(self.dev_draft)
             self.dev_sel = event

@@ -10,6 +10,7 @@ Uses a farm object for the mod (genesis_farm.GenesisFarm or a subclass): send, p
 tap, press, sleep, wait_for, elements, texts.
 """
 import re
+import time
 
 MAP = "QuestEventMap"          # in the map screen's paths (GenesisQuestEventMap)
 TOP = "QuestEventTop"          # the event's page with QUEST (GenesisQuestEventTop)
@@ -24,7 +25,8 @@ ATTEMPTS = re.compile(r"(\d+)\s*/\s*(\d+)")
 MODE_PIC = {"Normal": "btn_scenario_normal", "Hard": "btn_scenario_hard",
             "Extra": "btn_scenario_extra"}
 DIFFICULTY = {"Normal": ("Normal",), "Hard": ("Elite", "Hard"), "Extra": ("Extra",)}
-LOOT_RE = re.compile(r"[<,{]iname=([^,>]+),name=([^,>]+),type=([^,>]+)")
+# a name may hold a tag from the game's text: "Ais Wallenstein Soul Shard <br>"
+LOOT_RE = re.compile(r"[<,{]iname=([^,>]+),name=((?:[^,<>]|<[^>]*>)*),type=([^,>]+)")
 ARCHIVE = "EventQuestLibrary"  # the Event Archives (navigator's "archive")
 ARCHIVE_TAB_END = "window/tab/tab_event4"   # its Boss Battle Quest tab
 UNLOCK_POPUP = "QuestArchiveOpenPopup"       # its Confirm Unlock dialog
@@ -32,8 +34,25 @@ UNLOCK_TITLE = (0.5, 0.245)    # the dialog's title (inspect: the popup's data n
 UNLOCK_TEXT = (0.5, 0.40)      # its message: "Unlock ... for 24 hour(s)? / Free once per day! ..."
 
 
+class Unavailable(RuntimeError):
+    """The event can't be opened now: not in its list (ended) or still locked in the archive.
+    Waiting won't change that - the box farm skips its quests for this run."""
+
+
 def norm_name(s):
     return " ".join(s.replace("\xa0", " ").split()).casefold()
+
+
+def longer_name(full, wanted):
+    """The archive may give an event a longer name than the one it was published under: "My
+    Funeral, My Trial" for "My Funeral". True if full is a wanted name (2+ words) going on
+    after a comma, colon or dash."""
+    for w in wanted:
+        if " " in w and full.startswith(w) and len(full) > len(w) and full[len(w)] in ",:-~":
+            return True
+        if " " in w and full.startswith(w + " -"):
+            return True
+    return False
 
 
 def event_names(name=None, quests=()):
@@ -51,8 +70,8 @@ def event_names(name=None, quests=()):
 def parse_loot(reply):
     out = []
     for m in LOOT_RE.finditer(reply or ""):
-        item = {"iname": m.group(1), "name": m.group(2).replace("\xa0", " ").strip(),
-                "type": m.group(3)}
+        name = re.sub(r"<[^>]*>", "", m.group(2)).replace("\xa0", " ").strip()   # "<br>" etc.
+        item = {"iname": m.group(1), "name": name, "type": m.group(3)}
         if item not in out:
             out.append(item)
     return out
@@ -104,17 +123,31 @@ class MapScanner:
         return None
 
     def open_map(self):
-        """From the event's page, press QUEST and wait for the map."""
-        for _ in range(6):
-            if self.on_map():
+        """From the event's page, press QUEST and wait for the map. The page's buttons wait a
+        moment at a small size, then grow in, and a press before they've grown is ignored: QUEST
+        is pressed once it has grown (or has shown for a while), and again if the map hasn't
+        come up a moment later - a press that's taken brings the map within ~0.8 s."""
+        first = size = None
+        pressed = 0.0
+        end = time.time() + 20 * self.f.lag
+        while time.time() < end:
+            els = self.f.elements()
+            if any(MAP in e["path"] for e in els if e["top"]):
+                self.f.sleep(0.2)
                 return True
-            btn = next((e for e in self.f.elements() if e["top"] and e["on"]
+            btn = next((e for e in els if e["top"] and e["on"]
                         and e["path"].endswith(QUEST_BTN_END)), None)
+            now = time.time()
             if btn:
-                self.f.press(btn, "QUEST")
-            if self.f.wait_for(self.on_map, 6):
-                return True
-            self.f.sleep(1.0)
+                w = round(btn.get("w") or 0, 3)
+                if first is None:
+                    first, size = (now, w), None
+                grown = w != first[1] and w == size   # changed from its first size, then held
+                size = w
+                if (grown or now - first[0] > 1.2) and now - pressed > 1.2:
+                    self.f.press(btn, "QUEST")
+                    pressed = now
+            self.f.sleep(0.08)
         return False
 
     def set_tab(self, tab):
@@ -130,7 +163,8 @@ class MapScanner:
             if "btn_scenario_" not in pics:
                 return False
             self.f.press(btn, "the Normal / Hard switch")
-            self.f.sleep(1.5)
+            self.f.wait_for(lambda: self.f.inspect((btn["x"], btn["y"])) != pics, 2.5)
+            self.f.sleep(0.3)   # the nodes redraw
         return False
 
     # ---------- the stages ----------
@@ -196,7 +230,7 @@ class MapScanner:
             got = self._attempts()
             if got:
                 return got
-            self.f.sleep(0.6)
+            self.f.sleep(0.25)
         return None
 
     def _attempts(self):
@@ -208,9 +242,10 @@ class MapScanner:
         most = re.findall(r"\d+", " ".join(self.f.texts(self.f.inspect((0.72, 0.474)))))
         return (int(used[0]), int(most[0])) if used and most else None
 
-    def open_stage(self, node, spot):
-        """Tap a node; True once the stage popup naming it is up. Brackets don't count: the
-        popup's text comes back without its closing "]" ("... [Hard" for "... [Hard]")."""
+    def open_stage(self, node, spot, wait=8):
+        """Tap a node; True once the stage popup naming it is up (within `wait` s). Brackets
+        don't count: the popup's text comes back without its closing "]" ("... [Hard" for
+        "... [Hard]")."""
         self.f.tap(spot)
         want = node["name"].split()[-1] if node.get("name") else ""
         flat = lambda s: " ".join(re.sub(r"[\[\]]", " ", s or "").split())
@@ -222,7 +257,7 @@ class MapScanner:
             title = self.popup_title()
             return ((base and flat(base) in flat(title)) or
                     (want and re.search(rf"\b{re.escape(want)}\s*$", title)))
-        return bool(self.f.wait_for(up, 8))
+        return bool(self.f.wait_for(up, wait))
 
     def popup_up(self):
         here = self.f.probe(OUTSIDE)
@@ -236,7 +271,10 @@ class MapScanner:
                 self.f.tap(NOTICE_OK)
             else:
                 self.f.tap(OUTSIDE)
-            self.f.sleep(1.2)
+            # until it's gone (a second popup under it is closed next round)
+            before = self.f.probe(OUTSIDE)
+            self.f.wait_for(lambda: self.f.probe(OUTSIDE) != before or not self.popup_up(), 2.0)
+            self.f.sleep(0.2)
         return not self.popup_up()
 
     def read_loot(self):
@@ -346,7 +384,60 @@ class MapScanner:
         if entry:
             m = re.search(r"mName=([^,>]+)", self.f.inspect((entry["x"], entry["y"])))
             name = m.group(1).strip() if m else entry.get("archive_name")
+        elif event and here == "archive":
+            # the archive may call it something else than its map ("DanMachi Advance" for "The
+            # Code of the Heroic Tale"): open the unlocked entries until one is this event
+            name = self.archive_name_by_id(event, nav)
+            entry = bool(name)
         return {"list": here, "found": bool(entry), "name": name}
+
+    def archive_entries(self):
+        """[(name, locked)] of every Event Archives entry (scrolls the list, presses nothing)."""
+        seen = {}
+        lists = [e for e in self.f.elements() if e["top"] and e["on"] and "/viewport/list/" in e["path"]]
+        if not lists:
+            return []
+        anchor = lists[0]
+        for step in range(16):
+            self.f.send(f"scroll {anchor['x']:.4f} {anchor['y']:.4f} {1 - step / 15}")
+            self.f.sleep(0.6)
+            els = [e for e in self.f.elements() if e["top"] and "/viewport/list/" in e["path"]]
+            for info in els:
+                node = re.search(r"/(Node_\d+)/btn_information$", info["path"])
+                if not node or not 0.15 < info["y"] < 0.85 or node.group(1) in seen:
+                    continue
+                texts = re.findall(r"text:(.*?)(?=, text:|\])", self.f.inspect((0.45, info["y"])))
+                if not texts:
+                    continue
+                opened = any(e["path"].endswith(f"/{node.group(1)}/btn_opened") for e in els)
+                seen[node.group(1)] = (texts[0].strip(), not opened)
+        return list(seen.values())
+
+    def archive_name_by_id(self, event, nav):
+        """With the Event Archives open: the name of the unlocked entry whose map is this event
+        (opens each one's map and comes back - nothing is spent), or None."""
+        for name, locked in self.archive_entries():
+            if locked:
+                continue
+            self.log(f"  is it {name}?")
+            entry = self.f.wait_for(lambda: self.find_entry(event, [name]), 10)
+            if not entry:
+                continue
+            self.f.press(entry, name)
+            cid = None
+            if self.f.wait_for(lambda: self.on_top() or self.on_map(), 15) and self.open_map():
+                self.f.sleep(1.0)
+                cid = self.chapter_id()
+            for _ in range(4):   # back to the archive
+                if not (self.on_map() or self.on_top()):
+                    break
+                if not nav.back(nav.where(), self.f.elements()):
+                    break
+                self.f.sleep(2.0)
+            self.f.wait_for(lambda: nav.where() == "archive", 10)
+            if cid == event:
+                return name
+        return None
 
     def open_event(self, event, list_screen, nav, names=()):
         """Get to the event's map from anywhere: the menu map to its list, its entry, QUEST.
@@ -361,15 +452,23 @@ class MapScanner:
         entry = None
         for screen in lists:
             nav.go(screen)
-            entry = self.f.wait_for(lambda: self.find_entry(event, names), 10)
+            # the list's entries first, then a look through it (twice: it may still be filling)
+            self.f.wait_for(lambda: any(e["top"] and "/viewport/list/" in e["path"]
+                                        for e in self.f.elements()), 8)
+            for tries in range(2):
+                # the route ends on the archive's Boss Battle Quest tab: it's pressed again
+                # only for the second look (the game was left on another tab)
+                entry = self.find_entry(event, names, tab=tries > 0)
+                if entry or self.locked:
+                    break
             if entry:
                 break
         if not entry:
             if self.locked:
-                raise RuntimeError(f"{self.locked} is locked in the Event Archives - unlock it in "
-                                   "the game first"
-                                   + (f" ({self.unlock_note})" if self.unlock_note else ""))
-            raise RuntimeError(f"{event} isn't in the {' or '.join(lists)} (has the event ended?)")
+                raise Unavailable(f"{self.locked} is locked in the Event Archives - unlock it in "
+                                  "the game first"
+                                  + (f" ({self.unlock_note})" if self.unlock_note else ""))
+            raise Unavailable(f"{event} isn't in the {' or '.join(lists)} (has the event ended?)")
         self.f.press(entry, event)
         if not self.f.wait_for(lambda: self.on_top() or self.on_map(), 15):
             raise RuntimeError(f"{event}: its page didn't open")
@@ -377,7 +476,7 @@ class MapScanner:
         if not self.open_map():
             raise RuntimeError(f"{event}: its map didn't open")
         return True
-    def find_entry(self, event, names=()):
+    def find_entry(self, event, names=(), tab=True):
         """On a list screen: the entry whose game data names the event, scrolled into view.
         The Event Archives' entries don't carry the event's id, only its name: there the entry
         is found by name (names) and its open button returned, with "archive_name" added. A
@@ -385,11 +484,11 @@ class MapScanner:
         self.locked = None
         els = self.f.elements()
         archive = any(ARCHIVE in e["path"] for e in els if e["top"])
-        if archive:
+        if archive and tab:
             tab = next((e for e in els if e["top"] and e["path"].endswith(ARCHIVE_TAB_END)), None)
             if tab:
                 self.f.press(tab, "Boss Battle Quest")   # it may be on another tab
-                self.f.sleep(1.0)
+                self.f.sleep(0.5)
         wanted = {norm_name(n) for n in names if n}
         lists = [e for e in self.f.elements() if e["top"] and e["on"]
                  and "/viewport/list/" in e["path"]]
@@ -399,7 +498,7 @@ class MapScanner:
         steps = 16 if archive else 11
         for step in range(steps):
             self.f.send(f"scroll {anchor['x']:.4f} {anchor['y']:.4f} {1 - step / (steps - 1)}")
-            self.f.sleep(0.6)
+            self.f.sleep(0.25)
             els = [e for e in self.f.elements() if e["top"] and "/viewport/list/" in e["path"]]
             if archive:
                 hit = self.archive_entry(els, wanted)
@@ -470,7 +569,7 @@ class MapScanner:
             node = re.search(r"/(Node_\d+)/", info["path"])
             # the name sits on the magnifier's row, left of it
             texts = re.findall(r"text:(.*?)(?=, text:|\])", self.f.inspect((0.45, info["y"])))
-            name = next((t.strip() for t in texts if norm_name(t) in wanted), None)
+            name = next((t.strip() for t in texts if norm_name(t) in wanted), None) or                 next((t.strip() for t in texts if longer_name(norm_name(t), wanted)), None)
             if not node or not name:
                 continue
             mine = [e for e in els if f"/{node.group(1)}/" in e["path"]]
