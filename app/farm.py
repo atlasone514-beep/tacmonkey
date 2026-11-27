@@ -75,7 +75,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-VERSION = "1.7.7.1"   # TACMonkey release (the setup and the window show it)
+VERSION = "1.7.7.2"   # TACMonkey release (the setup and the window show it)
 MOD_VERSION = "1.3.1"  # TAC Auto Tap version shipped with this release (release/build.py checks it)
 WINDOW_TITLE = "The Alchemist Code"
 # APP_DIR holds your buttons, scripts and settings; RES_DIR the files shipped with the program.
@@ -625,7 +625,9 @@ def goal_image_path(script=None):
 
 def load_goal(script=None):
     """The script's item goal: {"count": N (0 = off), "ref": capture width, "name": the item's
-    name once read from the game, "img": the picture or None}, or None if it has none."""
+    name (picked from a results screen, or read from the game), "img": the picture or None,
+    "owned" / "got" / "seen": the last reading (how many owned, how many that run dropped, when)
+    - each None until read}, or None if it has none."""
     g = script_settings(script).get("goal")
     g = g if isinstance(g, dict) else {}
     f = goal_image_path(script)
@@ -633,10 +635,15 @@ def load_goal(script=None):
     if img is None and not g:
         return None
     count, ref, name = g.get("count"), g.get("ref"), g.get("name")
+
+    def num(v):
+        return v if isinstance(v, (int, float)) and not isinstance(v, bool) and v >= 0 else None
+
     return {"count": count if isinstance(count, int) and count > 0 else 0,
             "ref": ref if isinstance(ref, int) and 100 <= ref <= 10000 else None,
             "name": name if isinstance(name, str) and name else None,
-            "img": img}
+            "img": img, "owned": num(g.get("owned")), "got": num(g.get("got")),
+            "seen": num(g.get("seen"))}
 
 
 GOAL_TOP = 0.65   # share of the goal picture that is matched (from the top)
@@ -673,7 +680,8 @@ def set_goal_image(script, img, ref_width):
     if img.ndim == 3 and img.shape[2] == 4:
         img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
     cv2.imwrite(str(f), img)
-    set_goal(script, ref=int(ref_width), name=None)   # a new item: its name is read again
+    set_goal(script, ref=int(ref_width), name=None, owned=None, got=None, seen=None)
+    # (a new item: its name and count are read again)
     return f
 
 
@@ -684,7 +692,7 @@ def clear_goal(script):
         old = script_dir(script) / "_old"
         old.mkdir(exist_ok=True)
         f.replace(old / f"goal item {time.strftime('%Y%m%d-%H%M%S')}.png")
-    set_goal(script, count=None, ref=None, name=None)
+    set_goal(script, count=None, ref=None, name=None, owned=None, got=None, seen=None)
 
 
 def grab_goal(script=None):
@@ -705,6 +713,108 @@ def grab_goal(script=None):
 
 def drop_texts(chunk):
     return [t.replace("\xa0", " ").strip() for t in re.findall(r"text:([^,\]]*)", chunk)]
+
+
+DROP_LIST = "itemlist"   # a results screen's drop list: .../itemlist_new/... (quests) or
+                         # .../itemlist/... (boss battles)
+GOAL_POLL = 0.7          # seconds between looks for the drop list (goal found by name)
+DROP_NAME_RE = re.compile(r"\bname=([^,{}=]+?),type=")
+
+
+def parse_drops(reply):
+    """The entries of an "itemsof" reply for a drop list: [{"node", "name", "got", "owned"}]
+    (got / owned None if not shown). Entries without an item name are left out."""
+    out = []
+    for chunk in (reply or "").split(" ||| ")[1:]:
+        node = re.match(r"#(\d+) ", chunk)
+        m = DROP_NAME_RE.search(chunk)
+        name = " ".join(re.sub(r"<[^>]*>", " ", m.group(1)).replace("\xa0", " ").split()) \
+            if m else ""
+        if not (node and name):
+            continue
+        t = drop_texts(chunk)
+        i = next((i for i, x in enumerate(t) if OWNED_RE.search(x)), None)
+        owned = int(OWNED_RE.search(t[i]).group(1)) if i is not None else None
+        got = re.fullmatch(r"[x×X]?\s*(\d+)", t[i - 1]) if i else None
+        out.append({"node": int(node.group(1)), "name": name,
+                    "got": int(got.group(1)) if got else None, "owned": owned})
+    return out
+
+
+def results_drops():
+    """The drops on the results screen showing now, read through the mod (every entry, even
+    ones scrolled out of view): see parse_drops. None if no drop list is showing or the mod
+    doesn't answer."""
+    reply = mod_send(f"itemsof {DROP_LIST}", timeout=6.0)
+    if not reply or not reply.startswith("ok"):
+        return None
+    return parse_drops(reply)
+
+
+def drop_numbers(text):
+    """(dropped, owned) from a results-screen drop's text in the mod's "list", e.g.
+    "* | 89 | (Owned: 10498)" -> (89, 10498); None if it shows no "(Owned"."""
+    parts = [t.strip() for t in str(text or "").replace("\xa0", " ").split("|")]
+    i = next((i for i, t in enumerate(parts) if OWNED_RE.search(t)), None)
+    if i is None:
+        return None
+    got = re.fullmatch(r"[x×X]?\s*(\d+)", parts[i - 1]) if i > 0 else None
+    return int(got.group(1)) if got else None, int(OWNED_RE.search(parts[i]).group(1))
+
+
+def drop_box(drop):
+    """(x, y, w, h) of results-screen drop `drop` (from results_drops; centre and size, as
+    fractions of the window), from the mod's "list"; None if it isn't listed.
+
+    Matched by the count and owned it shows, not by number: "list" names the drops Node_0,
+    Node_1 ... while "itemsof" numbers the list's children, a hidden template first (Node_5 is
+    itemsof #6)."""
+    if drop.get("owned") is None:
+        return None
+    reply = mod_send("list", timeout=5.0)
+    try:
+        els = json.loads(reply) if reply else []
+    except ValueError:
+        return None
+    if any("CloseMissionDetail" in str(e.get("path", "")) for e in els if isinstance(e, dict)):
+        return None   # the Quest Missions page is over the drops (the list is filled already)
+    for e in els:
+        path = str(e.get("path", "")) if isinstance(e, dict) else ""
+        if (DROP_LIST in path and path.endswith("dropitem")
+                and all(isinstance(e.get(k), (int, float)) for k in "xywh")
+                and drop_numbers(e.get("text")) == (drop.get("got"), drop["owned"])):
+            return e["x"], e["y"], e["w"], e["h"]
+    return None
+
+
+def pick_goal(script, drop):
+    """Make results-screen drop `drop` (from results_drops) the script's goal item: its name
+    and owned count, plus its icon cut from the game (the row's thumbnail, and how the goal is
+    seen when the mod isn't running). Returns True if the icon was cut too."""
+    box = drop_box(drop)
+    hwnd, region = find_window()
+    frame = capture(hwnd, region) if region and box else None
+    cut = None
+    if frame is not None:
+        h, w = frame.shape[:2]
+        x0, x1 = int((box[0] - box[2] / 2) * w), int((box[0] + box[2] / 2) * w)
+        y0, y1 = int((box[1] - box[3] / 2) * h), int((box[1] + box[3] / 2) * h)
+        x0, y0, x1, y1 = max(0, x0), max(0, y0), min(w, x1), min(h, y1)
+        if x1 - x0 >= 12 and y1 - y0 >= 12:
+            cut = frame[y0:y1, x0:x1]
+            if cv2.cvtColor(cut, cv2.COLOR_BGR2GRAY).std() < 15:
+                cut = None   # an empty slot: the drops show one by one, this one not yet
+    if cut is not None:
+        set_goal_image(script, cut, frame.shape[1])
+    else:   # no icon: an old item's picture would be matched as this item - put it away
+        f = goal_image_path(script)
+        if f.exists():
+            old = script_dir(script) / "_old"
+            old.mkdir(exist_ok=True)
+            f.replace(old / f"goal item {time.strftime('%Y%m%d-%H%M%S')}.png")
+    set_goal(script, name=drop["name"], owned=drop["owned"], got=None,
+             seen=time.time() if drop["owned"] is not None else None)
+    return cut is not None
 
 
 def listed_drop(fx, fy):
@@ -729,27 +839,22 @@ def listed_drop(fx, fy):
             best = (dx + dy, e)
     if not best:
         return None
-    parts = [t.strip() for t in best[1]["text"].replace("\xa0", " ").split("|")]
-    i = next(i for i, t in enumerate(parts) if OWNED_RE.search(t))
-    got = re.fullmatch(r"[x×X]?\s*(\d+)", parts[i - 1]) if i > 0 else None
+    got, owned = drop_numbers(best[1]["text"])
     node = re.search(r"/Node_(\d+)/", best[1]["path"])
-    return (int(got.group(1)) if got else None, int(OWNED_RE.search(parts[i]).group(1)),
-            int(node.group(1)) if node else None)
+    return got, owned, int(node.group(1)) if node else None
 
 
-def listed_name(node):
-    """The name of drop number `node` on a quest's results screen, read through the mod's
-    "itemsof" (mod 1.3+; the list is found by its path, past the skip button). None if unknown."""
-    if node is None:
+def listed_name(got, owned):
+    """The name of the drop showing (got, owned) on the results screen, read through the mod's
+    "itemsof" (mod 1.3+; the list is found by its path, past the skip button). None if unknown
+    or if drops with different names show the same numbers.
+
+    By the numbers, not the drop's number: "itemsof" counts a hidden template first, so the
+    "list"'s Node_5 is its #6 (by number, the farm read the next drop's name)."""
+    if owned is None:
         return None
-    reply = mod_send("itemsof itemlist_new", timeout=6.0)
-    if not reply or not reply.startswith("ok"):
-        return None
-    for chunk in reply.split(" ||| ")[1:]:
-        if chunk.startswith(f"#{node} "):
-            m = re.search(r"\bname=([^,<>{}=]+?),type=", chunk)
-            return m.group(1).strip() if m else None
-    return None
+    names = {d["name"] for d in results_drops() or () if (d["got"], d["owned"]) == (got, owned)}
+    return names.pop() if len(names) == 1 else None
 
 
 def read_drop(fx, fy, want=None):
@@ -767,7 +872,7 @@ def read_drop(fx, fy, want=None):
     listed = listed_drop(fx, fy)
     if listed:
         got, owned, node = listed
-        name = listed_name(node)   # mod 1.3: the drop's name, found by the list's path
+        name = listed_name(got, owned)   # mod 1.3: the drop's name, from the list by its path
         if want and name and name != want:
             return None            # a look-alike icon: not the goal item
         return name or want, got, owned
@@ -1966,11 +2071,12 @@ def test(script=None):
 
 
 def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_switch=True,
-        skip_merc=None, script=None, leaves=None, finish_last=False):
+        skip_merc=None, script=None, leaves=None, finish_last=False, on_goal=None):
     """Farm until stopped and return why it stopped.
     leaves: the AP refill action's leaf settings (genesis_farm.leaf_settings).
     finish_last: when max_runs is reached on a step that starts a run (Go), let that last quest
     finish and stop at the next step that would start another (Go / Try again), unpressed.
+    on_goal: called (no arguments) after the item goal's owned count is read and saved.
 
     The window (farm_ui.pyw) passes threading.Events for stop/pause/skip_merc, its own log
     function and on_status(state, runs, last_click). F8 (pause/resume) and F9 (stop) work either
@@ -2032,11 +2138,21 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
         log("TAC Auto Tap mod not running - using touch taps.")
     goal = load_goal(script)
     goal_tpl, goal_name, goal_last, goal_drops = None, None, 0.0, 0
-    if goal and goal["img"] is not None and goal["count"]:
-        goal_tpl, goal_name = [("goal item", goal_template(goal), goal["ref"])], goal["name"]
+    goal_poll, goal_read, goal_absent = 0.0, False, False   # name mode: last look; this
+    # results screen read / said "not in the drops"
+    goal_on = bool(goal and goal["count"] and (goal["img"] is not None
+                                               or (status and goal["name"])))
+    if goal_on:
+        goal_name = goal["name"]
+        if goal["img"] is not None:
+            goal_tpl = [("goal item", goal_template(goal), goal["ref"])]
         log(f"Item goal: stop at {goal['count']} {goal_name or '(the goal item)'}" +
-            (" owned." if status else " drops - the mod isn't running, so it counts drops "
-             "instead of reading Owned."))
+            (" owned (found by name in each run's drops)." if status and goal_name else
+             " owned." if status else
+             " drops - the mod isn't running, so it counts drops instead of reading Owned."))
+    elif goal and goal["count"] and goal["name"]:
+        log(f"Item goal ({goal['name']}) is off: without the mod it needs the item's picture "
+            "(Picture... on the Item row).")
     refill = None  # the AP refill action, if this script uses it
     if AP_REFILL in used_actions(script):
         import genesis_farm  # its refill routine (imported here: it imports this file)
@@ -2184,39 +2300,61 @@ def run(max_runs=None, log=print, stop=None, pause=None, on_status=None, act_swi
                 show("Running")
                 continue
 
-        if goal_tpl:   # results screen with the goal item: read it before tapping on
-            ghit = find_button(frame, goal_tpl, False)
-            if ghit:
-                fresh = time.time() - goal_last > GOAL_GAP
-                goal_last = time.time()
-                if fresh:
-                    res = (read_drop(ghit[2] / region[2], ghit[3] / region[3], goal_name)
-                           if status else (None, None, None))
-                    if res is None:   # the picture matched a look-alike: not the goal item
-                        name = got = owned = None
-                    else:
-                        name, got, owned = res
-                    if name and name != goal_name:
-                        goal_name = name
-                        set_goal(script, name=name)
-                    label = goal_name or "goal item"
-                    xn = f" x{got}" if got else ""
-                    if res is None:
-                        say(f"Item goal: no {label} in this run's drops")
-                        done = False
-                    elif owned is not None:
-                        say(f"Item goal: {label}{xn} (owned {owned} / {goal['count']})")
-                        done = owned >= goal["count"]
-                    else:
-                        goal_drops += 1
-                        say(f"Item goal: {label} dropped{xn} ({goal_drops} / {goal['count']} "
-                            "drops)")
-                        done = goal_drops >= goal["count"]
-                    if done:
-                        reason = (f"Reached {goal['count']} {label}" +
-                                  (f" (owned {owned})" if owned is not None else " drops") +
-                                  " - stopped on the results screen.")
-                        break
+        if goal_on:   # results screen: read the goal item before tapping on
+            res, read = False, False   # res: (name, got, owned), None = not in the drops
+            if status and goal_name:   # by name, in the drop list the mod reads
+                if time.time() - goal_poll >= GOAL_POLL:
+                    goal_poll = time.time()
+                    drops = results_drops()
+                    if drops:   # a drop list with named entries is showing
+                        if time.time() - goal_last > GOAL_GAP:   # a new results screen
+                            goal_read, goal_absent = False, False
+                        goal_last = time.time()
+                        if not goal_read:
+                            hit = next((d for d in drops if d["name"] == goal_name), None)
+                            if hit:
+                                res, read, goal_read = (hit["name"], hit["got"], hit["owned"]), \
+                                    True, True
+                            elif not goal_absent:   # (looked at again while it's showing:
+                                res, read, goal_absent = None, True, True   # still filling)
+            elif goal_tpl:   # by picture
+                ghit = find_button(frame, goal_tpl, False)
+                if ghit:
+                    fresh = time.time() - goal_last > GOAL_GAP
+                    goal_last = time.time()
+                    if fresh:   # (read: once it has the name it goes by name, not this screen again)
+                        read, goal_read, goal_absent = True, True, True
+                        res = (read_drop(ghit[2] / region[2], ghit[3] / region[3], goal_name)
+                               if status else (None, None, None))
+            if read:
+                if res is None:   # not in this run's drops (or a look-alike icon)
+                    name = got = owned = None
+                else:
+                    name, got, owned = res
+                if name and name != goal_name:
+                    goal_name = name
+                    set_goal(script, name=name)
+                label = goal_name or "goal item"
+                xn = f" x{got}" if got else ""
+                if res is None:
+                    say(f"Item goal: no {label} in this run's drops")
+                    done = False
+                elif owned is not None:
+                    say(f"Item goal: {label}{xn} (owned {owned} / {goal['count']})")
+                    set_goal(script, owned=owned, got=got, seen=time.time())
+                    if on_goal:
+                        on_goal()
+                    done = owned >= goal["count"]
+                else:
+                    goal_drops += 1
+                    say(f"Item goal: {label} dropped{xn} ({goal_drops} / {goal['count']} "
+                        "drops)")
+                    done = goal_drops >= goal["count"]
+                if done:
+                    reason = (f"Reached {goal['count']} {label}" +
+                              (f" (owned {owned})" if owned is not None else " drops") +
+                              " - stopped on the results screen.")
+                    break
 
         back = act_finished(frame, groups, markers, quest_steps)
         if back and time.time() - last_click.get(BACK_MARKER, 0) >= CLICK_COOLDOWN:

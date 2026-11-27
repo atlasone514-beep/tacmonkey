@@ -714,19 +714,33 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
         self.goal_thumb = tk.Label(row, bg=DARK, width=6, height=1, text="none", fg=MUTED,
                                    font=(FONT, 8))
         self.goal_thumb.pack(side="left", padx=6)
-        self.goal_name = self.label(row, "", size=9, color=MUTED)
+        self.goal_name = self.label(row, "", size=9, color=MUTED, key=False)
         self.goal_name.pack(side="left")
+        self.goal_pick_btn = self.small_button(row, "Pick from results", self.goal_pick)
+        self.goal_pic_btn = self.small_button(row, "Picture...", self.goal_picture_menu)
         self.goal_buttons = [self.small_button(row, "Clear", self.goal_clear),
-                             self.small_button(row, "From file", self.goal_from_file),
-                             self.small_button(row, "Capture", self.goal_capture)]
+                             self.goal_pic_btn, self.goal_pick_btn]
         for b in self.goal_buttons:
             b.pack(side="right", padx=(4, 0))
         self.goal_count.trace_add("write", lambda *_: self.goal_count_changed())
         self.goal_loading = False
-        self.label(opts, "Item: on each results screen the farm finds the item's icon and reads "
-                         "its \"(Owned: N)\", then stops there once you have that many. "
-                         "Saved with the script. Blank or 0 = no item goal.", size=9,
-                   color=MUTED, wraplength=520, justify="left").pack(anchor="w", pady=(4, 0))
+        # progress: [bar] Owned 742 / 1000 - 258 to go - last run +12 - read 14:02
+        self.goal_prog = tk.Frame(opts, bg=PANEL)
+        self.goal_bar = tk.Canvas(self.goal_prog, width=160, height=6, bg=DARK,
+                                  highlightthickness=0, bd=0)
+        self.goal_bar.pack(side="left", padx=(0, 8))
+        self.goal_owned = self.label(self.goal_prog, "", size=9, key=False)
+        self.goal_owned.pack(side="left")
+        self.goal_more = self.label(self.goal_prog, "", size=9, color=MUTED, key=False)
+        self.goal_more.pack(side="left")
+        self.goal_hint = self.label(
+            opts, "Item: open a results screen that has the item and press Pick from results. "
+                  "On each results screen the farm then finds the item by name and reads its "
+                  "\"(Owned: N)\", and stops there once you have that many. Without the mod it "
+                  "needs the item's picture (Picture...) and counts drops instead. Saved with the "
+                  "script. Blank or 0 = no item goal.", size=9,
+            color=MUTED, wraplength=520, justify="left")
+        self.goal_hint.pack(anchor="w", pady=(4, 0))
         self.section(opts, "While running")
         self.act_check = self.check(opts, "Go to the next act when one is finished",
                                     self.act_switch)
@@ -1295,7 +1309,8 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
                               on_status=lambda s, r, l: self.q.put(("status", s, r, l)),
                               act_switch=act_switch, skip_merc=self.skip_merc_event,
                               script=script, leaves=leaves,
-                              finish_last=self.finish_home.get())
+                              finish_last=self.finish_home.get(),
+                              on_goal=lambda: self.q.put(("goal_read",)))
             if self.finish_home.get() and max_runs and str(reason).startswith(
                     f"Reached {max_runs} runs") and not self.stop_event.is_set():
                 self.q.put(("log", "Going to the home screen..."))
@@ -1366,7 +1381,105 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
             _, buf = farm.cv2.imencode(".png", small)
             self.goal_photo = tk.PhotoImage(data=base64.b64encode(buf.tobytes()))
             self.goal_thumb.config(image=self.goal_photo, text="", width=0, height=0)
-        self.goal_name.config(text=(goal["name"] or "") if img is not None else "")
+        name = goal["name"] if goal else None
+        if img is None and name:
+            self.goal_thumb.config(text="name", width=6, height=1)
+        self.goal_name.config(text=name or "", fg=FG if name else MUTED,
+                              font=(FONT, 9, "bold" if name else "normal"))
+        self.show_goal_progress(goal)
+
+    def show_goal_progress(self, goal):
+        """The line under the Item row: a bar and "Owned 742 / 1000 - 258 to go - last run +12 -
+        read 14:02" from the last reading; hidden while there's no goal item."""
+        if not goal or not (goal["name"] or goal["img"] is not None):
+            self.goal_prog.pack_forget()
+            return
+        if not self.goal_prog.winfo_ismapped():
+            self.goal_prog.pack(anchor="w", padx=(52, 0), pady=(4, 0), before=self.goal_hint)
+        count, owned = goal["count"], goal["owned"]
+        self.goal_bar.delete("all")
+        if owned is None:
+            self.goal_owned.config(text="", fg=FG)
+            self.goal_more.config(text=t("ui.goal_not_read", "Owned: read on the first results "
+                                                            "screen"))
+            return
+        owned = int(owned)
+        if count:
+            share = min(1.0, owned / count)
+            if share > 0:
+                self.goal_bar.create_rectangle(0, 0, max(2, int(160 * share)), 6, fill=GREEN,
+                                               width=0)
+        self.goal_owned.config(text=f"Owned {owned:,} / {count:,}" if count else
+                               f"Owned {owned:,}", fg=GREEN if count and owned >= count else FG)
+        more = []
+        if count:
+            more.append(f"{count - owned:,} to go" if owned < count else "reached")
+        if goal["got"]:
+            more.append(f"last run +{int(goal['got']):,}")
+        if goal["seen"]:
+            when = time.localtime(goal["seen"])
+            more.append("read " + time.strftime(
+                "%H:%M" if time.strftime("%Y%m%d", when) == time.strftime("%Y%m%d") else
+                "%d %b %H:%M", when))
+        self.goal_more.config(text="".join(f"  ·  {m}" for m in more))
+
+    def goal_pick(self):
+        """Read the drops on the results screen showing now and offer them in a menu."""
+        self.enable(self.goal_pick_btn, False)
+
+        def job():
+            drops = farm.results_drops()
+            self.q.put(("grab_done", lambda: self.goal_pick_menu(drops)))
+
+        threading.Thread(target=job, daemon=True).start()
+
+    def goal_pick_menu(self, drops):
+        self.enable(self.goal_pick_btn, not self.running())
+        if drops is None:
+            self.log("Item goal: no results screen found. Open a results screen that has the item "
+                     "first (this needs the mod).", "warn")
+            return
+        seen, items = set(), []
+        for d in drops:
+            if d["name"] not in seen:
+                seen.add(d["name"])
+                items.append(d)
+        if not items:
+            self.log("Item goal: the results screen's drops couldn't be read - try again once "
+                     "they've all shown.", "warn")
+            return
+        menu = tk.Menu(self.root, tearoff=0, bg=FIELD, fg=FG, activebackground=BLUE,
+                       activeforeground=DARK, font=(FONT, 10), bd=0)
+        for d in items:
+            owned = f"   (owned {d['owned']:,})" if d["owned"] is not None else ""
+            menu.add_command(label=d["name"] + owned, command=lambda d=d: self.goal_pick_done(d))
+        b = self.goal_pick_btn
+        menu.tk_popup(b.winfo_rootx(), b.winfo_rooty() + b.winfo_height())
+
+    def goal_pick_done(self, drop):
+        script = self.script.get()
+
+        def job():
+            try:
+                cut = farm.pick_goal(script, drop)
+                self.q.put(("log", f"Item goal for script '{script}': {drop['name']}" +
+                            ("" if cut else " - no icon yet: it's only needed without the mod. For it, press Pick "
+                             "again once the drops page shows every item."),
+                            "good"))
+            except Exception as e:
+                self.q.put(("log", f"Item goal pick failed: {e!r}", "bad"))
+            self.q.put(("grab_done", self.refresh_goal))
+
+        threading.Thread(target=job, daemon=True).start()
+
+    def goal_picture_menu(self):
+        """Capture / From file: the item's picture, for playing without the mod."""
+        menu = tk.Menu(self.root, tearoff=0, bg=FIELD, fg=FG, activebackground=BLUE,
+                       activeforeground=DARK, font=(FONT, 10), bd=0)
+        menu.add_command(label=t("ui.capture", "Capture"), command=self.goal_capture)
+        menu.add_command(label=t("ui.from_file", "From file"), command=self.goal_from_file)
+        b = self.goal_pic_btn
+        menu.tk_popup(b.winfo_rootx(), b.winfo_rooty() + b.winfo_height())
 
     def goal_count_changed(self):
         if self.goal_loading:
@@ -1647,6 +1760,8 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
             elif kind == "grab_done":
                 if msg[1]:
                     msg[1]()
+            elif kind == "goal_read":
+                self.refresh_goal()
             elif kind == "live":
                 self.live_changed(msg[1], msg[2])
             elif kind == "live_error":
