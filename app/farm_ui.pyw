@@ -878,7 +878,9 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
         self.genesis_pause = threading.Event()
         self.genesis_keys_prev = (False, False)   # F8, F9 last poll
         self.genesis_solo = tk.BooleanVar(value=False)
-        self.box_solo = tk.BooleanVar(value=False)   # Box events: Solo stages only
+        self.box_solo = tk.BooleanVar(value=False)   # Box events: Solo stages only, every event
+        self.box_solo_events = set()   # ... or just these events (each event's own tick)
+        self.box_solo_vars = {}
         self.box_order = []   # Box events: the player's clearing order ([] = the developer's)
         self.genesis_mode = "hard"
         self.genesis_name = "Genesis farm"
@@ -1014,7 +1016,7 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
             import box_farm
             return [q["title"] for _, q in box_farm.plan(self.live, picks,
                                                          self.genesis_count_map("box"),
-                                                         self.box_solo.get())]
+                                                         self.box_solo_now())]
         return [s["stage"] for s in genesis_farm.plan(self.genesis_data[mode], picks,
                                                        self.genesis_count_map(mode),
                                                        self.genesis_solo_on(mode))]
@@ -1064,13 +1066,15 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
         solo = self.genesis_solo.get()
         for key, cb in self.genesis_star.items():
             cb.config(text=key + (" *" if solo else ""))
-        for key, name in getattr(self, "box_star", {}).items():
-            name.config(text=key + (" *" if self.box_solo.get() else ""))
+        bsolo = self.box_solo_set() if hasattr(self, "box_solo_set") else set()
+        for key, name in getattr(self, "box_star", {}).items():   # in an event with Solo on
+            star = any(q["event"] in bsolo for q in self.box_units.get(key, []))
+            name.config(text=key + (" *" if star else ""))
         bnote = getattr(self, "box_star_note", None)
         if bnote is not None:
-            if self.box_solo.get() and not bnote.winfo_manager():
-                bnote.pack(side="left")
-            elif not self.box_solo.get() and bnote.winfo_manager():
+            if bsolo and not bnote.winfo_manager():
+                bnote.pack(anchor="e", before=self.box_body)
+            elif not bsolo and bnote.winfo_manager():
                 bnote.pack_forget()
         note = getattr(self, "genesis_star_note", None)
         if note is not None:
@@ -1530,6 +1534,10 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
                         min(max(n, 1), len(self.genesis_data[mode][k]["stages"])))
         self.genesis_solo.set(bool(s.get("genesis_solo", False)))
         self.box_solo.set(bool(s.get("box_solo", False)))
+        evs = s.get("box_solo_events")
+        self.box_solo_events = {e for e in evs if isinstance(e, str)} if isinstance(evs, list) \
+            else set()
+        self.box_solo_sync()
         self.box_order = s.get("box_order") if live_data.good_order(s.get("box_order")) else []
         if self.box_order:
             self.box_rebuild()   # the events listed in the player's order
@@ -1573,6 +1581,7 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
                                             "genesis_mode": self.genesis_mode,
                                             "genesis_solo": self.genesis_solo.get(),
                                             "box_solo": self.box_solo.get(),
+                                            "box_solo_events": sorted(self.box_solo_events),
                                             "box_order": self.box_order,
                                             "box_units": self.genesis_selected("box"),
                                             "box_counts": self.genesis_count_map("box"),

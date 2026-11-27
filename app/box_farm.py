@@ -128,25 +128,36 @@ def shared_only(by_unit, unit, owners):
                for q in by_unit.get(unit, []))
 
 
+def solo_events(data, solo):
+    """The events Solo stages only is on for: solo is True (every event), False / None (none)
+    or the event ids (it's ticked per event on the Box events tab)."""
+    if solo is True:
+        return set(data.get("events", {}))
+    return set(solo or ())
+
+
 def unit_quests(data, unit, picks=(), solo=False, by_unit=None, owners=None):
-    """A unit's quests in order. solo (Solo stages only): leave out quests that drop another
-    unit's shard too, unless every unit on it is picked; a unit with only shared quests keeps
-    them all - like Genesis."""
+    """A unit's quests in order. solo (Solo stages only - True, or the events it's on for, see
+    solo_events): in those events leave out quests that drop another unit's shard too, unless
+    every unit on it is picked; a unit with only shared quests there keeps them - like Genesis."""
     by_unit = by_unit if by_unit is not None else live_data.units(data)
     qs = by_unit.get(unit, [])
-    if not solo:
+    on = solo_events(data, solo)
+    if not on:
         return qs
     owners = owners if owners is not None else quest_owners(data)
-    if shared_only(by_unit, unit, owners):
-        return qs
+    key = lambda q: (q["event"], q.get("tab"), q["title"])
+    if all(len(owners.get(key(q), ())) > 1 for q in qs if q["event"] in on):
+        return qs   # only shared quests in the solo events: kept
     picked = set(picks) | {unit}
-    return [q for q in qs if owners.get((q["event"], q.get("tab"), q["title"]), {unit}) <= picked]
+    return [q for q in qs if q["event"] not in on or owners.get(key(q), {unit}) <= picked]
 
 
 def plan(data, units, counts=None, solo=False):
     """[(event id, quest)] for the picked units, each unit's first counts[unit] quests (all if
     no count), a quest shared by units once, in the live file's order (event by event).
-    solo: leave out shared quests (see unit_quests)."""
+    solo: leave out shared quests - in every event (True) or in the given events (see
+    unit_quests)."""
     by_unit = live_data.units(data)
     owners = quest_owners(data) if solo else None
     wanted = set()
