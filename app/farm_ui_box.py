@@ -24,8 +24,7 @@ from texts import t
 BG = PANEL = FIELD = FG = MUTED = DARK = GREY = BLUE = GREEN = ORANGE = RED = YELLOW = ""
 ACCENT_TEXT = NAV_SEL = TILE = ""
 FONT = "Segoe UI"
-ARCHIVE_MAX = 3   # Event Archives events open at once (the game's limit)
-ARCHIVE_BG, ARCHIVE_FG = "#352f4f", "#c4b5fd"   # the Archive pill and tags
+ARCHIVE_BG, ARCHIVE_FG = "#352f4f", "#c4b5fd"   # the Archive tags
 
 
 def use_theme(**colors):
@@ -120,9 +119,6 @@ class BoxTab:
         self.box_clock = tk.Label(row, text="", bg=NAV_SEL, fg=ACCENT_TEXT, font=(FONT, 9),
                                   padx=8, pady=3)
         self.box_clock.pack(side="left", padx=(8, 0))
-        # Event Archives: how many more archive events can be ticked (shown when there are any)
-        self.box_archive = tk.Label(row, text="", bg=ARCHIVE_BG, fg=ARCHIVE_FG, font=(FONT, 9),
-                                    padx=8, pady=3)
         self.box_refresh_btn = self.small_button(row, "Refresh", self.box_refresh, key="box.refresh")
         self.box_refresh_btn.pack(side="right", padx=(8, 0))
         srow = tk.Frame(card, bg=PANEL)
@@ -137,8 +133,6 @@ class BoxTab:
                    key="box.solo").pack(side="right")
         self.box_star_note = self.label(srow, "* only shared stages, kept", size=8, color=MUTED,
                                         key="box.star_note")
-        self.box_warn = self.label(card, "", size=9, color=YELLOW, anchor="w", justify="left",
-                                   wraplength=540, key=False)
         self.box_body = tk.Frame(card, bg=PANEL)
         self.box_body.pack(fill="x", pady=(6, 0))
         foot = tk.Frame(card, bg=GREY, height=1)
@@ -295,7 +289,7 @@ class BoxTab:
         tile = tk.Frame(g["grid"], bg=TILE, highlightthickness=1, highlightbackground=TILE,
                         padx=6, pady=4, cursor="hand2")
         cb = tk.Checkbutton(tile, variable=var, command=lambda: self.box_ticked(mode, unit, var),
-                            bg=TILE,
+                            bg=TILE, fg="#ffffff", activeforeground="#ffffff",   # the check: white
                             activebackground=TILE, selectcolor=FIELD, highlightthickness=0, bd=0)
         cb.pack(side="left")
         code = (self.box_pics.get(unit) if mode == "box" else
@@ -342,34 +336,8 @@ class BoxTab:
                                "unit": unit}
         g["keys"].append(key)
 
-    # ---------- Event Archives: at most ARCHIVE_MAX archive events at once ----------
-    def archive_events(self, units):
-        """The Event Archives events the units' quests are in."""
-        arch = {eid for eid, ev in self.live.get("events", {}).items() if ev.get("list") == "archive"}
-        units = list(units)
-        return {q["event"] for u in units
-                for q in box_farm.unit_quests(self.live, u, units, self.box_solo.get(),
-                                              self.box_units, self.box_owners)
-                if q["event"] in arch}
-
     def box_ticked(self, mode, unit, var):
-        """A tile was ticked or unticked. Ticking a unit that needs one archive event too many
-        is refused (with a warning), unless the limit is off on the Dev page."""
-        warn = ""
-        if mode == "box" and var.get() and self.archive_limit.get():
-            others = [u for u in self.genesis_selected("box") if u != unit]
-            have = self.archive_events(others)
-            new = self.archive_events([unit]) - have
-            if new and len(have | new) > ARCHIVE_MAX:
-                var.set(False)
-                warn = t("box.archive_full", "Only {max} Event Archives events can be open at once "
-                         "- untick a unit from another archive event first (the limit can be "
-                         "turned off on the Dev page).", max=ARCHIVE_MAX)
-        self.box_warn.config(text=warn)
-        if warn and not self.box_warn.winfo_manager():
-            self.box_warn.pack(anchor="w", before=self.box_body, pady=(6, 0))
-        elif not warn and self.box_warn.winfo_manager():
-            self.box_warn.pack_forget()
+        """A tile was ticked or unticked."""
         self.genesis_changed()
         if mode == "box" and self.box_solo.get():
             self.box_counts_refresh()   # a shared quest counts once all its units are ticked
@@ -379,22 +347,6 @@ class BoxTab:
         self.save_settings()
         self.genesis_changed()
         self.box_counts_refresh()
-
-    def archive_refresh(self):
-        """The Archive pill: archive events still free (of ARCHIVE_MAX) for the ticked units."""
-        if not hasattr(self, "box_archive"):
-            return
-        any_archive = any(ev.get("list") == "archive" for ev in self.live.get("events", {}).values())
-        if not any_archive:
-            self.box_archive.pack_forget()
-            return
-        used = len(self.archive_events(self.genesis_selected("box")))
-        self.box_archive.config(text=t("box.archive_left", "Archive {left}/{max}",
-                                       left=ARCHIVE_MAX - used, max=ARCHIVE_MAX),
-                                bg=ARCHIVE_BG if used <= ARCHIVE_MAX else RED,
-                                fg=ARCHIVE_FG if used <= ARCHIVE_MAX else FG)
-        if not self.box_archive.winfo_manager():
-            self.box_archive.pack(side="left", padx=(8, 0))
 
     def portrait_list(self):
         if not hasattr(self, "_portrait_codes"):
@@ -889,12 +841,9 @@ class DevPage:
         self.dev_order_live = self.label(card, "", size=8, color=MUTED, anchor="w", key=False)
         self.dev_order_live.pack(fill="x", pady=(4, 0))
         self.dev_order_draw()
-        self.check(card, f"Limit Event Archives events to {ARCHIVE_MAX} on the Box events tab "
-                         "(warn and refuse one more)", self.archive_limit,
-                   self.archive_limit_changed).pack(fill="x", pady=(10, 0))
         self.check(card, "Unlock locked Event Archives events with the day's free unlocks "
                          "(never items: stops at \"Owned\")", self.archive_unlock,
-                   self.save_settings).pack(fill="x", pady=(4, 0))
+                   self.save_settings).pack(fill="x", pady=(10, 0))
         grid = tk.Frame(card, bg=PANEL)
         grid.pack(fill="x", pady=(10, 0))
         grid.columnconfigure(1, weight=1)
@@ -961,13 +910,6 @@ class DevPage:
                                parent=self.root):
             self.dev_work("Publishing", lambda: live_data.publish_order(token, order),
                           self.dev_published)
-
-    def archive_limit_changed(self):
-        if self.archive_limit.get() and len(self.archive_events(self.genesis_selected("box")))                 > ARCHIVE_MAX:
-            self.log(f"More than {ARCHIVE_MAX} archive events are ticked - untick some on the Box "
-                     "events tab (the ones ticked stay).", "warn")
-        self.save_settings()
-        self.archive_refresh()
 
     def style_menu(self, menu):
         menu.config(bg=FIELD, fg=FG, activebackground=GREY, activeforeground=FG, relief="flat",

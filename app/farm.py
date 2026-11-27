@@ -75,7 +75,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-VERSION = "1.7.6"   # TACMonkey release (the setup and the window show it)
+VERSION = "1.7.7"   # TACMonkey release (the setup and the window show it)
 MOD_VERSION = "1.3.1"  # TAC Auto Tap version shipped with this release (release/build.py checks it)
 WINDOW_TITLE = "The Alchemist Code"
 # APP_DIR holds your buttons, scripts and settings; RES_DIR the files shipped with the program.
