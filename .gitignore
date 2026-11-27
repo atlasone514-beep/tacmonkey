@@ -31,3 +31,4 @@ app/box_events.json
 app/dev.json
 app/box_draft.json
 app/event_scan.json
+app/archive_names_found.json

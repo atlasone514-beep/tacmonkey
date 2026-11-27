@@ -829,7 +829,6 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
                    lambda: self.root.attributes("-topmost", self.on_top.get())).pack(
             fill="x", pady=(8, 0))
         self.notify_done = tk.BooleanVar(value=True)
-        self.archive_limit = tk.BooleanVar(value=True)   # Dev page: at most 3 archive events
         self.archive_unlock = tk.BooleanVar(value=True)  # Dev page: use the day's free unlocks
         self.check(card, "Windows notification when a script or farm finishes", self.notify_done,
                    self.save_settings).pack(fill="x", pady=(4, 0))
@@ -1105,7 +1104,6 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
         self.set_badge("ex", len(picks))
         if getattr(self, "box_tiles", None):
             self.box_counts_refresh()   # Solo stages only changes the Genesis tiles' counts
-        self.archive_refresh()
         self.update_buttons()
 
     def genesis_running(self):
@@ -1518,7 +1516,6 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
         self.check_updates.set(s.get("check_updates", True))
         self.notify_done.set(s.get("notify_done", True))
         self.finish_home.set(s.get("finish_home", True))
-        self.archive_limit.set(s.get("archive_limit", True))
         self.archive_unlock.set(s.get("archive_unlock", True))
         self.vcr_leaves.set(s.get("vcr_leaves", True))
         self.editor_view = s.get("editor_view", "flow")
@@ -1566,7 +1563,6 @@ class App(farm_ui_box.BoxTab, farm_ui_box.ScriptOffers, farm_ui_box.DevPage,
                                             "check_updates": self.check_updates.get(),
                                             "notify_done": self.notify_done.get(),
                                             "finish_home": self.finish_home.get(),
-                                            "archive_limit": self.archive_limit.get(),
                                             "archive_unlock": self.archive_unlock.get(),
                                             "vcr_leaves": self.vcr_leaves.get(),
                                             "editor_view": self.editor_view,

@@ -127,6 +127,7 @@ def main():
                "--add-data", f"{REPO / 'app' / 'genesis_extra.json'};.",
                "--add-data", f"{REPO / 'app' / 'portraits'};portraits",   # Box events tab pictures
                "--add-data", f"{REPO / 'data' / 'screen_map.json'};.",   # the navigator's menu map
+               "--add-data", f"{REPO / 'data' / 'archive_names.json'};.",   # the Event Archives' names
                *(["--add-data", f"{live};."] if live.exists() else []),   # box events at release
                REPO / "app" / "farm_ui.pyw"])
     app = BUILD / "app" / "TACMonkey"

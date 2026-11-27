@@ -62,6 +62,12 @@ MAP_BACK, TOP_BACK, TEAM_BACK = (0.075, 0.933), (0.074, 0.935), (0.062, 0.941)
 HOME_QUEST, STORY, GENESIS = (0.882, 0.895), (0.226, 0.520), (0.493, 0.540)
 
 
+def result_button(els, end):
+    """A button of the skip's rewards screen (RaidResultWindow) whose path ends with end."""
+    return next((e for e in els if "RaidResultWindow" in e["path"] and e["path"].endswith(end)),
+                None)
+
+
 class Stop(Exception):
     pass
 
@@ -613,7 +619,7 @@ class GenesisFarm:
         got = {}
         did_skip = False
         refill_fails = 0
-        counted = None   # the rewards screen's OK whose shards are already counted
+        counted = False   # this skip's rewards screen has been read
         start = time.time()
         for _ in range(400):   # ~50 s, stretched while the game is slow
             if time.time() - start > 50 * self.lag:
@@ -655,24 +661,27 @@ class GenesisFarm:
                     self.log(f"  AP refill didn't finish ({e}) - trying again")
                     self.sleep(1.0)
             elif state == "result":
-                okb = next((e for e in els if e["path"].endswith("btn_ok")), None)
-                if okb and counted is None:
+                # the result window's own OK only: the team screen's hidden sort menu has a
+                # "btn_ok" too (UnitSortMenu/window/btn_ok), and taking it for this one counted
+                # the rewards twice
+                okb = result_button(els, "btn_ok")
+                if okb and not counted:
                     # seen the moment it opens now: let its rewards fill in before reading them
                     els = self.settled(2.0)
-                    okb = next((e for e in els if e["path"].endswith("btn_ok")), None)
+                    okb = result_button(els, "btn_ok")
                 if okb:
-                    # an OK press the game ignored (still animating) leaves the same screen:
-                    # its shards were counted already
-                    spot = (okb["path"], round(okb["x"], 2), round(okb["y"], 2))
-                    if counted != spot:
-                        for unit, n in self.reward_shards(els):
-                            got[unit] = got.get(unit, 0) + n
-                        counted = spot
+                    # one 3x skip = one rewards screen: counted once, however many presses
+                    # its OK takes (one the game ignores while it animates leaves it up)
+                    if not counted:
+                        shards = self.reward_shards(els)
+                        if shards is not None:
+                            for unit, n in shards:
+                                got[unit] = got.get(unit, 0) + n
+                            counted = True
                     self.press(okb)
-                    if self.gone(okb, 2.5):
-                        counted = None
+                    self.gone(okb, 2.5)
                 else:
-                    skip = next((e for e in els if e["path"].endswith("itemskip")), None)
+                    skip = result_button(els, "itemskip")
                     if skip:
                         self.press(skip)
                         self.gone(skip, 2.0)
@@ -686,14 +695,14 @@ class GenesisFarm:
 
     def reward_shards(self, els):
         """(name, count) for the unit shards (and, on Extra stages, Diagram Pieces) on the
-        rewards screen."""
+        rewards screen; None while its drop list isn't there to read."""
         node = next((e for e in els if "itemlist" in e["path"] and e["path"].endswith("dropitem")), None)
         if not node:
-            return []
+            return None
         reply = self.send(f"items {node['x']:.3f} {node['y']:.3f}", timeout=10)
         out = []
         for chunk in reply.split(" ||| ")[1:]:
-            m = re.search(r"name=([^,<>]+) Soul Shard\s*(?:<[^>]*>\s*)*,type=UnitPiece", chunk)
+            m = re.search(r"name=([^,<>]+?)(?:'s|’s)? Soul Shard\s*(?:<[^>]*>\s*)*,type=UnitPiece", chunk)
             if not m and self.mode == "extra":
                 m = re.search(r"name=([^,<>]+ Diagram Piece)\s*(?:<[^>]*>\s*)*,type=ItemPiecePiece", chunk)
             if m:
@@ -769,9 +778,9 @@ class GenesisFarm:
             self.sleep(0.2)
         raise RuntimeError(f"{key}: didn't get back to the map")
 
-    @staticmethod
-    def day_key(st):
-        return f"genesis|{st['stage']}"
+    def day_key(self, st):
+        # Extra stages share their numbers with the Hard ones ("19-1"): kept apart
+        return f"genesis|{'' if self.mode == 'hard' else 'EX '}{st['stage']}"
 
     def note_done(self, st, most):
         if self.counter is not None:

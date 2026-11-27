@@ -1,0 +1,19 @@
+{
+ "note": "Event Archives > Boss Battle Quest: each box event's map id and its name in the archive list, exactly as the game shows it (scanned 2026-11-27 from the unlock dialogs and maps). The farm finds archive events by these names.",
+ "events": {
+  "ADVANCE_3TITLE_02": "For Whose Princess Could Endure This Nightmare? -The Snowscape of Love-",
+  "ADVANCE_ALSO_SPRACH_02": "Septicolored Amber Sans Serif",
+  "ADVANCE_ALSO_SPRACH_03": "Roaring Rain in May",
+  "ADVANCE_ALSO_SPRACH_04": "See You at the Phantom Crossroads",
+  "ADVANCE_ALSO_SPRACH_05": "My Funeral, My Trial",
+  "ADVANCE_ALSO_SPRACH_06": "Love Won't Tear Us Apart Again",
+  "ADVANCE_DIE_FROHLICHE": "Qilin & Standing Alone",
+  "ADVANCE_DUNG_01": "DanMachi Advance",
+  "ADVANCE_KOF_01": "What Dwells in the Fist Is for Whom",
+  "ADVANCE_MT3_01": "Nocturne Played in the Desert",
+  "ADVANCE_RE0_01": "Re:Zero - Starting Life in Another World, Overlapping",
+  "ADVANCE_SB_01": "Seashore Moratorium",
+  "ADVANCE_TSP_01": "Scavengers of Time and Space",
+  "ADVANCE_TS_02": "At Dawn, We Trust"
+ }
+}

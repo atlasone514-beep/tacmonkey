@@ -43,6 +43,13 @@ def norm_name(s):
     return " ".join(s.replace("\xa0", " ").split()).casefold()
 
 
+def same_event(a, b):
+    """Two ids of one event: the archive's unlock dialog says OR_DIE_FROHLICHE or
+    OR_ADVANCE_DUNG_01 for the maps ADVANCE_DIE_FROHLICHE and ADVANCE_DUNG_01."""
+    core = lambda s: re.sub(r"^(?:OR_)?(?:ADVANCE_)?", "", s or "")
+    return bool(a and b) and core(a) == core(b)
+
+
 def longer_name(full, wanted):
     """The archive may give an event a longer name than the one it was published under: "My
     Funeral, My Trial" for "My Funeral". True if full is a wanted name (2+ words) going on
@@ -103,6 +110,10 @@ class MapScanner:
         self.free_unlock = False
         self.unlock_tried = set()   # names whose Confirm Unlock was already opened this time
         self.unlock_note = ""       # why the last one wasn't unlocked
+        self.event = None           # find_entry: the event looked for (its id), for the dialog
+        self.by_id = False          # archive_by_id: open locked entries' dialogs to read their id
+        self.found_name = None      # open_event: what the Event Archives called the event
+        self.others = set()         # entry names whose dialog named another event
 
     # ---------- where ----------
     def on_map(self):
@@ -391,9 +402,31 @@ class MapScanner:
             entry = bool(name)
         return {"list": here, "found": bool(entry), "name": name}
 
+    def archive_rows(self, els=None):
+        """[(name, node, open button or None, unlock button or None)] of the Event Archives
+        rows in view. By name, not by Node_n: the list hands its slots to other entries as it
+        scrolls, and a slot just handed over can still show the last entry's button a moment."""
+        els = els if els is not None else \
+            [e for e in self.f.elements() if e["top"] and "/viewport/list/" in e["path"]]
+        out = []
+        for info in els:
+            node = re.search(r"/(Node_\d+)/btn_information$", info["path"])
+            if not node or not 0.15 < info["y"] < 0.93:   # the last row sits low
+                continue
+            texts = re.findall(r"text:(.*?)(?=, text:|\])", self.f.inspect((0.45, info["y"])))
+            if not texts:
+                continue
+            mine = [e for e in els if e["on"] and f"/{node.group(1)}/" in e["path"]]
+            opened = next((e for e in mine if e["path"].endswith("/btn_opened")), None)
+            lock = next((e for e in mine if e["path"].endswith("/btn_open")), None)
+            if opened or lock:
+                out.append((texts[0].strip(), node.group(1), opened, lock))
+        return out
+
     def archive_entries(self):
-        """[(name, locked)] of every Event Archives entry (scrolls the list, presses nothing)."""
-        seen = {}
+        """[(name, locked)] of every Event Archives entry (scrolls the list, presses nothing).
+        Each row is seen on several scroll steps: the state seen most wins (see archive_rows)."""
+        votes = {}
         lists = [e for e in self.f.elements() if e["top"] and e["on"] and "/viewport/list/" in e["path"]]
         if not lists:
             return []
@@ -401,17 +434,9 @@ class MapScanner:
         for step in range(16):
             self.f.send(f"scroll {anchor['x']:.4f} {anchor['y']:.4f} {1 - step / 15}")
             self.f.sleep(0.6)
-            els = [e for e in self.f.elements() if e["top"] and "/viewport/list/" in e["path"]]
-            for info in els:
-                node = re.search(r"/(Node_\d+)/btn_information$", info["path"])
-                if not node or not 0.15 < info["y"] < 0.85 or node.group(1) in seen:
-                    continue
-                texts = re.findall(r"text:(.*?)(?=, text:|\])", self.f.inspect((0.45, info["y"])))
-                if not texts:
-                    continue
-                opened = any(e["path"].endswith(f"/{node.group(1)}/btn_opened") for e in els)
-                seen[node.group(1)] = (texts[0].strip(), not opened)
-        return list(seen.values())
+            for name, _, opened, _ in self.archive_rows():
+                votes.setdefault(name, []).append(not opened)
+        return [(n, v.count(True) > v.count(False)) for n, v in votes.items()]
 
     def archive_name_by_id(self, event, nav):
         """With the Event Archives open: the name of the unlocked entry whose map is this event
@@ -439,13 +464,63 @@ class MapScanner:
                 return name
         return None
 
+    def archive_by_id(self, event, nav):
+        """With the Event Archives open, for an event its names didn't find (the archive calls
+        DanMachi's "The Code of the Heroic Tale" "DanMachi Advance"): a locked entry's Confirm
+        Unlock dialog names the event's id, so each locked entry's dialog is opened and
+        cancelled unless it's this event (then it's unlocked if that's free, as by name); the
+        unlocked entries are told apart by their map's id. Returns the entry's open button (with
+        "archive_name"), or None (self.locked = its name if it's there but stays locked)."""
+        self.log(f"  {event}: not under its name in the Event Archives - looking for it by id")
+        self.event, self.by_id = event, True
+        lists = [e for e in self.f.elements() if e["top"] and e["on"] and "/viewport/list/" in e["path"]]
+        if not lists:
+            return None
+        anchor, opened = lists[0], set()
+        try:
+            # one pass down the list: each locked entry's dialog, read and cancelled
+            for step in range(16):
+                self.f.send(f"scroll {anchor['x']:.4f} {anchor['y']:.4f} {1 - step / 15}")
+                self.f.sleep(0.6)
+                again = True
+                while again:   # after a dialog the rows are read afresh
+                    again = False
+                    for name, node, btn, lock in self.archive_rows():
+                        if btn:
+                            opened.add(name)
+                        if not lock or btn or lock["y"] >= 0.97 or name in self.unlock_tried \
+                                or name in self.others:
+                            continue
+                        got = self.unlock_free(lock, name, node)
+                        if got == "unlocked":
+                            btn = self.f.wait_for(lambda: self.opened_button(node), 10)
+                            return {**btn, "archive_name": name} if btn else None
+                        if got == "locked":   # this event, still locked
+                            self.locked = name
+                            return None
+                        self.others.add(name)
+                        again = True
+                        # closing a dialog can move the list: put it back before reading again
+                        self.f.send(f"scroll {anchor['x']:.4f} {anchor['y']:.4f} {1 - step / 15}")
+                        self.f.sleep(0.6)
+                        break
+        finally:
+            self.by_id = False
+        # the unlocked entries: their map says which event they are
+        if opened:
+            name = self.archive_name_by_id(event, nav)
+            if name:
+                return self.f.wait_for(lambda: self.find_entry(event, [name], tab=False), 10)
+        return None
+
     def open_event(self, event, list_screen, nav, names=()):
         """Get to the event's map from anywhere: the menu map to its list, its entry, QUEST.
         A Boss Battle event that has left its list is looked for in the Event Archives too
         (by name: names = the event's name and its stages' "<event> - Hard 1" titles)."""
         if self.on_map() and self.chapter_id() == event:
             return True
-        self.unlock_tried, self.unlock_note = set(), ""
+        self.unlock_tried, self.unlock_note, self.found_name = set(), "", None
+        self.others = set()
         lists = [list_screen]
         if names and list_screen == "boss battle list":
             lists.append("archive")
@@ -463,12 +538,15 @@ class MapScanner:
                     break
             if entry:
                 break
+        if not entry and lists[-1] == "archive" and not self.locked:
+            entry = self.archive_by_id(event, nav)
         if not entry:
             if self.locked:
                 raise Unavailable(f"{self.locked} is locked in the Event Archives - unlock it in "
                                   "the game first"
                                   + (f" ({self.unlock_note})" if self.unlock_note else ""))
             raise Unavailable(f"{event} isn't in the {' or '.join(lists)} (has the event ended?)")
+        self.found_name = entry.get("archive_name")
         self.f.press(entry, event)
         if not self.f.wait_for(lambda: self.on_top() or self.on_map(), 15):
             raise RuntimeError(f"{event}: its page didn't open")
@@ -482,6 +560,7 @@ class MapScanner:
         is found by name (names) and its open button returned, with "archive_name" added. A
         locked one (still to unlock) is never pressed: it's noted in self.locked instead."""
         self.locked = None
+        self.event = event if event and event != "?" else None
         els = self.f.elements()
         archive = any(ARCHIVE in e["path"] for e in els if e["top"])
         if archive and tab:
@@ -517,71 +596,91 @@ class MapScanner:
                      and e["path"].endswith(f"/{node}/btn_opened")), None)
 
     def unlock_free(self, lock, name, node):
-        """Press a locked archive event's unlock button and OK its Confirm Unlock - only if the
-        dialog is for this event and says the unlock is free ("Free once per day!") and nothing
-        is "Owned" (that's the item cost once the day's free unlocks are used). Else Cancel.
-        True if it was unlocked. (The dialog's second line needs TAC Auto Tap 1.3.1+: with an
-        older mod the free line can't be read, so nothing is unlocked.)"""
+        """Press a locked archive entry's unlock button and read its Confirm Unlock: the event
+        it's for (mChapter<iname=OR_<event id>,name=...>) and its cost. OK only if it's the event
+        looked for (self.event: its id, else the name), free unlocks are on and the dialog says
+        it's free ("Free once per day!") with nothing "Owned" (the item cost once the day's free
+        unlocks are used). Else Cancel. Returns "unlocked", "other" (another event's entry) or
+        "locked". (The dialog's second line needs TAC Auto Tap 1.3.1+: with an older mod the
+        free line can't be read, so nothing is unlocked.)"""
         def popup_btn(end):
             return next((e for e in self.f.elements() if e["top"] and e["on"]
                          and UNLOCK_POPUP in e["path"] and e["path"].endswith(end)), None)
         self.unlock_tried.add(name)
-        self.f.press(lock, f"unlock {name}?")
+        self.f.press(lock, f"unlock {name}?" if self.free_unlock else f"is {name} it?")
         if not self.f.wait_for(lambda: popup_btn("/btn_ok"), 6):
-            return False
+            return "locked"
         self.f.sleep(0.6)
         about = self.f.inspect(UNLOCK_TITLE)
         m = re.search(r"mChapter<[^<>]*?,name=(.*?),expr=", about)
+        iname = re.search(r"mChapter<(?:[^<>]*?,)?iname=([^,<>]+)", about)
+        iname = iname.group(1) if iname else ""
         text = re.search(r"mCurrentText=(.*?)\}", self.f.inspect(UNLOCK_TEXT))
         text = (text.group(1) if text else "").lower()
         whole = " / " in text and not text.endswith("...")   # older mods cut it short
-        free = bool(m) and norm_name(m.group(1)) == norm_name(name) and whole and             "free once per day" in text and "owned" not in text
+        if self.event and iname:
+            ours = same_event(iname, self.event)
+        else:
+            ours = bool(m) and norm_name(m.group(1)) == norm_name(name)
+        free = ours and self.free_unlock and whole and \
+            "free once per day" in text and "owned" not in text
         btn = popup_btn("/btn_ok" if free else "/btn_cancel")
         if not btn:
-            return False
-        self.f.press(btn, "OK - free unlock" if free else "Cancel - no free unlock left")
+            return "locked"
+        self.f.press(btn, "OK - free unlock" if free else "Cancel")
         if not free:
-            self.unlock_note = ("the mod can't read the unlock's cost - update TACMonkey (TAC "
+            self.f.wait_for(lambda: not popup_btn("/btn_cancel"), 5)
+            if not ours:
+                return "other"
+            self.unlock_note = ("free unlocks are off on the Dev page" if not self.free_unlock else
+                                "the mod can't read the unlock's cost - update TACMonkey (TAC "
                                 "Auto Tap 1.3.1)" if not whole else
                                 "today's free unlocks are used up; the farm never spends items")
             self.log(f"{name}: {self.unlock_note} - not unlocked")
-            self.f.wait_for(lambda: not popup_btn("/btn_cancel"), 5)
-            return False
+            return "locked"
         self.log(f"Unlocked {name} with today's free unlock (24 hours)")
         # the game says it's open: its OK (a game notice) closes it
         for _ in range(10):
             self.f.sleep(1.0)
             els = self.f.elements()
             if any(e["top"] and e["path"].endswith(f"/{node}/btn_opened") for e in els):
-                return True
+                return "unlocked"
             ok = next((e for e in els if e["top"] and e["on"] and
                        ("Win_Btn_Decide" in e["path"] or e["path"].endswith("/btn_ok"))), None)
             if ok:
                 self.f.press(ok, "OK")
-        return True
+        return "unlocked"
 
     def archive_entry(self, els, wanted):
         """An Event Archives entry in view whose name is wanted: its open button (Node_n/btn_opened),
         or None (and self.locked = its name if it's there but locked: Node_n/btn_open)."""
         for info in els:
-            if not info["path"].endswith("/btn_information") or not 0.15 < info["y"] < 0.85:
+            # the last entry's row sits low even with the list at its end
+            if not info["path"].endswith("/btn_information") or not 0.15 < info["y"] < 0.93:
                 continue
             node = re.search(r"/(Node_\d+)/", info["path"])
             # the name sits on the magnifier's row, left of it
             texts = re.findall(r"text:(.*?)(?=, text:|\])", self.f.inspect((0.45, info["y"])))
             name = next((t.strip() for t in texts if norm_name(t) in wanted), None) or                 next((t.strip() for t in texts if longer_name(norm_name(t), wanted)), None)
-            if not node or not name:
+            if not node or not name or name in self.others:
                 continue
             mine = [e for e in els if f"/{node.group(1)}/" in e["path"]]
             btn = next((e for e in mine if e["on"] and e["path"].endswith("/btn_opened")), None)
-            if btn and btn["y"] < 0.9:
+            if btn and btn["y"] < 0.97:
                 return {**btn, "archive_name": name}
             lock = next((e for e in mine if e["on"] and e["path"].endswith("/btn_open")), None)
             if lock:
-                if self.free_unlock and lock["y"] < 0.9 and name not in self.unlock_tried                         and self.unlock_free(lock, name, node.group(1)):
+                got = "locked"
+                if (self.free_unlock or self.by_id) and lock["y"] < 0.97 \
+                        and name not in self.unlock_tried:
+                    got = self.unlock_free(lock, name, node.group(1))
+                if got == "unlocked":
                     btn = self.f.wait_for(lambda: self.opened_button(node.group(1)), 10)
                     if btn:
                         return {**btn, "archive_name": name}
+                if got == "other":   # same name, another event: keep looking
+                    self.others.add(name)
+                    continue
                 self.locked = name
                 return None
             # its button is below the view: the next scroll step brings it up

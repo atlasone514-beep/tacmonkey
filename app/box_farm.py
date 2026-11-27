@@ -24,6 +24,33 @@ import map_scan
 from event_scan import EventScanner, clean, parse_quest_text, QUEST_LIST, EVENT_SCREEN
 
 DONE_FILE = farm.APP_DIR / "box_done.json"
+# {event id: its name in the Event Archives}: the scanned list that ships with TACMonkey
+# (data/archive_names.json), and names this PC found by id since (an archive event added later)
+TABLE_FILES = (farm.RES_DIR / "archive_names.json",
+               farm.RES_DIR.parent / "data" / "archive_names.json")   # run from source
+NAMES_FILE = farm.APP_DIR / "archive_names_found.json"
+
+
+def _names(path, key=None):
+    try:
+        d = json.loads(path.read_text(encoding="utf-8"))
+        d = d.get(key, {}) if key else d
+        return {k: v for k, v in d.items() if isinstance(k, str) and isinstance(v, str)}
+    except (OSError, ValueError, AttributeError):
+        return {}
+
+
+def archive_names():
+    table = next((t for t in (_names(p, "events") for p in TABLE_FILES) if t), {})
+    return {**table, **_names(NAMES_FILE)}
+
+
+def remember_archive_name(event, name):
+    try:
+        NAMES_FILE.write_text(json.dumps({**_names(NAMES_FILE), event: name}, indent=1,
+                                         ensure_ascii=False), encoding="utf-8")
+    except OSError:
+        pass
 
 
 # ---------- daily counter ----------
@@ -279,10 +306,16 @@ class BoxFarm(genesis_farm.GenesisFarm):
         key, name, ms = quest_key(eid, q), q["title"], self.mapper
         if self.here != (eid, q.get("tab")) or not ms.on_map():
             self.here = None
-            ms.open_event(ev.get("chapter") or eid, ev.get("list") or "event list",
-                          self.navigator, map_scan.event_names(ev.get("name"), ev["quests"])
-                          # what the Event Archives call it, when that's another name
-                          + ([ev["archive_name"]] if ev.get("archive_name") else []))
+            chapter = ev.get("chapter") or eid
+            # what the Event Archives call it, when that's another name: published, or found
+            # by its id on an earlier run
+            names = map_scan.event_names(ev.get("name"), ev["quests"]) + \
+                [n for n in (ev.get("archive_name"), archive_names().get(chapter)) if n]
+            ms.open_event(chapter, ev.get("list") or "event list", self.navigator, names)
+            if ms.found_name and map_scan.norm_name(ms.found_name) not in \
+                    {map_scan.norm_name(n) for n in names}:
+                remember_archive_name(chapter, ms.found_name)
+                self.log(f"  (the Event Archives call it {ms.found_name} - remembered)")
             if q.get("tab") and not ms.set_tab(q["tab"]):
                 raise RuntimeError(f"{name}: couldn't switch the map to {q['tab']}")
             self.spots = {}   # looked for only if a node isn't where the scan saw it
