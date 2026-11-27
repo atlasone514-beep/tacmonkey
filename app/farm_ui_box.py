@@ -77,7 +77,43 @@ class BoxTab:
         """A box unit's quests (with Solo stages only: without the ones shared with units that
         aren't ticked)."""
         return box_farm.unit_quests(self.live, unit, self.genesis_selected("box"),
-                                    self.box_solo.get(), self.box_units, self.box_owners)
+                                    self.box_solo_now(), self.box_units, self.box_owners)
+
+    # ---------- Solo stages only: per event (each event's header), or all at once ----------
+    def box_solo_now(self):
+        """For the farm: True (every event, also ones published later) or the event ids."""
+        return True if self.box_solo.get() else frozenset(self.box_solo_events)
+
+    def box_solo_set(self):
+        """The live events Solo stages only is on for."""
+        return box_farm.solo_events(self.live, self.box_solo_now())
+
+    def box_solo_changed(self):
+        """The top tick: Solo stages only for every event, or for none."""
+        self.box_solo_events = set()
+        for var in self.box_solo_vars.values():
+            var.set(self.box_solo.get())
+        self.box_solo_apply()
+
+    def box_event_solo_changed(self, eid):
+        """An event's own tick."""
+        evs = self.box_solo_set()
+        (evs.add if self.box_solo_vars[eid].get() else evs.discard)(eid)
+        every = set(self.live.get("events", {}))
+        self.box_solo.set(bool(every) and every <= evs)
+        self.box_solo_events = set() if self.box_solo.get() else evs
+        self.box_solo_apply()
+
+    def box_solo_sync(self):
+        """The events' ticks follow the setting (after loading it)."""
+        on = self.box_solo_set()
+        for eid, var in self.box_solo_vars.items():
+            var.set(eid in on)
+
+    def box_solo_apply(self):
+        self.save_settings()
+        self.genesis_changed()
+        self.box_counts_refresh()
 
     def box_image(self, code):
         if not code:
@@ -129,10 +165,10 @@ class BoxTab:
         self.box_order_btn = tk.OptionMenu(srow, self.box_order_var, "")
         self.style_menu(self.box_order_btn)
         self.box_order_btn.pack(side="left", padx=(6, 0))
-        self.check(srow, "Solo stages only", self.box_solo, self.box_solo_changed,
-                   key="box.solo").pack(side="right")
-        self.box_star_note = self.label(srow, "* only shared stages, kept", size=8, color=MUTED,
-                                        key="box.star_note")
+        self.check(srow, "Solo stages only: all events", self.box_solo, self.box_solo_changed,
+                   key="box.solo_all").pack(side="right")
+        self.box_star_note = self.label(card, "* only shared stages, kept", size=8, color=MUTED,
+                                        key="box.star_note")   # its own line, under the row
         self.box_body = tk.Frame(card, bg=PANEL)
         self.box_body.pack(fill="x", pady=(6, 0))
         foot = tk.Frame(card, bg=GREY, height=1)
@@ -198,6 +234,8 @@ class BoxTab:
         for w in self.box_body.winfo_children() + self.genesis_body.winfo_children():
             w.destroy()
         self.box_tiles, self.box_groups = {}, []
+        self.box_solo_vars = {}   # event id -> its Solo stages only tick
+        solo_on = self.box_solo_set()
         for m in ("box", "hard"):
             self.genesis_vars[m], self.genesis_counts[m], self.genesis_spins[m] = {}, {}, {}
         self.genesis_star = {}
@@ -233,6 +271,11 @@ class BoxTab:
                 tk.Label(g["head"], text=t("box.archive_tag", "Archive"), bg=ARCHIVE_BG,
                          fg=ARCHIVE_FG, font=(FONT, 8), padx=6).pack(side="left", padx=(0, 8),
                                                                      before=g["left"])
+            svar = tk.BooleanVar(value=eid in solo_on)
+            self.box_solo_vars[eid] = svar
+            self.check(g["head"], "Solo stages only", svar,
+                       lambda e=eid: self.box_event_solo_changed(e), key="box.solo").pack(
+                side="right")
             for u in units:
                 self.box_tile(g, "box", u, u in picked, counts.get(u))
         # Genesis Hard: the same tiles, farmed after the box quests by the same Start
@@ -339,14 +382,8 @@ class BoxTab:
     def box_ticked(self, mode, unit, var):
         """A tile was ticked or unticked."""
         self.genesis_changed()
-        if mode == "box" and self.box_solo.get():
+        if mode == "box" and self.box_solo_set():
             self.box_counts_refresh()   # a shared quest counts once all its units are ticked
-
-    def box_solo_changed(self):
-        """Solo stages only (box events): the counts, the stars and the note follow."""
-        self.save_settings()
-        self.genesis_changed()
-        self.box_counts_refresh()
 
     def portrait_list(self):
         if not hasattr(self, "_portrait_codes"):
@@ -464,7 +501,7 @@ class BoxTab:
         self.genesis_mode = "box"
         self.save_settings()
         counts, gcounts = self.genesis_count_map("box"), self.genesis_count_map("hard")
-        solo, bsolo = self.genesis_solo.get(), self.box_solo.get()
+        solo, bsolo = self.genesis_solo.get(), self.box_solo_now()
         name = ("Box + Genesis farm" if picks and gpicks else "Box farm" if picks
                 else "Genesis farm")
         self.genesis_stop, self.genesis_pause = threading.Event(), threading.Event()
