@@ -1,6 +1,6 @@
 {
  "format": 1,
- "updated": "2026-11-28 08:54",
+ "updated": "2026-11-28 12:28",
  "events": {
   "ADVANCE_ORION_CC": {
    "quests": [
@@ -5915,6 +5915,479 @@
    ],
    "id": "ADVANCE_MAGNUS_CC",
    "added": "2026-11-27"
+  },
+  "ADVANCE_SEIKYOU_BASINI_01": {
+   "name": "Escape from a Dark Fate",
+   "quests": [
+    {
+     "title": "Escape from a Dark Fate [Hard] (Hard Stage 1)",
+     "name": "Hard Stage 1",
+     "iname": "QE_EV_ADVANCE_SEIKYOU_BASINI_HA_01",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_SEIKYOU_BASINI_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_IRENE01",
+       "name": "Darkwing Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BASI_CLOAK",
+       "name": "Informer Cape Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_LUK_SILVERCOIN",
+       "name": "Fortune Coin",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_LOUPE",
+       "name": "Magnifying Glass Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_NECRO",
+       "name": "Necronomicon Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GEARROD",
+       "name": "Gear Rod Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_SEIKYOU_BASINI_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_BASINI",
+       "name": "Basheeny Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_IRENE",
+       "name": "Irene Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_JACKET",
+       "name": "Cloth Jacket Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GOGGLES",
+       "name": "Goggles Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHIELD",
+       "name": "Lion Monarch Shield Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GLASSPEN",
+       "name": "Glass Pen Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.18,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "Escape from a Dark Fate [Hard] (Hard Stage 2)",
+     "name": "Hard Stage 2",
+     "iname": "QE_EV_ADVANCE_SEIKYOU_BASINI_HA_02",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_SEIKYOU_BASINI_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_IRENE01",
+       "name": "Darkwing Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BASI_CLOAK",
+       "name": "Informer Cape Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_HP_CAP",
+       "name": "Thick Hat",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_HOURGLASS",
+       "name": "Rainbow Hourglass Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_PARKA",
+       "name": "Magus Hood Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ARROWCASE",
+       "name": "Dragon Scale Quiver Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_SEIKYOU_BASINI_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_BASINI",
+       "name": "Basheeny Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_IRENE",
+       "name": "Irene Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_JACKET",
+       "name": "Cloth Jacket Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GOGGLES",
+       "name": "Goggles Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHIELD",
+       "name": "Lion Monarch Shield Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GLASSPEN",
+       "name": "Glass Pen Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GEARROD",
+       "name": "Gear Rod Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.33,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "Escape from a Dark Fate [Hard] (Hard Stage 3)",
+     "name": "Hard Stage 3",
+     "iname": "QE_EV_ADVANCE_SEIKYOU_BASINI_HA_03",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_SEIKYOU_BASINI_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_IRENE01",
+       "name": "Darkwing Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BASI_CLOAK",
+       "name": "Informer Cape Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_VEST",
+       "name": "Vest Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_TRUMPET",
+       "name": "Trumpet Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_KATAR",
+       "name": "Platinum Katar Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SHOULDER",
+       "name": "Laboratory Flasks Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_SEIKYOU_BASINI_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_BASINI",
+       "name": "Basheeny Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_IRENE",
+       "name": "Irene Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_JACKET",
+       "name": "Cloth Jacket Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GOGGLES",
+       "name": "Goggles Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHIELD",
+       "name": "Lion Monarch Shield Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GLASSPEN",
+       "name": "Glass Pen Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GEARROD",
+       "name": "Gear Rod Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.45,
+      0.39
+     ],
+     "max": 3
+    },
+    {
+     "title": "Escape from a Dark Fate [Hard] (Hard Stage 4)",
+     "name": "Hard Stage 4",
+     "iname": "QE_EV_ADVANCE_SEIKYOU_BASINI_HA_04",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_SEIKYOU_BASINI_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_IRENE01",
+       "name": "Darkwing Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BASI_CLOAK",
+       "name": "Informer Cape Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_GETA",
+       "name": "Single-Tooth Geta Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAM_SMALL",
+       "name": "Picmy Figurine Diagram",
+       "type": "ItemPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_DICE",
+       "name": "Dice of Fate Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_ARROWCASE",
+       "name": "Dragon Scale Quiver Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_SEIKYOU_BASINI_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_BASINI",
+       "name": "Basheeny Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_IRENE",
+       "name": "Irene Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_JACKET",
+       "name": "Cloth Jacket Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GOGGLES",
+       "name": "Goggles Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHIELD",
+       "name": "Lion Monarch Shield Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GLASSPEN",
+       "name": "Glass Pen Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GEARROD",
+       "name": "Gear Rod Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.6,
+      0.564
+     ],
+     "max": 3
+    },
+    {
+     "title": "Escape from a Dark Fate [Hard] (Hard Stage 5)",
+     "name": "Hard Stage 5",
+     "iname": "QE_EV_ADVANCE_SEIKYOU_BASINI_HA_05",
+     "tab": "Hard",
+     "kind": "map",
+     "loot": [
+      {
+       "iname": "IT_ADVANCE_SEIKYOU_BASINI_COIN",
+       "name": "[3-Title] Event Coin",
+       "type": "Other"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_IRENE01",
+       "name": "Darkwing Boots Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_BASI_CLOAK",
+       "name": "Informer Cape Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DEX_TRIANGLE",
+       "name": "Set Square",
+       "type": "Equip"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GOGGLES",
+       "name": "Goggles Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_TENBIN",
+       "name": "Gem Seller's Scales Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_DIAGRAMPIECE_SHOULDER",
+       "name": "Laboratory Flasks Diagram Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_ADVANCE_SEIKYOU_BASINI_TICKET",
+       "name": "[3-Title] Boss Challenge Ticket",
+       "type": "Ticket"
+      },
+      {
+       "iname": "IT_PI_BASINI",
+       "name": "Basheeny Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_PI_IRENE",
+       "name": "Irene Soul Shard",
+       "type": "UnitPiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_JACKET",
+       "name": "Cloth Jacket Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_SHIELD",
+       "name": "Lion Monarch Shield Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_NOTEBOOK",
+       "name": "Research Notebook Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GLASSPEN",
+       "name": "Glass Pen Piece",
+       "type": "ItemPiecePiece"
+      },
+      {
+       "iname": "IT_EQ_PIECE_GEARROD",
+       "name": "Gear Rod Piece",
+       "type": "ItemPiecePiece"
+      }
+     ],
+     "spot": [
+      0.7036,
+      0.3927
+     ],
+     "max": 3
+    }
+   ],
+   "kind": "map",
+   "chapter": "ADVANCE_SEIKYOU_BASINI_01",
+   "list": "boss battle list",
+   "main": [
+    "Irene"
+   ],
+   "id": "ADVANCE_SEIKYOU_BASINI_01",
+   "added": "2026-11-28"
   }
  },
  "scripts": {},
