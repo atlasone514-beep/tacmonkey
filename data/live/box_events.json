@@ -1,6 +1,6 @@
 {
  "format": 1,
- "updated": "2026-11-27 01:56",
+ "updated": "2026-11-28 08:54",
  "events": {
   "ADVANCE_ORION_CC": {
    "quests": [
@@ -5387,7 +5387,8 @@
    "chapter": "ADVANCE_MABEL_EVENT",
    "list": "boss battle list",
    "main": [
-    "Mabel's"
+    "Mabel's",
+    "Mabel"
    ],
    "id": "ADVANCE_MABEL_EVENT",
    "added": "2026-11-27"
