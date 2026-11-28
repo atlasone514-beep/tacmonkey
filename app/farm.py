@@ -75,7 +75,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-VERSION = "1.7.7.2"   # TACMonkey release (the setup and the window show it)
+VERSION = "1.7.7.3"   # TACMonkey release (the setup and the window show it)
 MOD_VERSION = "1.3.1"  # TAC Auto Tap version shipped with this release (release/build.py checks it)
 WINDOW_TITLE = "The Alchemist Code"
 # APP_DIR holds your buttons, scripts and settings; RES_DIR the files shipped with the program.
@@ -1478,6 +1478,9 @@ KNOWN_POPUPS = (
     # the monthly login bonus on the main menu; its "Receive" (the free total-days reward) is
     # left for you - or a future "claim rewards" task
     ("Login Bonus", "LoginBonusWindow", "LoginBonus_month(Clone)/close", "Close"),
+    # player level up on a results screen ("LEVEL UP!", Level 11 -> 12, AP refilled): its close
+    # covers the whole screen; seen in a second account's VM, 2026-11-28
+    ("Level Up", "PlayerLvUp", "root/close", "Close"),
 )
 PEDDLER = KNOWN_POPUPS[0][1]
 
